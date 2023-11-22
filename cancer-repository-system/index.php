@@ -169,14 +169,15 @@ include('includes/config.php');
                 </div>
 
                 <div class="row">
-                    <div class="wrap"></div>
-                    <br>
-                    <div>
-                        <button id="pieChartBtn">Pie Chart</button>
-                        <button id="barChartBtn">Bar Chart</button>
+                    <div class="wrap">
+                        <div class="chartButtonContainer">
+                            <button id="pieChartBtn" class="chartButton" id="specificId">Pie Chart</button>
+                            <button id="barChartBtn" class="chartButton" id="specificId">Bar Chart</button>
+                        </div>
                     </div>
                     <!-- PIE CHART TABLE -->
                         <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+                        <!-- PIE CHART TABLE END-->
                 </div>
             </div>
         </div>

@@ -17,6 +17,9 @@ include('config.php');
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
     <title>PCC HRMS</title>
 
     <style>
@@ -223,75 +226,7 @@ include('config.php');
                     <span class="notification-title">Notifications</span>
                     <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
                 </div>
-                <div class="noti-content">
-                    <ul class="notification-list">
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="../assets/img/profiles/avatar-02.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
-                                        <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="assets/img/profiles/avatar-03.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">Tarah Shropshire</span> changed the task name <span class="noti-title">Appointment booking with payment gateway</span></p>
-                                        <p class="noti-time"><span class="notification-time">6 mins ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="assets/img/profiles/avatar-06.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">Misty Tison</span> added <span class="noti-title">Domenic Houston</span> and <span class="noti-title">Claire Mapes</span> to project <span class="noti-title">Doctor available module</span></p>
-                                        <p class="noti-time"><span class="notification-time">8 mins ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="assets/img/profiles/avatar-17.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">Rolland Webber</span> completed task <span class="noti-title">Patient and Doctor video conferencing</span></p>
-                                        <p class="noti-time"><span class="notification-time">12 mins ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="assets/img/profiles/avatar-13.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">Bernardo Galaviz</span> added new task <span class="noti-title">Private chat module</span></p>
-                                        <p class="noti-time"><span class="notification-time">2 days ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+
                 <div class="topnav-dropdown-footer">
                     <a href="#">View all Notifications</a>
                 </div>
@@ -433,7 +368,7 @@ include('config.php');
 
                 <!-- HOSPITAL AND REPO USER REGISTRATION -->
                 <li class="submenu">
-                    <a href="#"><i class="la la-external-link-square"></i> <span>Add Hospital | Repo-user</span> <span class="menu-arrow"></span></a>
+                    <a href="#"><i class="la la-external-link-square"></i> <span>Create account</span> <span class="menu-arrow"></span></a>
                     <ul style="display: none;">
                         <li><a href="hospital-registration.php">Hospital Creation</a></li>
                         <li><a href="#">User Creation</a></li>
@@ -475,6 +410,7 @@ include('config.php');
                             <div class="welcome d-flex justify-content-between align-items-center">
                                 <h3 class="page-title">HOSPITAL REGISTRATION</h3>
                             </div>
+                            
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item active"></li>
                             </ul>
@@ -484,49 +420,80 @@ include('config.php');
 
                 <!-- METRICS -->
                 <div class="row">
-                    <!--<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="card dash-widget">
-                            <div class="card-body">
-                                <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
-                                <div class="dash-widget-info">
-                                    <h3>15</h3>
-                                    <span>New Cases</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="card dash-widget">
-                            <div class="card-body">
-                                <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
-                                <div class="dash-widget-info">
-                                    <h3>2</h3>
-                                    <span>Total Hospitals</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="card dash-widget">
-                            <div class="card-body">
-                                <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
-                                <div class="dash-widget-info">
-                                    <h3>1</h3>
-                                    <span>Total Cases</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
+                    <div class="hospital-table">
+                        <h3 class="hospital-header">Hospital Information</h3>
+                    </div>  
                 </div>
-
-
-                <div class="row">
-                    
+                <div class="container">
+                        <div class="row additional-content">
+                            <div class="search-wrap">
+                                <div class="search">
+                                    <input type="text" class="searchTerm" placeholder="">
+                                    <button type="submit" class="searchButton">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                   <!-- HTML -->
+                                        <button class="add-hospital-button" onclick="redirectToIndex('add')">Add Hospital</button>
+                                        <button class="export-button" onclick="redirectToIndex('export')">Export</button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <br>
+                <div class="containerTable">
+                    <div class="row">
+                        <div class="col-12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">Day</th>
+                                <th scope="col">Article Name</th>
+                                <th scope="col">Author</th>
+                                <th scope="col">Shares</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Bootstrap 4 CDN and Starter Template</td>
+                                <td>Cristina</td>
+                                <td>2.846</td>
+                                <td>
+                                <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button>
+                                <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                                <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Bootstrap Grid 4 Tutorial and Examples</td>
+                                <td>Cristina</td>
+                                <td>3.417</td>
+                                <td>
+                                <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button>
+                                <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                                <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Bootstrap Flexbox Tutorial and Examples</td>
+                                <td>Cristina</td>
+                                <td>1.234</td>
+                                <td>
+                                <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button>
+                                <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                                <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
-    </div>
 
 
     <!-- jQuery -->
@@ -548,6 +515,7 @@ include('config.php');
     <!-- Custom JS -->
     <script src="../assets/js/app.js"></script>
     <script src="../assets/js/piechart.js"></script>
+    <script src="../assets/js/buttons.js"></script>
 
 </body>
 

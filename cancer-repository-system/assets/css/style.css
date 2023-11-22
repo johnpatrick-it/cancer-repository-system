@@ -4032,46 +4032,54 @@ table.dataTable thead > tr > td.sorting {
 		min-width: inherit;
 	}
 	@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+	/* Styling for chart buttons */
+/* Styling for chart buttons */
 
-	.search {
-	  width: 100%;
-	  position: relative;
-	  display: flex;
+.chartButton {
+    display: inline-block;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.chartButton:hover {
+    background-color: #ddd;
+}
+
+.hospital-table {
+    width: 1115px;
+    height: 843px;
+    flex-shrink: 0;
+    border-radius: 5px;
+}
+
+.hospital-table .hospital-header {
+    color: #18372E!important;
+    font-family: Inter;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 130%;
+}
+.containerTable {
+	padding: 2rem 0rem;
+  }
+  
+  h4 {
+	margin: 2rem 0rem 1rem;
+  }
+  
+  .table-image {
+	td, th {
+	  vertical-align: middle;
 	}
-	
-	.searchTerm {
-	  width: 100%;
-	  border: 3px solid #18372E;
-	  border-right: none;
-	  padding: 5px;
-	  height: 20px;
-	  border-radius: 5px 0 0 5px;
-	  outline: none;
-	  color: #9DBFAF;
-	}
-	
-	.searchTerm:focus{
-	  color: #18372E;
-	}
-	
-	.searchButton {
-	  width: 40px;
-	  height: 36px;
-	  border: 1px solid #18372E;
-	  background: #18372E;
-	  text-align: center;
-	  color: #fff;
-	  border-radius: 0 5px 5px 0;
-	  cursor: pointer;
-	  font-size: 20px;
-	}
-	
-	/*Resize the wrap to see the search bar change!*/
-	.wrap{
-	  width: 50%;
-	  position: absolute;
-	  top: 50%;
-	  left: 50%;
-	  transform: translate(-50%, -50%);
-	}
+  }
+
+  
+
 }

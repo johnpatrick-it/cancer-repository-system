@@ -42,7 +42,7 @@
                 <li class="profile-block">
                     <a href="#">
                         <span class="user-img d-inline-block position-relative">
-                            <img src="../profiles/<?php echo htmlentities($result->Picture); ?>" alt="User Picture" class="rounded-circle img-thumbnail neon-border">
+                            <img src="/cancer-repository-system/profiles/<?php echo htmlentities($result->Picture); ?>" alt="User Picture" class="rounded-circle img-thumbnail neon-border">
                         </span>
                     </a>
                     <a href=" #"><span class="text-white h4">Heionim</span></a>
@@ -57,7 +57,7 @@
                 <li class="submenu">
                     <a href="#"><i class="la la-external-link-square"></i> <span>Create account</span> <span class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li><a href="/includes/hospital-registration.php">Hospital Creation</a></li>
+                        <li><a href="/cancer-repository-system/includes/hospital-registration.php">Hospital Creation</a></li>
                         <li><a href="#">User Creation</a></li>
                     </ul>
                 </li>
