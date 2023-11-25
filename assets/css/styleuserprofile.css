@@ -1,0 +1,34 @@
+
+/* User Profile Img */
+.neon-border {
+    border: 2px solid #0B72BD;
+    box-shadow: 0 0 10px #0B72BD;
+}
+
+.user-img img {
+    width: 6rem;
+    height: auto;
+}
+
+.profile-block {
+    margin: 0 0 0 -2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-role {
+    margin-top: -1.5rem;
+}
+
+/* ACTIVE NAV STATE */
+.sample-active {
+    background-color: #A88C0A;
+}
+
+/* LOGOUT */
+.out-container .out-button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}

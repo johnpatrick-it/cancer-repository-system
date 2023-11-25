@@ -4063,23 +4063,26 @@ table.dataTable thead > tr > td.sorting {
     font-family: Inter;
     font-size: 25px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 100;
     line-height: 130%;
 }
 .containerTable {
-	padding: 2rem 0rem;
-  }
-  
-  h4 {
-	margin: 2rem 0rem 1rem;
-  }
-  
-  .table-image {
-	td, th {
-	  vertical-align: middle;
-	}
+    padding: 2rem 0rem;
+    overflow-x: auto; /* Enable horizontal scrolling */
   }
 
-  
+  .table-bordered {
+    width: 100%; /* Use 100% width for the table */
+    table-layout: fixed; /* Fix table layout */
+    border-collapse: collapse;
+  }
 
+  .table-bordered th,
+  .table-bordered td {
+    overflow: hidden; /* Hide overflowing content */
+    text-overflow: ellipsis; /* Show ellipsis for overflow */
+    white-space: nowrap; /* Prevent text wrapping */
+    padding: 10px; /* Adjust padding as needed */
+    border: 1px solid #ddd; /* Add borders */
+  }
 }
