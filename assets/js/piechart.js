@@ -3,7 +3,7 @@ function renderPieChart() {
         exportEnabled: true,
         animationEnabled: true,
         title:{
-            text: "TOP CANCER CASES PCC REPOSITORY 2023"
+            text: "Estimated number of new Cancer Cases in 2025"
         },
         legend:{
             cursor: "pointer",
@@ -25,6 +25,7 @@ function renderPieChart() {
             ]
         }]
     });
+    
     chart.render();
 }
     

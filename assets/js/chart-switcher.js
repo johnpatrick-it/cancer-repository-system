@@ -1,8 +1,8 @@
 $(document).ready(function () {
-    // Initially render the pie chart
+    // RENDERING YUGN CHART
     renderPieChart();
 
-    // Button click handlers
+    // BUTTON FUNCTION PARA MALIPAT MGA CHART
     $('#pieChartBtn').click(function () {
         renderPieChart();
     });

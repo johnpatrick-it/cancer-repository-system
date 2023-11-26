@@ -2,6 +2,11 @@
 session_start();
 error_reporting(0);
 include('includes/config.php');
+
+if (!isset($_SESSION['userlogin']) || empty($_SESSION['userlogin'])) {
+    header('Location: login.php');
+    exit;
+}
 ?>
 
 
@@ -107,25 +112,24 @@ include('includes/config.php');
 
         <!-- Header -->
         <?php include_once("includes/header.php"); ?>
+        <!-- End Header -->
 
         <!-- Sidebar -->
         <?php include_once("includes/sidebar.php"); ?>
+        <!-- End Sidebar -->
+
 
         <div class="page-wrapper">
             <div class="content container-fluid">
-
                 <!-- WELCOME MESSAGE -->
                 <div class="page-header">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="welcome d-flex justify-content-between align-items-center">
                                 <h3 class="page-title">CANCER REPOSITORY DASHBOARD</h3>
-                                <button type="button" class="close" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
                             </div>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item active">Dashboard</li>
+                                <li class="breadcrumb-item active"></li>
                             </ul>
                         </div>
                     </div>
@@ -171,13 +175,14 @@ include('includes/config.php');
                 <div class="row">
                     <div class="wrap">
                         <div class="chartButtonContainer">
+                            <!-- Nasa ASSETS JS yung chart file-->
                             <button id="pieChartBtn" class="chartButton" id="specificId">Pie Chart</button>
-                            <button id="barChartBtn" class="chartButton" id="specificId">Bar Chart</button>
+                            <button id="barChartBtn" class="chartButton" id="specificId">Line Chart</button>
                         </div>
                     </div>
-                    <!-- PIE CHART TABLE -->
+                    <!-- CHART TABLE -->
                         <div id="chartContainer" style="height: 400px; width: 100%;"></div>
-                        <!-- PIE CHART TABLE END-->
+                        <!-- CHART TABLE END-->
                 </div>
             </div>
         </div>

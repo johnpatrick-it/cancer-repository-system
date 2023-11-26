@@ -1,7 +1,7 @@
 <?php
 session_start();
 error_reporting(0);
-include('config.php');
+include('includes/config.php');
 ?>
 
 
@@ -176,101 +176,6 @@ include('config.php');
     }
 </style>
 
-<div class="header">
-    <!-- LOGO -->
-    <div class="header-left">
-        <a href="index.php" class="logo">
-        </a>
-    </div>
-
-    <!-- SIDEBAR TOGGLE -->
-    <a id="toggle_btn" href="javascript:void(0);">
-        <span class="bar-icon">
-            <span></span>
-            <span></span>
-            <span></span>
-        </span>
-    </a>
-
-    <!-- DATE AND TIME -->
-    <div class="page-title-box">
-        <div class="d-flex flex-row">
-            <img class="weather-icon" src="../assets/img/clouds.png">
-        </div>
-
-        <div class="d-flex flex-column">
-            <h3 id="day" class="day mb-0"></h3>
-            <h4 id="date" class="date"></h4>
-        </div>
-
-        <div class="d-flex flex-row">
-            <div class="black-line"></div>
-            <div class="d-flex flex-column align-items-end">
-                <h4 id="time" class="time ml-3"></h4>
-            </div>
-        </div>
-    </div>
-
-    <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa fa-bars"></i></a>
-
-    <ul class="nav user-menu">
-
-        <!-- NOTIFICATION BELL -->
-        <li class="nav-item dropdown">
-            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                <i class="fa fa-bell" style="color: #000;"></i> <span class="badge badge-pill">5</span>
-            </a>
-            <div class="dropdown-menu notifications">
-                <!-- NOTIICATION SAMPLE CONTENT -->
-                <div class="topnav-dropdown-header">
-                    <span class="notification-title">Notifications</span>
-                    <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
-                </div>
-
-                <div class="topnav-dropdown-footer">
-                    <a href="#">View all Notifications</a>
-                </div>
-            </div>
-        </li>
-
-        <?php
-        $sql = "SELECT * from users";
-        $query = $dbh->prepare($sql);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_OBJ);
-        $cnt = 1;
-        ?>
-
-        <!-- USER PROFILE -->
-        <li class="nav-item dropdown has-arrow main-drop">
-            <div class="user-container" id="userDropdown">
-                <a href="#" class="nav-link" data-toggle="dropdown">
-                    <span class="user-img">
-                        <img src="../profiles/myself.png" alt="User Picture">
-                    </span>
-                    <span class="user-text">Heionim</span>
-                </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="profile.php">My Profile</a>
-                    <a class="dropdown-item" href="settings.php">Settings</a>
-                    <a class="dropdown-item" href="logout.php">Logout</a>
-                </div>
-            </div>
-        </li>
-
-    </ul>
-
-    <!-- MOBILE MENU -->
-    <div class="dropdown mobile-user-menu">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-        <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="profile.php">My Profile</a>
-            <a class="dropdown-item" href="settings.php">Settings</a>
-            <a class="dropdown-item" href="login.php">Logout</a>
-        </div>
-    </div>
-
-</div>
 
 
 <script>
@@ -347,60 +252,17 @@ include('config.php');
     }
 </style>
 
-<div class="sidebar" id="sidebar">
-    <div class="sidebar-inner slimscroll">
-        <div id="sidebar-menu" class="sidebar-menu">
-            <ul>
-                <!-- PROFILE -->
-                <li class="profile-block">
-                    <a href="#">
-                        <span class="user-img d-inline-block position-relative">
-                            <img src="../profiles/<?php echo htmlentities($result->Picture); ?>" alt="User Picture" class="rounded-circle img-thumbnail neon-border">
-                        </span>
-                    </a>
-                    <a href=" #"><span class="text-white h4">Heionim</span></a>
-                    <a href="../index.php"><span class="text-white small user-role">CANCER REPOSITORY ADMIN</span></a>
-                </li>
-                <hr class="bg-white w-100 mt-2">
 
-                <!-- DASHBOARD -->
-                <li class="sample-active mt-5"><a href="../index.php"><i class="la la-dashboard"></i> <span> Dashboard</span> </a></li>
+ <!-- HEADER -->
+ <?php include_once("includes/header.php"); ?>
+ <!-- END HEADER -->
 
-                <!-- HOSPITAL AND REPO USER REGISTRATION -->
-                <li class="submenu">
-                    <a href="#"><i class="la la-external-link-square"></i> <span>Create account</span> <span class="menu-arrow"></span></a>
-                    <ul style="display: none;">
-                        <li><a href="hospital-registration.php">Hospital Creation</a></li>
-                        <li><a href="#">User Creation</a></li>
-                    </ul>
-                </li>
-                <li class="submenu">
-                    <a href="#"><i class="la la-user"></i> <span>Geography</span> <span class="menu-arrow"></span></a>
-                    <ul style="display: none;">
-                        <li><a href="#">Hospital Location</a></li>
-                        <li><a href="#">Maps by Indicators</a></li>
-                    </ul>
-                </li>
-                <!-- ACTIVITY LOGS -->
-                <li>
-                    <a href="#"><i class="la la-users"></i><span>Activity Logs</span></a>
-                </li>
+<!-- SIDEBAR -->
+<?php include_once("includes/sidebar.php"); ?>
+<!-- END SIDEBAR -->
 
-                <!-- SETTINGS -->
-                <li>
-                    <a href="#"><i class="la la-cogs"></i><span>Settings</span></a>
-                </li>
-
-                <!-- LOGOUT -->
-                <li class="out-container">
-                    <a class="out-button" href="#"><i class="la la-power-off"></i><span>Logout</span></a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-        <div class="page-wrapper">
+<!--HOSPITAL TABLE-->
+<div class="page-wrapper">
             <div class="content container-fluid">
 
                 <!-- WELCOME MESSAGE -->
@@ -408,7 +270,7 @@ include('config.php');
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="welcome d-flex justify-content-between align-items-center">
-                                <h3 class="page-title">HOSPITAL REGISTRATION</h3>
+                                <h3 class="page-title">HOSPITAL INFORMATION</h3>
                             </div>
                             
                             <ul class="breadcrumb">
@@ -432,9 +294,9 @@ include('config.php');
                                     <button type="submit" class="searchButton">
                                         <i class="fa fa-search"></i>
                                     </button>
-                                   <!-- HTML -->
+                                   <!-- NASA ASSETS BUTTON.JS FUNCTION -->
                                         <button class="add-hospital-button" onclick="redirectToIndex('add')">Add Hospital</button>
-                                        <button class="export-button" onclick="redirectToIndex('export')">Export</button>
+                                        <button class="export-button" onclick="redirectToIndex('export')">Import SVG</button>
                                 </div>
                             </div>
                         </div>
@@ -469,7 +331,6 @@ include('config.php');
                                 <td>Null</td>
                                 <td>Null</td>
                                 <td>
-                                <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button>
                                 <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
                                 <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
                                 </td>
@@ -483,8 +344,7 @@ include('config.php');
                                 <td>Null</td>
                                 <td>Null</td>
                                 <td>Null</td>
-                                <td>
-                                <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button>
+                                <td>  
                                 <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
                                 <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
                                 </td>
@@ -499,7 +359,6 @@ include('config.php');
                                 <td>Null</td>
                                 <td>Null</td>
                                 <td>
-                                <button type="button" class="btn btn-primary"><i class="far fa-eye"></i></button>
                                 <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
                                 <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
                                 </td>
@@ -510,7 +369,8 @@ include('config.php');
                     </div>
                 </div>
             </div>
-        </div>
+</div>
+<!--END HOSPITAL TABLE-->
 
 
     <!-- jQuery -->

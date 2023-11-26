@@ -1,4 +1,10 @@
 <style>
+    @media (max-width: 768px) {
+ .sidebar {
+   display: none;
+ }
+}
+
     /* User Profile Img */
     .neon-border {
         border: 2px solid #0B72BD;
@@ -35,32 +41,34 @@
 </style>
 
 <div class="sidebar" id="sidebar">
-    <div class="sidebar-inner slimscroll">
-        <div id="sidebar-menu" class="sidebar-menu">
-            <ul>
-                <!-- PROFILE -->
-                <li class="profile-block">
+   <div class="sidebar-inner slimscroll">
+       <div id="sidebar-menu" class="sidebar-menu">
+           <ul>
+               <!-- LOGO HINDI NA SYA PROFILE -->
+               <li class="profile-block">
                     <a href="#">
                         <span class="user-img d-inline-block position-relative">
-                            <img src="/cancer-repository-system/profiles/<?php echo htmlentities($result->Picture); ?>" alt="User Picture" class="rounded-circle img-thumbnail neon-border">
+                            <img src="../profiles/pcc-logo.png" alt="User Picture" class="rounded-circle img-thumbnail neon-border">
                         </span>
                     </a>
-                    <a href=" #"><span class="text-white h4">Heionim</span></a>
-                    <a href="#"><span class="text-white small user-role">CANCER REPOSITORY ADMIN</span></a>
+                    <br>
+                    <a href="../admin-index.php"><span class="text-white small user-role">CANCER REPOSITORY ADMIN</span></a>
                 </li>
-                <hr class="bg-white w-100 mt-2">
 
                 <!-- DASHBOARD -->
-                <li class="sample-active mt-5"><a href="index.php"><i class="la la-dashboard"></i> <span> Dashboard</span> </a></li>
+                <li class="sample-active mt-5"><a href="admin-index.php"><i class="la la-dashboard"></i> <span> Dashboard</span> </a></li>
 
                 <!-- HOSPITAL AND REPO USER REGISTRATION -->
                 <li class="submenu">
                     <a href="#"><i class="la la-external-link-square"></i> <span>Create account</span> <span class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li><a href="/cancer-repository-system/includes/hospital-registration.php">Hospital Creation</a></li>
-                        <li><a href="#">User Creation</a></li>
+                        <li><a href="hospital-information.php">Hospital Table</a></li>
+                        <li><a href="#">User Table</a></li>
                     </ul>
                 </li>
+                <!-- END HOSPITAL AND REPO USER REGISTRATION -->
+
+                <!-- HOSPITAL MAPPING HOSPITAL  -->
                 <li class="submenu">
                     <a href="#"><i class="la la-user"></i> <span>Geography</span> <span class="menu-arrow"></span></a>
                     <ul style="display: none;">
@@ -68,20 +76,25 @@
                         <li><a href="#">Maps by Indicators</a></li>
                     </ul>
                 </li>
+                <!-- END HOSPITAL MAPPING -->
+
                 <!-- ACTIVITY LOGS -->
                 <li>
                     <a href="#"><i class="la la-users"></i><span>Activity Logs</span></a>
                 </li>
+                <!-- END ACTIVITY LOGS -->
 
                 <!-- SETTINGS -->
                 <li>
                     <a href="#"><i class="la la-cogs"></i><span>Settings</span></a>
                 </li>
+                 <!-- END SETTINGS -->
 
                 <!-- LOGOUT -->
                 <li class="out-container">
-                    <a class="out-button" href="#"><i class="la la-power-off"></i><span>Logout</span></a>
+                    <a class="out-button" href="logout.php"><i class="la la-power-off"></i><span>Logout</span></a>
                 </li>
+                <!-- END LOGOUT -->
             </ul>
         </div>
     </div>

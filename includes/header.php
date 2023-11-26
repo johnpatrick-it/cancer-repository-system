@@ -67,8 +67,8 @@
 <div class="header">
     <!-- LOGO -->
     <div class="header-left">
-        <a href="index.php" class="logo">
-            <img src="assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo">
+        <a href="./admin-index.php" class="logo">
+            <img src="./assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo">
         </a>
     </div>
 
@@ -107,7 +107,7 @@
         <!-- NOTIFICATION BELL -->
         <li class="nav-item dropdown">
             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                <i class="fa fa-bell" style="color: #000;"></i> <span class="badge badge-pill">5</span>
+                <i class="fa fa-bell" style="color: #000;"></i> <span class="badge badge-pill">#</span>
             </a>
             <div class="dropdown-menu notifications">
                 <!-- NOTIICATION SAMPLE CONTENT -->
@@ -116,73 +116,6 @@
                     <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
                 </div>
                 <div class="noti-content">
-                    <ul class="notification-list">
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="assets/img/profiles/avatar-02.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">John Doe</span> added new task <span class="noti-title">Patient appointment booking</span></p>
-                                        <p class="noti-time"><span class="notification-time">4 mins ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="assets/img/profiles/avatar-03.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">Tarah Shropshire</span> changed the task name <span class="noti-title">Appointment booking with payment gateway</span></p>
-                                        <p class="noti-time"><span class="notification-time">6 mins ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="assets/img/profiles/avatar-06.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">Misty Tison</span> added <span class="noti-title">Domenic Houston</span> and <span class="noti-title">Claire Mapes</span> to project <span class="noti-title">Doctor available module</span></p>
-                                        <p class="noti-time"><span class="notification-time">8 mins ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="assets/img/profiles/avatar-17.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">Rolland Webber</span> completed task <span class="noti-title">Patient and Doctor video conferencing</span></p>
-                                        <p class="noti-time"><span class="notification-time">12 mins ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-message">
-                            <a href="#">
-                                <div class="media">
-                                    <span class="avatar">
-                                        <img alt="" src="assets/img/profiles/avatar-13.jpg">
-                                    </span>
-                                    <div class="media-body">
-                                        <p class="noti-details"><span class="noti-title">Bernardo Galaviz</span> added new task <span class="noti-title">Private chat module</span></p>
-                                        <p class="noti-time"><span class="notification-time">2 days ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
                 </div>
                 <div class="topnav-dropdown-footer">
                     <a href="#">View all Notifications</a>
@@ -190,22 +123,25 @@
             </div>
         </li>
 
+<!-- IMPORTANT -->
         <?php
-        $sql = "SELECT * from users";
+        $sql = "SELECT * from repo_admin";
         $query = $dbh->prepare($sql);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_OBJ);
         $cnt = 1;
         ?>
+<!-- IMPORTANT -->
 
         <!-- USER PROFILE -->
         <li class="nav-item dropdown has-arrow main-drop">
             <div class="user-container" id="userDropdown">
                 <a href="#" class="nav-link" data-toggle="dropdown">
                     <span class="user-img">
-                        <img src="./profiles/<?php echo htmlentities($result->Picture); ?>" alt="User Picture">
+                        <!--FIX-->
+                        <img src="../profiles/<?php echo htmlentities($result->Picture); ?>" alt="User Picture">
                     </span>
-                    <span class="user-text">Heionim</span>
+                    <span class="user-text"></span>
                 </a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="profile.php">My Profile</a>
@@ -214,6 +150,7 @@
                 </div>
             </div>
         </li>
+        <!-- END USER PROFILE -->
 
     </ul>
 
@@ -226,6 +163,7 @@
             <a class="dropdown-item" href="login.php">Logout</a>
         </div>
     </div>
+    <!-- END MOBILE MENU -->
 
 </div>
 

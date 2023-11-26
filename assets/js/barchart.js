@@ -1,141 +1,219 @@
 function renderBarChart() {
-        var chart = new CanvasJS.Chart("chartContainer", {
-            title: {
-                text: "TOP CANCER CASES PPC REPOSITORY 2023"
+	
+    var chart = new CanvasJS.Chart("chartContainer", {
+        //theme: "light2", // "light1", "light2", "dark1", "dark2"
+        animationEnabled: true,
+        exportEnabled: true,
+        title:{
+            text: "Estimated number of new Cancer Cases in 2025"  
+        },
+        axisX: {
+            lineColor: "black",
+            labelFontColor: "black"
+        },
+        axisY2: {
+              gridThickness: 0,
+            title: " Number of Cases",
+            suffix: "",
+            titleFontColor: "black",
+            labelFontColor: "black"
+        },
+        legend: {
+            cursor: "pointer",
+            itemmouseover: function(e) {
+                e.dataSeries.lineThickness = e.chart.data[e.dataSeriesIndex].lineThickness * 2;
+                e.dataSeries.markerSize = e.chart.data[e.dataSeriesIndex].markerSize + 2;
+                e.chart.render();
             },
-            axisX: {
-                valueFormatString: "MMM YYYY"
+            itemmouseout: function(e) {
+                e.dataSeries.lineThickness = e.chart.data[e.dataSeriesIndex].lineThickness / 2;
+                e.dataSeries.markerSize = e.chart.data[e.dataSeriesIndex].markerSize - 2;
+                e.chart.render();
             },
-            axisY2: {
-                title: "Cancer Cases",
-                prefix: "",
-                suffix: ""
-            },
-            toolTip: {
-                shared: true
-            },
-            legend: {
-                cursor: "pointer",
-                verticalAlign: "top",
-                horizontalAlign: "center",
-                dockInsidePlotArea: true,
-                itemclick: toogleDataSeries
-            },
-            data: [{
-                type:"line",
-                axisYType: "secondary",
-                name: "Null",
-                showInLegend: true,
-                markerSize: 0,
-                yValueFormatString: "#,###",
-                dataPoints: [		
-                    { x: new Date(2019, 0, 1), y: 850 },
-                    { x: new Date(2019, 1, 1), y: 889 },
-                    { x: new Date(2019, 2, 1), y: 890 },
-                    { x: new Date(2019, 3, 1), y: 899 },
-                    { x: new Date(2019, 4, 1), y: 903 },
-                    { x: new Date(2020, 5, 1), y: 925 },
-                    { x: new Date(2020, 6, 1), y: 899 },
-                    { x: new Date(2020, 7, 1), y: 875 },
-                    { x: new Date(2020, 8, 1), y: 927 },
-                    { x: new Date(2020, 9, 1), y: 949 },
-                    { x: new Date(2020, 10, 1), y: 946 },
-                    { x: new Date(2021, 11, 1), y: 927 },
-                    { x: new Date(2021, 0, 1), y: 950 },
-                    { x: new Date(2021, 1, 1), y: 998 },
-                    { x: new Date(2021, 2, 1), y: 998 },
-                    { x: new Date(2021, 3, 1), y: 1050 },
-                    { x: new Date(2021, 4, 1), y: 1050 },
-                    { x: new Date(2021, 5, 1), y: 999 },
-                    { x: new Date(2021, 6, 1), y: 998 },
-                    { x: new Date(2021, 7, 1), y: 998 },
-                    { x: new Date(2022, 8, 1), y: 1050 },
-                    { x: new Date(2022, 9, 1), y: 1070 },
-                    { x: new Date(2022, 10, 1), y: 1050 },
-                    { x: new Date(2022, 11, 1), y: 1050 },
-                    { x: new Date(2022, 0, 1), y: 995 },
-                    { x: new Date(2022, 1, 1), y: 1090 },
-                    { x: new Date(2022, 2, 1), y: 1100 },
-                    { x: new Date(2023, 3, 1), y: 1150 },
-                    { x: new Date(2022, 4, 1), y: 1150 },
-                    { x: new Date(2022, 5, 1), y: 1150 },
-                    { x: new Date(2022, 6, 1), y: 1100 },
-                    { x: new Date(2022, 7, 1), y: 1100 },
-                    { x: new Date(2022, 8, 1), y: 1150 },
-                    { x: new Date(2022, 9, 1), y: 1170 },
-                    { x: new Date(2022, 0, 1), y: 1150 },
-                    { x: new Date(2023, 1, 1), y: 1150 },
-                    { x: new Date(2023, 0, 1), y: 1150 },
-                    { x: new Date(2023, 1, 1), y: 1200 },
-                    { x: new Date(2023, 2, 1), y: 1200 },
-                    { x: new Date(2023, 3, 1), y: 1200 },
-                    { x: new Date(2023, 4, 1), y: 1190 },
-                    { x: new Date(2023, 5, 1), y: 1170 }
-                ]
-            },
-            {
-                type: "line",
-                axisYType: "secondary",
-                name: "Null",
-                showInLegend: true,
-                markerSize: 0,
-                yValueFormatString: "#,###",
-                dataPoints: [
-                    { x: new Date(2014, 0, 1), y: 1200 },
-                    { x: new Date(2014, 1, 1), y: 1200 },
-                    { x: new Date(2014, 2, 1), y: 1190 },
-                    { x: new Date(2014, 3, 1), y: 1180 },
-                    { x: new Date(2014, 4, 1), y: 1250 },
-                    { x: new Date(2014, 5, 1), y: 1270 },
-                    { x: new Date(2014, 6, 1), y: 1300 },
-                    { x: new Date(2014, 7, 1), y: 1300 },
-                    { x: new Date(2014, 8, 1), y: 1358 },
-                    { x: new Date(2014, 9, 1), y: 1410 },
-                    { x: new Date(2014, 10, 1), y: 1480 },
-                    { x: new Date(2014, 11, 1), y: 1500 },
-                    { x: new Date(2015, 0, 1), y: 1500 },
-                    { x: new Date(2015, 1, 1), y: 1550 },
-                    { x: new Date(2015, 2, 1), y: 1550 },
-                    { x: new Date(2015, 3, 1), y: 1590 },
-                    { x: new Date(2015, 4, 1), y: 1600 },
-                    { x: new Date(2015, 5, 1), y: 1590 },
-                    { x: new Date(2015, 6, 1), y: 1590 },
-                    { x: new Date(2015, 7, 1), y: 1620 },
-                    { x: new Date(2015, 8, 1), y: 1670 },
-                    { x: new Date(2015, 9, 1), y: 1720 },
-                    { x: new Date(2015, 10, 1), y: 1750 },
-                    { x: new Date(2015, 11, 1), y: 1820 },
-                    { x: new Date(2016, 0, 1), y: 2000 },
-                    { x: new Date(2016, 1, 1), y: 1920 },
-                    { x: new Date(2016, 2, 1), y: 1750 },
-                    { x: new Date(2016, 3, 1), y: 1850 },
-                    { x: new Date(2016, 4, 1), y: 1750 },
-                    { x: new Date(2016, 5, 1), y: 1730 },
-                    { x: new Date(2016, 6, 1), y: 1700 },
-                    { x: new Date(2016, 7, 1), y: 1730 },
-                    { x: new Date(2016, 8, 1), y: 1720 },
-                    { x: new Date(2016, 9, 1), y: 1740 },
-                    { x: new Date(2016, 10, 1), y: 1750 },
-                    { x: new Date(2016, 11, 1), y: 1750 },
-                    { x: new Date(2017, 0, 1), y: 1750 },
-                    { x: new Date(2017, 1, 1), y: 1770 },
-                    { x: new Date(2017, 2, 1), y: 1750 },
-                    { x: new Date(2017, 3, 1), y: 1750 },
-                    { x: new Date(2017, 4, 1), y: 1730 },
-                    { x: new Date(2017, 5, 1), y: 1730 }
-                ]
-            },
-           ]
-        });
-        chart.render();
-        
-        function toogleDataSeries(e){
-            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                e.dataSeries.visible = false;
-            } else{
-                e.dataSeries.visible = true;
+            itemclick: function (e) {
+                if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    e.dataSeries.visible = false;
+                } else {
+                    e.dataSeries.visible = true;
+                }
+                e.chart.render();
             }
-            chart.render();
-        }
-        
-        }
+        },
+        toolTip: {
+            shared: true
+        },
+        data: [{
+            type: "spline",
+            name: "null",
+            markerSize: 5,
+              axisYType: "secondary",
+            xValueFormatString: "YYYY",
+            yValueFormatString: "#,##0.0\"%\"",
+            showInLegend: true,
+            dataPoints: [
+                { x: new Date(2018, 0), y: 47.5 },
+                { x: new Date(2019, 0), y: 84.8 },
+                { x: new Date(2020, 0), y: 91 },
+                { x: new Date(2021, 0), y: 90 },
+                { x: new Date(2022, 0), y: 92.8 },
+                { x: new Date(2023, 0), y: 93.2 },
+                { x: new Date(2024, 0), y: 94.8 },
+                { x: new Date(2025, 0), y: 92.5 }
+            ]
+        },
+        {
+            type: "spline",
+            name: "null",
+            markerSize: 5,
+            axisYType: "secondary",
+            xValueFormatString: "YYYY",
+            yValueFormatString: "#,##0.0\"%\"",
+            showInLegend: true,
+            dataPoints: [
+                { x: new Date(2018, 0), y: 26.8 },
+                { x: new Date(2019, 0), y: 70 },
+                { x: new Date(2020, 0), y: 83.6 },
+                { x: new Date(2021, 0), y: 85 },
+                { x: new Date(2022, 0), y: 85.4 },
+                { x: new Date(2023, 0), y: 87.5 },
+                { x: new Date(2024, 0), y: 89.8 },
+                { x: new Date(2025, 0), y: 91.6 }
+            ]
+        },
+        {
+            type: "spline",
+            name: "null",
+            markerSize: 5,
+            axisYType: "secondary",
+            xValueFormatString: "YYYY",
+            yValueFormatString: "#,##0.0\"%\"",
+            showInLegend: true,
+            dataPoints: [
+                { x: new Date(2018, 0), y: 23.6 },
+                { x: new Date(2019, 0), y: 40 },
+                { x: new Date(2020, 0), y: 64 },
+                { x: new Date(2021, 0), y: 68 },
+                { x: new Date(2022, 0), y: 78 },
+                { x: new Date(2023, 0), y: 85 },
+                { x: new Date(2024, 0), y: 86 },
+                { x: new Date(2025, 0), y: 90.4 }
+            ]
+        },
+        {
+            type: "spline",
+            showInLegend: true,
+            name: "null",
+            markerSize: 5,
+            axisYType: "secondary",
+            yValueFormatString: "#,##0.0\"%\"",
+            xValueFormatString: "YYYY",
+            dataPoints: [
+                { x: new Date(2018, 0), y: 43.1 },
+                { x: new Date(2019, 0), y: 68 },
+                { x: new Date(2020, 0), y: 71 },
+                { x: new Date(2021, 0), y: 71.7 },
+                { x: new Date(2022, 0), y: 69.7 },
+                { x: new Date(2023, 0), y: 79.3 },
+                { x: new Date(2024, 0), y: 84.2 },
+                { x: new Date(2025, 0), y: 87 }
+            ]
+        },
+        {
+            type: "spline",
+            name: "null",
+            markerSize: 5,
+            axisYType: "secondary",
+            xValueFormatString: "YYYY",
+            yValueFormatString: "#,##0.0\"%\"",
+            showInLegend: true,
+            dataPoints: [
+                { x: new Date(2018, 0), y: 47.1 },
+                { x: new Date(2019, 0), y: 70.1 },
+                { x: new Date(2020, 0), y: 81.3 },
+                { x: new Date(2021, 0), y: 83.9 },
+                { x: new Date(2022, 0), y: 85.2 },
+                { x: new Date(2023, 0), y: 85.2 },
+                { x: new Date(2024, 0), y: 86.7 },
+                { x: new Date(2025, 0), y: 87 }
+            ]
+        },
+        {
+            type: "spline",
+            name: "null",
+            markerSize: 5,
+            axisYType: "secondary",
+            xValueFormatString: "YYYY",
+            yValueFormatString: "#,##0.0\"%\"",
+            showInLegend: true,
+            dataPoints: [
+                { x: new Date(2018, 0), y: 27.8 },
+                { x: new Date(2019, 0), y: 56.9 },
+                { x: new Date(2020, 0), y: 69.4 },
+                { x: new Date(2021, 0), y: 72 },
+                { x: new Date(2022, 0), y: 72.2 },
+                { x: new Date(2023, 0), y: 72.9 },
+                { x: new Date(2024, 0), y: 74.2 },
+                { x: new Date(2025, 0), y: 74.6 }
+            ]
+        },
+        {
+            type: "spline",
+            name: "null",
+            markerSize: 5,
+            axisYType: "secondary",
+            xValueFormatString: "YYYY",
+            yValueFormatString: "#,##0.0\"%\"",
+            showInLegend: true,
+            dataPoints: [
+                { x: new Date(2018, 0), y: 2 },
+                { x: new Date(2019, 0), y: 15.2 },
+                { x: new Date(2020, 0), y: 29 },
+                { x: new Date(2021, 0), y: 43 },
+                { x: new Date(2022, 0), y: 49 },
+                { x: new Date(2023, 0), y: 63.8 },
+                { x: new Date(2024, 0), y: 61.4 },
+                { x: new Date(2025, 0), y: 70.5 }
+            ]
+        },
+        {
+            type: "spline",
+            name: "null",
+            markerSize: 5,
+            axisYType: "secondary",
+            xValueFormatString: "YYYY",
+            yValueFormatString: "#,##0.0\"%\"",
+            showInLegend: true,
+            dataPoints: [
+                { x: new Date(2018, 0), y: .7 },
+                { x: new Date(2019, 0), y: 3.7 },
+                { x: new Date(2020, 0), y: 17.9 },
+                { x: new Date(2021, 0), y: 23.3 },
+                { x: new Date(2022, 0), y: 28.7 },
+                { x: new Date(2023, 0), y: 35.3 },
+                { x: new Date(2024, 0), y: 41.8 },
+                { x: new Date(2025, 0), y: 43.4 }
+            ]
+        },
+        {
+            type: "spline",
+            name: "null",
+            markerSize: 5,
+            axisYType: "secondary",
+            xValueFormatString: "YYYY",
+            yValueFormatString: "#,##0.0\"%\"",
+            showInLegend: true,
+            dataPoints: [
+                { x: new Date(2018, 0), y: .5 },
+                { x: new Date(2019, 0), y: 2.4 },
+                { x: new Date(2020, 0), y: 5.1 },
+                { x: new Date(2021, 0), y: 7.5 },
+                { x: new Date(2022, 0), y: 10.1 },
+                { x: new Date(2023, 0), y: 12.6 },
+                { x: new Date(2024, 0), y: 15.1 },
+                { x: new Date(2025, 0), y: 18 }
+            ]
+        }]
+    });
+    chart.render();
+    
+    }

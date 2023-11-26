@@ -3,7 +3,7 @@
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', 'pcc-hr-management-system');
+define('DB_NAME', 'pcc-cancer-repo-system');
 
 // Establish Database Connection.
 try {
