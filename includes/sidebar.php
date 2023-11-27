@@ -1,9 +1,9 @@
 <style>
     @media (max-width: 768px) {
- .sidebar {
-   display: none;
- }
-}
+        .sidebar {
+            display: none;
+        }
+    }
 
     /* User Profile Img */
     .neon-border {
@@ -41,60 +41,44 @@
 </style>
 
 <div class="sidebar" id="sidebar">
-   <div class="sidebar-inner slimscroll">
-       <div id="sidebar-menu" class="sidebar-menu">
-           <ul>
-               <!-- LOGO HINDI NA SYA PROFILE -->
-               <li class="profile-block">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+                <li class="profile-block">
                     <a href="#">
                         <span class="user-img d-inline-block position-relative">
-                            <img src="../profiles/pcc-logo.png" alt="User Picture" class="rounded-circle img-thumbnail neon-border">
+                            <img src="./profiles/pcc-logo.png" alt="User Picture" class="rounded-circle img-thumbnail neon-border">
                         </span>
                     </a>
                     <br>
-                    <a href="../index.php"><span class="text-white small user-role">CANCER REPOSITORY ADMIN</span></a>
+                    <a href="../admin-index.php"><span class="text-white small user-role">CANCER REPO ADMIN</span></a>
                 </li>
 
                 <!-- DASHBOARD -->
-                <li class="sample-active mt-5"><a href="index.php"><i class="la la-dashboard"></i> <span> Dashboard</span> </a></li>
+                <li class="sample-active mt-5"><a href="./index.php"><i class="la la-dashboard"></i> <span> Dashboard</span> </a></li>
 
-                <!-- HOSPITAL AND REPO USER REGISTRATION -->
-                <li class="submenu">
-                    <a href="#"><i class="la la-external-link-square"></i> <span>Create account</span> <span class="menu-arrow"></span></a>
-                    <ul style="display: none;">
-                        <li><a href="hospital-information.php">Hospital Table</a></li>
-                        <li><a href="#">User Table</a></li>
-                    </ul>
-                </li>
-                <!-- END HOSPITAL AND REPO USER REGISTRATION -->
+                <!-- CANCER STATISTICS -->
+                <li><a href="#"><i class="la la-bar-chart"></i><span>Cancer Statistics</span></a></li>
 
-                <!-- HOSPITAL MAPPING HOSPITAL  -->
-                <li class="submenu">
-                    <a href="#"><i class="la la-user"></i> <span>Geography</span> <span class="menu-arrow"></span></a>
-                    <ul style="display: none;">
-                        <li><a href="#">Hospital Location</a></li>
-                        <li><a href="#">Maps by Indicators</a></li>
-                    </ul>
-                </li>
-                <!-- END HOSPITAL MAPPING -->
+                <!-- HOSPITAL INFORMATION -->
+                <li><a href="./hospital-information.php"><i class="la la-medkit"></i><span>Hospital Information</span></a></li>
+
+                <!-- USER INFORMATION -->
+                <!-- <li><a href="./user-information.php"><i class="la la-user"></i><span>User Information</span></a></li> -->
+
+                <!-- HOSPITAL MAPPING -->
+                <li><a href="#"><i class="la la-map"></i><span>Hospital Mapping</span></a></li>
 
                 <!-- ACTIVITY LOGS -->
-                <li>
-                    <a href="#"><i class="la la-users"></i><span>Activity Logs</span></a>
-                </li>
-                <!-- END ACTIVITY LOGS -->
+                <li><a href="./activity-logs.php"><i class="la la-history"></i><span>Activity Logs</span></a></li>
 
                 <!-- SETTINGS -->
-                <li>
-                    <a href="#"><i class="la la-cogs"></i><span>Settings</span></a>
-                </li>
-                 <!-- END SETTINGS -->
+                <li><a href="#"><i class="la la-file-text"></i><span>Personal Attendance</span></a></li>
 
                 <!-- LOGOUT -->
                 <li class="out-container">
                     <a class="out-button" href="logout.php"><i class="la la-power-off"></i><span>Logout</span></a>
                 </li>
-                <!-- END LOGOUT -->
             </ul>
         </div>
     </div>
