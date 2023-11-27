@@ -8,7 +8,7 @@ $wrongusername = ""; // Initialize $wrongusername
 $wrongpassword = ""; // Initialize $wrongpassword
 
 if (isset($_SESSION['userlogin']) && $_SESSION['userlogin'] > 0) {
-    header('location:admin-index.php');
+    header('location:index.php');
     exit;
 } elseif (isset($_POST['login'])) {
     $username = htmlspecialchars($_POST['username']);
@@ -31,7 +31,7 @@ if (isset($_SESSION['userlogin']) && $_SESSION['userlogin'] > 0) {
         $hashpass = $admin['admin_password'];
         if (password_verify($password, $hashpass)) {
             $_SESSION['userlogin'] = $admin['admin_username'];
-            header('location:admin-index.php');
+            header('location:index.php');
             exit;
         } else {
             echo '
@@ -244,7 +244,7 @@ if (isset($_SESSION['userlogin']) && $_SESSION['userlogin'] > 0) {
 		<!-- LEFT SIDE CONTAINER -->
 		<div class="left-side slanted-divider">
 			<div class="account-logo">
-				<a href="admin-index.php"><img src="assets/img/pcc-logo.png" alt="Company Logo"></a>
+				<a href="index.php"><img src="assets/img/pcc-logo.png" alt="Company Logo"></a>
 			</div>
 		</div>
 		<!-- RIGHT SIDE CONTAINER -->

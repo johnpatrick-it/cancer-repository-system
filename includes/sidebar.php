@@ -52,11 +52,11 @@
                         </span>
                     </a>
                     <br>
-                    <a href="../admin-index.php"><span class="text-white small user-role">CANCER REPOSITORY ADMIN</span></a>
+                    <a href="../index.php"><span class="text-white small user-role">CANCER REPOSITORY ADMIN</span></a>
                 </li>
 
                 <!-- DASHBOARD -->
-                <li class="sample-active mt-5"><a href="admin-index.php"><i class="la la-dashboard"></i> <span> Dashboard</span> </a></li>
+                <li class="sample-active mt-5"><a href="index.php"><i class="la la-dashboard"></i> <span> Dashboard</span> </a></li>
 
                 <!-- HOSPITAL AND REPO USER REGISTRATION -->
                 <li class="submenu">
