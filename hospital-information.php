@@ -4,8 +4,6 @@ error_reporting(0);
 include('includes/config.php');
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,384 +14,235 @@ include('includes/config.php');
     <meta name="keywords" content="PCC-HRMS, HRMS, Human Resource, Capstone, System, HR">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
     <title>PCC HRMS</title>
 
-    <style>
-        .page-header {
-            background-color: #204A3D;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            color: #fff;
-        }
-
-        .page-header .breadcrumb-item.active,
-        .page-header .welcome h3,
-        .page-header .close {
-            color: #F0F0F0;
-        }
-
-        h2 {
-            font-size: 1rem;
-            border-bottom: 2px solid #ccc;
-            padding: 0.5rem;
-        }
-
-        thead,
-        tbody {
-            background-color: #d9d9d9;
-            color: #204A3D;
-            font-size: 0.8rem;
-            text-align: center;
-        }
-
-        /* CALENDAR CHART */
-        #calendar {
-            max-width: 600px;
-            margin: 0 auto;
-            border-collapse: collapse;
-        }
-
-        #calendar th,
-        #calendar td {
-            width: 14.28%;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        #calendar th {
-            background-color: #f2f2f2;
-        }
-
-        .event {
-            background-color: #4CAF50;
-            color: #fff;
-            padding: 2px;
-            border-radius: 4px;
-            display: block;
-            margin-top: 5px;
-        }
-
-        #month-year {
-            text-align: center;
-            margin-bottom: 10px;
-        }
-    </style>
-    <script src="path/to/piechart.js"></script>
-
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/line-awesome.min.css">
 
-    <!-- Chart CSS -->
-    <link rel="stylesheet" href="../assets/plugins/morris/morris.css">
+    <!-- Datatable CSS -->
+    <link rel="stylesheet" href="assets/css/dataTables.bootstrap4.min.css">
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="assets/css/select2.min.css">
+
+    <!-- Datetimepicker CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        body {
+            background-color: #D4DEDB;
+        }
+
+        .body-container {
+            background-color: #FAFAFA;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            text-align: center;
+            border: 1px solid #285D4D;
+        }
+
+        .page-title {
+            font-size: 1.3rem;
+            color: #204A3D;
+        }
+
+        .btn-blue {
+            background-color: #0D6EFD;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            border: 1px solid #9E9E9E;
+            margin-bottom: 20px;
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 45%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .filter-btn,
+        .export-btn {
+            padding: 8px 20px;
+            background-color: #E5F6F1;
+            color: #204A3D;
+            border: 1px solid #204A3D;
+        }
+
+        .add-btn {
+            border-radius: 5px;
+            padding: 8px 2rem;
+        }
+
+        .m-right {
+            margin-right: -0.8rem;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-        <!-- Header -->
-        <style>
-    /* DATE AND TIME */
-    .page-title-box {
-        color: #18372E;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+        <?php include_once("includes/header.php"); ?>
+        <?php include_once("includes/sidebar.php"); ?>
 
-    .day {
-        font-size: 20px;
-        letter-spacing: 0.2rem;
-    }
-
-    .date {
-        font-size: 12px;
-    }
-
-    .time {
-        font-size: 15px;
-        color: black;
-        background-color: white;
-        padding: 8px 5px;
-        border-left: 4px solid #18372E;
-    }
-
-    /* LOGO */
-    .header-left {
-        background-color: #204A3D;
-    }
-
-    /* NOTIFICATION BELL */
-    .fa-bell-o {
-        color: black;
-    }
-
-    /* USER PROFILE */
-    .user-img {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .user-img img,
-    .user-img span {
-        margin: 0;
-        width: 1.2rem;
-    }
-
-    .user-container .nav-link {
-        color: white;
-        text-shadow: 1px 1px 2px black;
-        font-size: 0.8rem;
-    }
-
-    /* WEATHER ICON */
-    .weather-icon {
-        width: 3.3rem;
-    }
-
-    /* TOGGLE ICON */
-    .bar-icon span {
-        background-color: #000;
-    }
-</style>
-
-
-
-<script>
-    // DATE AND TIME
-    function updateDateTime() {
-        let now = new Date();
-
-        // Format the day
-        let dayOptions = {
-            weekday: 'long'
-        };
-        let dayString = now.toLocaleDateString('en-US', dayOptions);
-        document.getElementById("day").textContent = dayString + ", ";
-
-        // Format the date
-        let dateOptions = {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric'
-        };
-        let dateString = now.toLocaleDateString('en-US', dateOptions);
-        document.getElementById("date").textContent = dateString;
-
-        // Format the time
-        let timeOptions = {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        };
-        let timeString = now.toLocaleTimeString('en-US', timeOptions);
-        document.getElementById("time").textContent = timeString;
-    }
-
-    // Update the date and time every second
-    setInterval(updateDateTime, 1000);
-
-    updateDateTime();
-</script>
-
-        <!-- Sidebar -->
-        <style>
-    /* User Profile Img */
-    .neon-border {
-        border: 2px solid #0B72BD;
-        box-shadow: 0 0 10px #0B72BD;
-    }
-
-    .user-img img {
-        width: 6rem;
-        height: auto;
-    }
-
-    .profile-block {
-        margin: 0 0 0 -2rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .user-role {
-        margin-top: -1.5rem;
-    }
-
-    /* ACTIVE NAV STATE */
-    .sample-active {
-        background-color: #A88C0A;
-    }
-
-    /* LOGOUT */
-    .out-container .out-button {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-    }
-</style>
-
-
- <!-- HEADER -->
- <?php include_once("includes/header.php"); ?>
- <!-- END HEADER -->
-
-<!-- SIDEBAR -->
-<?php include_once("includes/sidebar.php"); ?>
-<!-- END SIDEBAR -->
-
-<!--HOSPITAL TABLE-->
-<div class="page-wrapper">
+        <div class="page-wrapper">
             <div class="content container-fluid">
+                <div class="body-container">
 
-                <!-- WELCOME MESSAGE -->
-                <div class="page-header">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="welcome d-flex justify-content-between align-items-center">
-                                <h3 class="page-title">HOSPITAL INFORMATION</h3>
+                    <!-- HEADER -->
+                    <div class="page-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h3 class="page-title">Hospital Information</h3>
                             </div>
-                            
-                            <ul class="breadcrumb">
-                                <li class="breadcrumb-item active"></li>
-                            </ul>
                         </div>
                     </div>
-                </div>
 
-                <!-- METRICS -->
-                <div class="row">
-                    <div class="hospital-table">
-                        <h3 class="hospital-header">Hospital Information</h3>
-                    </div>  
-                </div>
-                <div class="container">
-                        <div class="row additional-content">
-                            <div class="search-wrap">
-                                <div class="search">
-                                    <input type="text" class="searchTerm" placeholder="">
-                                    <button type="submit" class="searchButton">
-                                        <i class="fa fa-search"></i>
+                    <!-- SEARCH -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="search-container">
+                                <i class="fa fa-search"></i>
+                                <input type="text" class="form-control pl-5 search-input" placeholder="Search">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <!-- Empty Space -->
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-auto ml-auto m-right">
+                                    <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_hospital">
+                                        <i class="fa fa-medkit"></i> Add Hospital
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn filter-btn  m-right">
+                                        <i class="fa fa-filter"></i> Filter
                                     </button>
-                                   <!-- NASA ASSETS BUTTON.JS FUNCTION -->
-                                        <button class="add-hospital-button" onclick="redirectToIndex('add')">Add Hospital</button>
-                                        <button class="export-button" onclick="redirectToIndex('export')">Import SVG</button>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn export-btn">
+                                        <i class="fa fa-download"></i> Export
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                </div>
-                <br>
-                <div class="containerTable">
-                    <div class="row">
-                        <div class="col-12">
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th scope="col">Hospital ID</th>
-                                <th scope="col">Hospital Name</th>
-                                <th scope="col">Hospital Level</th>
-                                <th scope="col">Hospital Region</th>
-                                <th scope="col">Hospital Province</th>
-                                <th scope="col">Hospital Address</th>
-                                <th scope="col">Type of Institution</th>
-                                <th scope="col">Hospital Equipment</th>
-                                <th scope="col">Actions</th>
+                    </div>
 
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>
-                                <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
-                                <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>  
-                                <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
-                                <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                 <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>Null</td>
-                                <td>
-                                <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
-                                <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <!-- TABLE -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped custom-table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>Hospital Name</th>
+                                            <th>Location</th>
+                                            <th>Region</th>
+                                            <th>Admin Name</th>
+                                            <th>Landline</th>
+                                            <th class="no-sort">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Sample Hospital Name</td>
+                                            <td>Sample Location</td>
+                                            <td>Sample Region</td>
+                                            <td>Sample Admin Name</td>
+                                            <td>Sampe Landline</td>
+                                            <td>
+                                                <a href="#" data-toggle="modal" data-target="#edit_hospital" title="Edit" class="btn text-xs text-white btn-blue action-icon"><i class="fa fa-pencil"></i></a>
+                                                <a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon"><i class="fa fa-trash-o"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sample Hospital Name</td>
+                                            <td>Sample Location</td>
+                                            <td>Sample Region</td>
+                                            <td>Sample Admin Name</td>
+                                            <td>Sampe Landline</td>
+                                            <td>
+                                                <a href="#" data-toggle="modal" data-target="#edit_hospital" title="Edit" class="btn text-xs text-white btn-blue action-icon"><i class="fa fa-pencil"></i></a>
+                                                <a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon"><i class="fa fa-trash-o"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-</div>
-<!--END HOSPITAL TABLE-->
+
+            <!-- Add Hospital  Modal -->
+            <?php include_once 'includes/modals/hospital/add_hospital.php'; ?>
+
+            <!-- Edit Hospital Modal -->
+            <?php include_once 'includes/modals/hospital/edit_hospital.php'; ?>
+
+            <!-- Delete Hospital Modal -->
+            <?php include_once 'includes/modals/hospital/delete_hospital.php'; ?>
+        </div>
+    </div>
 
 
     <!-- jQuery -->
-    <script src="../assets/js/jquery-3.2.1.min.js"></script>
+    <script src=" assets/js/jquery-3.2.1.min.js"></script>
 
     <!-- Bootstrap Core JS -->
-    <script src="../assets/js/popper.min.js"></script>
-    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
 
     <!-- Slimscroll JS -->
-    <script src="../assets/js/jquery.slimscroll.min.js"></script>
+    <script src="assets/js/jquery.slimscroll.min.js"></script>
 
-    <!-- Chart JS -->
-    <script src="../assets/plugins/morris/morris.min.js"></script>
-    <script src="../assets/plugins/raphael/raphael.min.js"></script>
-    <script src="../assets/js/chart.js"></script>
+    <!-- Select2 JS -->
+    <script src="assets/js/select2.min.js"></script>
 
+    <!-- Datetimepicker JS -->
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+
+    <!-- Datatable JS -->
+    <script src="assets/js/jquery.dataTables.min.js"></script>
+    <script src="assets/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="../assets/js/app.js"></script>
-    <script src="../assets/js/piechart.js"></script>
-    <script src="../assets/js/buttons.js"></script>
-
+    <script src="assets/js/app.js"></script>
 </body>
 
 </html>

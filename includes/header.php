@@ -123,7 +123,7 @@
             </div>
         </li>
 
-<!-- IMPORTANT -->
+        <!-- IMPORTANT -->
         <?php
         $sql = "SELECT * from repo_admin";
         $query = $dbh->prepare($sql);
@@ -131,15 +131,13 @@
         $result = $query->fetch(PDO::FETCH_OBJ);
         $cnt = 1;
         ?>
-<!-- IMPORTANT -->
 
         <!-- USER PROFILE -->
         <li class="nav-item dropdown has-arrow main-drop">
             <div class="user-container" id="userDropdown">
                 <a href="#" class="nav-link" data-toggle="dropdown">
                     <span class="user-img">
-                        <!--FIX-->
-                        <img src="../profiles/<?php echo htmlentities($result->Picture); ?>" alt="User Picture">
+                        <img src="./profiles/myself.png ?>" alt="User Picture">
                     </span>
                     <span class="user-text"></span>
                 </a>
@@ -150,7 +148,6 @@
                 </div>
             </div>
         </li>
-        <!-- END USER PROFILE -->
 
     </ul>
 
@@ -163,8 +160,6 @@
             <a class="dropdown-item" href="login.php">Logout</a>
         </div>
     </div>
-    <!-- END MOBILE MENU -->
-
 </div>
 
 
