@@ -1,3 +1,5 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://f001.backblazeb2.com/file/buonzz-assets/jquery.ph-locations-v1.0.0.js"></script>
 <style>
 	h2 {
 		font-size: 1rem;
@@ -21,43 +23,55 @@
 			</div>
 			<div class="modal-body">
 				<form method="POST" enctype="multipart/form-data">
-					<h2>PERSONAL INFORMATION</h2>
+					<h2>HOSPITAL INFORMATION</h2>
 					<div class="form-row">
 						<div class="form-group col-md-3">
 							<label for="hospital-name">Hospital Name </label>
 							<input name="hospital-name" class="form-control" type="text" placeholder="Hospital Name">
 						</div>
 						<div class="form-group col-md-3">
-							<label for="location">Location</label>
-							<input name="location" class="form-control" type="text" placeholder="Location">
+							<label for="level">Hospital Level</label>
+							<label for="level">Institution </label>
+							<select class="form-control select" name="level">
+								<option disabled selected>Select Level</option>
+								<option>Level 1 General Hospital</option>
+								<option>Level 2 General Hospital</option>
+								<option>Level 3 General Hospital</option>
+							</select>
 						</div>
 						<div class="form-group col-md-3">
-							<label for="institution">Institution </label>
+							<label for="institution">Hospital Institution </label>
 							<select class="form-control select" name="institution">
 								<option disabled selected>Select institution</option>
-								<option>sample institution</option>
-								<option>sample institution</option>
-								<option>sample institution</option>
+								<option>Government</option>
+								<option>Private</option>
 							</select>
 						</div>
 						<div class="form-group col-md-3">
-							<label for="region">Region </label>
-							<select class="form-control select" name="region">
-								<option disabled selected>Select Region</option>
-								<option>sample region</option>
-								<option>sample region</option>
-								<option>sample region</option>
-							</select>
+							<label for="region">Region</label>
+							<select class="form-control select" name="region" id="my-region-dropdown"></select>
 						</div>
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-3">
-							<label for="equipment">Equipment</label>
-							<input type="text" class="form-control" name="equipment" placeholder="Equipment">
+							<label for="province">Province</label>
+							<select class="form-control select" name="province" id="my-province-dropdown"></select>
+						</div>
+						<div class="form-group col-md-3">
+							<label for="city_municipality">City/Municipality</label>
+							<select class="form-control select" name="city_municipality" id="my-city-dropdown"></select>
+						</div>
+						<div class="form-group col-md-3">
+							<label for="barangay">Barangay</label>
+							<select class="form-control select" name="barangay" id="my-barangay-dropdown"></select>
+						</div>
+						<div class="form-group col-md-3">
+							<label for="street">Street Adress</label>
+							<input type="text" class="form-control" name="street" placeholder="Street Adress">
 						</div>
 					</div>
-
-					<h2 class="mt-3 second-h2">ACCOUNT INFORMATION</h2>
+					
+					<h2 class="mt-3 second-h2">HOSPITAL EQUIPMENTS</h2>
 					<div class="form-row">
 						<div class="form-group col-md-3">
 							<label for="surname">Surname </label>
@@ -114,3 +128,20 @@
 		</div>
 	</div>
 </div>
+
+<script>
+   // Initialize the location dropdowns after the modal is shown
+   $('#add_hospital').on('shown.bs.modal', function () {
+       // Initialize the plugin for each dropdown
+       $('#my-region-dropdown').ph_locations({ 'location_type': 'regions' });
+       $('#my-province-dropdown').ph_locations({ 'location_type': 'provinces' });
+       $('#my-city-dropdown').ph_locations({ 'location_type': 'cities' });
+       $('#my-barangay-dropdown').ph_locations({ 'location_type': 'barangays' });
+       
+       // Fetch the data for each dropdown
+       $('#my-region-dropdown').ph_locations('fetch_list');
+       $('#my-province-dropdown').ph_locations('fetch_list');
+       $('#my-city-dropdown').ph_locations('fetch_list');
+       $('#my-barangay-dropdown').ph_locations('fetch_list');
+   });
+</script>
