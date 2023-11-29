@@ -1,13 +1,13 @@
 <?php
 session_start();
-error_reporting(0);
+error_reporting(E_ALL);
 include('includes/config.php');
 
-if (!isset($_SESSION['userlogin']) || empty($_SESSION['userlogin'])) {
-    header('Location: login.php');
-    exit;
+if (!$connection) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 ?>
+
 
 
 

@@ -1,13 +1,12 @@
 <?php
-// DB Credentials.
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'pcc-cancer-repo-system');
+$dbHost = 'localhost';
+$dbUsername = 'root'; // Replace 'username' with your actual database username
+$dbPassword = '';     // Replace 'password' with your actual database password
+$dbName = 'pcc-cancer-repo-system';
 
-// Establish Database Connection.
-try {
-    $dbh = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-} catch (PDOException $e) {
-    exit("Error: " . $e->getMessage());
+
+$connection = mysqli_connect($dbHost, $dbUsername, $dbPassword, $dbName);
+
+if (!$connection) {
+    die("Connection failed: " . mysqli_connect_error());
 }

@@ -14,18 +14,32 @@ if (isset($_SESSION['userlogin']) && $_SESSION['userlogin'] > 0) {
     $username = htmlspecialchars($_POST['username']);
     $password = htmlspecialchars($_POST['password']);
 
-    // Check repo_admin table for admin account
-    $sqlAdmin = "SELECT admin_username, admin_password FROM repo_admin WHERE admin_username = :username";
-    $queryAdmin = $dbh->prepare($sqlAdmin);
-    $queryAdmin->bindParam(':username', $username, PDO::PARAM_STR);
-    $queryAdmin->execute();
-    $admin = $queryAdmin->fetch(PDO::FETCH_ASSOC);
+    // MySQLi connection details
+    $dbHost = 'localhost';
+    $dbUsername = 'root'; // Replace with your actual database username
+    $dbPassword = ''; // Replace with your actual database password
+    $dbName = 'pcc-cancer-repo-system'; // Replace with your actual database name
 
-    $sqlUser = "SELECT user_name, password FROM repo_user WHERE user_name = :username";
-    $queryUser = $dbh->prepare($sqlUser);
-    $queryUser->bindParam(':username', $username, PDO::PARAM_STR);
-    $queryUser->execute();
-    $user = $queryUser->fetch(PDO::FETCH_ASSOC);
+    // Establish MySQLi connection
+    $connection = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
+
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+
+    $sqlAdmin = "SELECT admin_username, admin_password FROM repo_admin WHERE admin_username = ?";
+    $stmtAdmin = $connection->prepare($sqlAdmin);
+    $stmtAdmin->bind_param('s', $username);
+    $stmtAdmin->execute();
+    $resultAdmin = $stmtAdmin->get_result();
+    $admin = $resultAdmin->fetch_assoc();
+
+    $sqlUser = "SELECT user_name, password FROM repo_user WHERE user_name = ?";
+    $stmtUser = $connection->prepare($sqlUser);
+    $stmtUser->bind_param('s', $username);
+    $stmtUser->execute();
+    $resultUser = $stmtUser->get_result();
+    $user = $resultUser->fetch_assoc();
 
     if ($admin) {
         $hashpass = $admin['admin_password'];

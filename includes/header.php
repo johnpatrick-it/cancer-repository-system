@@ -1,3 +1,10 @@
+<?php
+error_reporting(E_ALL);
+session_start();
+include('config.php');
+
+?>
+
 <style>
     /* DATE AND TIME */
     .page-title-box {
@@ -67,7 +74,7 @@
 <div class="header">
     <!-- LOGO -->
     <div class="header-left">
-        <a href="./admin-index.php" class="logo">
+        <a href="./index.php" class="logo">
             <img src="./assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo">
         </a>
     </div>
@@ -122,16 +129,16 @@
                 </div>
             </div>
         </li>
-
-        <!-- IMPORTANT -->
         <?php
-        $sql = "SELECT * from repo_admin";
-        $query = $dbh->prepare($sql);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_OBJ);
-        $cnt = 1;
-        ?>
+            $sql = "SELECT * FROM repo_admin";
+            $query = mysqli_query($connection, $sql);
 
+            if ($query) {
+                $result = mysqli_fetch_assoc($query);
+            } else {
+                echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+            }
+        ?>
         <!-- USER PROFILE -->
         <li class="nav-item dropdown has-arrow main-drop">
             <div class="user-container" id="userDropdown">
