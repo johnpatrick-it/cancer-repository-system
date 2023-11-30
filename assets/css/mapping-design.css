@@ -1,0 +1,19 @@
+.map{
+    overflow: hidden;
+}
+
+.map__image{
+    width: 50%;
+    float: left;
+}
+
+.map__image path{ 
+    fill: gray;
+    stroke: #fff;
+    stroke-width: 1px;
+    transition: color 0.3s;
+}
+
+.map__image .is-active path{ 
+    fill: red;
+}
