@@ -18,7 +18,7 @@ if (strlen($_SESSION['userlogin']) == 0) {
     <meta name="keywords" content="PCC-HRMS, HRMS, Human Resource, Capstone, System, HR">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
-    <title>PCC HRMS</title>
+    <title>PCC CANCER REPO</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">

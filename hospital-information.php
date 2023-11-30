@@ -14,7 +14,7 @@ include('includes/config.php');
     <meta name="keywords" content="PCC-HRMS, HRMS, Human Resource, Capstone, System, HR">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
-    <title>PCC HRMS</title>
+    <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">

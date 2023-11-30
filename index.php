@@ -1,12 +1,16 @@
 <?php
 session_start();
-error_reporting(E_ALL);
+error_reporting(0);
 include('includes/config.php');
 
-if (!$connection) {
-    die("Connection failed: " . mysqli_connect_error());
+if (strlen($_SESSION['userlogin']) == 0) {
+    header('location:login.php');
 }
 ?>
+
+<!-- Rest of your HTML and PHP code for the dashboard -->
+
+
 
 
 
