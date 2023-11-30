@@ -170,31 +170,22 @@ include('includes/config.php');
                                     <thead>
                                         <tr>
                                             <th>Hospital Name</th>
-                                            <th>Location</th>
-                                            <th>Region</th>
-                                            <th>Admin Name</th>
-                                            <th>Landline</th>
+                                            <th>Hospital Level</th>
+                                            <th>Type of Instituion</th>
+                                            <th>Hospital Location UACS CODE</th>
+                                            <th>Hospital Street</th>
+                                            <th>Hospital Equipments</th>
                                             <th class="no-sort">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Sample Hospital Name</td>
-                                            <td>Sample Location</td>
-                                            <td>Sample Region</td>
-                                            <td>Sample Admin Name</td>
-                                            <td>Sampe Landline</td>
-                                            <td>
-                                                <a href="#" data-toggle="modal" data-target="#edit_hospital" title="Edit" class="btn text-xs text-white btn-blue action-icon"><i class="fa fa-pencil"></i></a>
-                                                <a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon"><i class="fa fa-trash-o"></i></a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Sample Hospital Name</td>
-                                            <td>Sample Location</td>
-                                            <td>Sample Region</td>
-                                            <td>Sample Admin Name</td>
-                                            <td>Sampe Landline</td>
+                                            <td>NULL</td>
+                                            <td>NULL</td>
+                                            <td>NULL</td>
+                                            <td>NULL</td>
+                                            <td>NULL</td>
+                                            <td>NULL</td>
                                             <td>
                                                 <a href="#" data-toggle="modal" data-target="#edit_hospital" title="Edit" class="btn text-xs text-white btn-blue action-icon"><i class="fa fa-pencil"></i></a>
                                                 <a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon"><i class="fa fa-trash-o"></i></a>
