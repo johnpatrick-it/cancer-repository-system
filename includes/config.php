@@ -1,7 +1,7 @@
 <?php
 $dbHost = 'localhost';
-$dbUsername = 'root'; // Replace 'username' with your actual database username
-$dbPassword = '';     // Replace 'password' with your actual database password
+$dbUsername = 'root'; 
+$dbPassword = '';     
 $dbName = 'pcc-cancer-repo-system';
 
 
