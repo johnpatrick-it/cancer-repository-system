@@ -14,11 +14,12 @@ if (strlen($_SESSION['userlogin']) == 0) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="This is a Philippine Cancer Center HR Management System">
-    <meta name="keywords" content="PCC-HRMS, HRMS, Human Resource, Capstone, System, HR">
+    <meta name="description" content="This is a Philippine Cancer Repository System">
+    <meta name="keywords" content="PCC-CR, CR, Cancer Repository, Capstone, System, Repo">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
-    <title>PCC CANCER REPO</title>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">

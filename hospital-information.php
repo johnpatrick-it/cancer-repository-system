@@ -10,10 +10,11 @@ include('includes/config.php');
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="This is a Philippine Cancer Center HR Management System">
-    <meta name="keywords" content="PCC-HRMS, HRMS, Human Resource, Capstone, System, HR">
+    <meta name="description" content="This is a Philippine Cancer Repository System">
+    <meta name="keywords" content="PCC-CR, CR, Cancer Repository, Capstone, System, Repo">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
@@ -173,24 +174,33 @@ include('includes/config.php');
                                             <th>Hospital Level</th>
                                             <th>Type of Instituion</th>
                                             <th>Hospital Location UACS CODE</th>
-                                            <th>Hospital Street</th>
-                                            <th>Hospital Equipments</th>
+                                            <th>Hospital Street</th> 
                                             <th class="no-sort">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>NULL</td>
-                                            <td>NULL</td>
-                                            <td>NULL</td>
-                                            <td>NULL</td>
-                                            <td>NULL</td>
-                                            <td>NULL</td>
-                                            <td>
-                                                <a href="#" data-toggle="modal" data-target="#edit_hospital" title="Edit" class="btn text-xs text-white btn-blue action-icon"><i class="fa fa-pencil"></i></a>
-                                                <a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon"><i class="fa fa-trash-o"></i></a>
-                                            </td>
-                                        </tr>
+                                        <?php
+                                        // FETCHING NG DATA TO TABLE 
+                                        $query = "SELECT hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street FROM `hospital_general_information`";
+                                        $result = mysqli_query($connection, $query);
+
+                                        if ($result && mysqli_num_rows($result) > 0) {
+                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                echo "<tr>";
+                                                echo "<td>" . $row['hospital_name'] . "</td>";
+                                                echo "<td>" . $row['hospital_level'] . "</td>";
+                                                echo "<td>" . $row['type_of_institution'] . "</td>";
+                                                echo "<td>" . $row['hospital_barangay'] . "</td>";
+                                                echo "<td>" . $row['hospital_street'] . "</td>";
+                                                echo "<td>";
+                                                echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>";
+                                                echo "</td>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='7'>No hospitals found</td></tr>";
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>

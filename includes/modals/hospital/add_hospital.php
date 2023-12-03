@@ -28,12 +28,12 @@
 					<div class="form-row">
 						<div class="form-group col-md-3">
 							<label for="hospital-name">Hospital Name </label>
-							<input name="hospital-name" class="form-control" type="text" placeholder="Hospital Name">
+							<input name="hospital-name" class="form-control" type="text" placeholder="Hospital Name" required>
 						</div>
-						<div class="form-group col-md-3">
+						<div class="form-group col-md-3" required>
 							<label for="level">Hospital Level</label>
 							<label for="level">Institution </label>
-							<select class="form-control select" name="level">
+							<select class="form-control select" name="level" required>
 								<option disabled selected>Select Level</option>
 								<option>Level 1 General Hospital</option>
 								<option>Level 2 General Hospital</option>
@@ -42,7 +42,7 @@
 						</div>
 						<div class="form-group col-md-3">
 							<label for="institution">Hospital Institution </label>
-							<select class="form-control select" name="institution">
+							<select class="form-control select" name="institution" required>
 								<option disabled selected>Select institution</option>
 								<option>Government</option>
 								<option>Private</option>
@@ -68,7 +68,7 @@
 						</div>
 						<div class="form-group col-md-3">
 							<label for="street">Street Adress</label>
-							<input type="text" class="form-control" name="street" placeholder="Street Adress">
+							<input type="text" class="form-control" name="street" placeholder="Street Adress" required>
 						</div>
 					</div>
 					
@@ -77,7 +77,7 @@
 							<div class="form-group col-md-3">
 								<label for="hospital-equipment">Oncologists Medical Equipment</label>
 								<div class="input-group">
-									<input name="hospital-equipment" class="form-control" type="text" placeholder="Medical Equipment">
+									<input name="hospital-equipment" class="form-control" type="text" placeholder="Medical Equipment"required>
 									<div class="input-group-append">
 										<button type="button" class="btn btn-primary add-equipment-btn">+</button>
 									</div>
