@@ -14,26 +14,26 @@ if (isset($_SESSION['userlogin']) && $_SESSION['userlogin'] > 0) {
     $username = htmlspecialchars($_POST['username']);
     $password = htmlspecialchars($_POST['password']);
 
-    // MySQLi connection details
+    // Double initialize ng db abnormal yung includes/config eh
     $dbHost = 'localhost';
-    $dbUsername = 'root'; // Replace with your actual database username
-    $dbPassword = ''; // Replace with your actual database password
-    $dbName = 'pcc-cancer-repo-system'; // Replace with your actual database name
+    $dbUsername = 'root'; 
+    $dbPassword = ''; 
+    $dbName = 'pcc-cancer-repo-system'; 
 
-    // Establish MySQLi connection
     $connection = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
 
     if ($connection->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
 
+	// For admin login
     $sqlAdmin = "SELECT admin_username, admin_password FROM repo_admin WHERE admin_username = ?";
     $stmtAdmin = $connection->prepare($sqlAdmin);
     $stmtAdmin->bind_param('s', $username);
     $stmtAdmin->execute();
     $resultAdmin = $stmtAdmin->get_result();
     $admin = $resultAdmin->fetch_assoc();
-
+	// For user login
     $sqlUser = "SELECT user_name, password FROM repo_user WHERE user_name = ?";
     $stmtUser = $connection->prepare($sqlUser);
     $stmtUser->bind_param('s', $username);
@@ -41,13 +41,28 @@ if (isset($_SESSION['userlogin']) && $_SESSION['userlogin'] > 0) {
     $resultUser = $stmtUser->get_result();
     $user = $resultUser->fetch_assoc();
 
-    if ($admin) {
-        $hashpass = $admin['admin_password'];
-        if (password_verify($password, $hashpass)) {
-            $_SESSION['userlogin'] = $admin['admin_username'];
-            header('location:index.php');
-            exit;
-        } else {
+
+	//landing page kapag admin
+    //landing page kapag admin
+if ($admin) {
+    $hashpass = $admin['admin_password'];
+    if (password_verify($password, $hashpass)) {
+        $_SESSION['userlogin'] = $admin['admin_username'];
+
+        // Retrieve repo_admin_id from the database for the logged-in admin
+        $sqlRepoAdminID = "SELECT repo_admin_id FROM repo_admin WHERE admin_username = ?";
+        $stmtRepoAdminID = $connection->prepare($sqlRepoAdminID);
+        $stmtRepoAdminID->bind_param('s', $username);
+        $stmtRepoAdminID->execute();
+        $resultRepoAdminID = $stmtRepoAdminID->get_result();
+        $repoAdminID = $resultRepoAdminID->fetch_assoc()['repo_admin_id'];
+
+        // Set repo_admin_id into the session variable
+        $_SESSION['repo_admin_id'] = $repoAdminID;
+
+        header('location:index.php');
+        exit;
+    } else {
             echo '
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <strong>Oh Snap!😕</strong> Alert <b class="alert-link">Password: </b>You entered the wrong password.
@@ -56,13 +71,26 @@ if (isset($_SESSION['userlogin']) && $_SESSION['userlogin'] > 0) {
                     </button>
                 </div>';
         }
-    } elseif ($user) {
-        $hashpass = $user['password'];
-        if (password_verify($password, $hashpass)) {
-            $_SESSION['userlogin'] = $user['user_name'];
-            header('location:user-index.php'); // Change this to user index page
-            exit;
-        } else {
+	//landing page kapag user
+	} elseif ($user) {
+		$hashpass = $user['password'];
+		if (password_verify($password, $hashpass)) {
+			$_SESSION['userlogin'] = $user['user_name'];
+
+			// Retrieve repo_user_id from the database for the logged-in user
+			$sqlRepoUserID = "SELECT repo_user_id FROM repo_user WHERE user_name = ?";
+			$stmtRepoUserID = $connection->prepare($sqlRepoUserID);
+			$stmtRepoUserID->bind_param('s', $username);
+			$stmtRepoUserID->execute();
+			$resultRepoUserID = $stmtRepoUserID->get_result();
+			$repoUserID = $resultRepoUserID->fetch_assoc()['repo_user_id'];
+
+			// Set repo_user_id into the session variable
+			$_SESSION['repo_user_id'] = $repoUserID;
+
+			header('location:user-index.php');
+			exit;
+		} else {
             echo '
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <strong>Oh Snap!😕</strong> Alert <b class="alert-link">Password: </b>You entered the wrong password.
@@ -100,13 +128,14 @@ if (isset($_SESSION['userlogin']) && $_SESSION['userlogin'] > 0) {
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-	<meta name="description" content="This is a Philippine Cancer Center HR Management System">
-	<meta name="keywords" content="PCC-HRMS, HRMS, Human Resource, Capstone, System, HR">
-	<meta name="author" content="Heionim">
-	<meta name="robots" content="noindex, nofollow">
-	<title>PCC HRMS</title>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="This is a Philippine Cancer Repository System">
+    <meta name="keywords" content="PCC-CR, CR, Cancer Repository, Capstone, System, Repo">
+    <meta name="author" content="Heionim">
+    <meta name="robots" content="noindex, nofollow">
+    <title>PCC CANCER REPOSITORY</title>
+
 
 	<!-- Favicon -->
 	<link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">

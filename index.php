@@ -1,14 +1,39 @@
 <?php
-session_start();
-error_reporting(0);
-include('includes/config.php');
+// Your database connection
+$dbHost = 'localhost';
+$dbUsername = 'root'; 
+$dbPassword = '';     
+$dbName = 'pcc-cancer-repo-system';
 
-if (strlen($_SESSION['userlogin']) == 0) {
-    header('location:login.php');
+$connection = mysqli_connect($dbHost, $dbUsername, $dbPassword, $dbName);
+
+if (!$connection) {
+    die("Connection failed: " . mysqli_connect_error());
 }
+
+// Query to count the number of hospitals in the table
+$sql = "SELECT COUNT(*) as total_hospitals FROM hospital_general_information";
+
+$result = $connection->query($sql);
+
+if (!$result) {
+    printf("Error: %s\n", $connection->error);
+    exit();
+}
+
+$totalHospitals = 0;
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $totalHospitals = $row["total_hospitals"];
+}
+
+// Close the connection
+$connection->close();
 ?>
 
-<!-- Rest of your HTML and PHP code for the dashboard -->
+
+
+
 
 
 
@@ -157,7 +182,7 @@ if (strlen($_SESSION['userlogin']) == 0) {
                             <div class="card-body">
                                 <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
                                 <div class="dash-widget-info">
-                                    <h3>2</h3>
+                                    <h3><?php echo $totalHospitals; ?></h3>
                                     <span>Total Hospitals</span>
                                 </div>
                             </div>

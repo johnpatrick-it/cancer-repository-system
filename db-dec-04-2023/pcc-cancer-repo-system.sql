@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2023 at 07:10 PM
+-- Generation Time: Dec 04, 2023 at 11:47 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -46,7 +46,8 @@ CREATE TABLE `hospital_general_information` (
 --
 
 INSERT INTO `hospital_general_information` (`hospital_id`, `repo_admin_id`, `hospital_name`, `hospital_level`, `hospital_region`, `hospital_province`, `type_of_institution`, `hospital_city`, `hospital_barangay`, `hospital_street`, `hospital_equipments`) VALUES
-(16, NULL, 'test52', 'Level 3 General Hospital', '17', '1759', 'Private', '175905', '175905005', 'test52', 'test52');
+(24, 1, 'CITY GLOBAL ORGTIGAS', 'Level 2 General Hospital', '05', '0541', 'Private', '054117', '054117018', '288 Masigla Street', 'X-ray'),
+(25, 1, 'Quezon City General Hospital', 'Level 3 General Hospital', '13', '1374', 'Private', '137404', '137404139', '112 Matapang street', 'Chemotherapy chairs.');
 
 -- --------------------------------------------------------
 
@@ -247,7 +248,7 @@ ALTER TABLE `repo_user`
 -- AUTO_INCREMENT for table `hospital_general_information`
 --
 ALTER TABLE `hospital_general_information`
-  MODIFY `hospital_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `hospital_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `patient_general_info`

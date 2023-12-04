@@ -1,11 +1,17 @@
 <?php
+
+
 session_start();
+$repoAdminID = $_SESSION['repo_admin_id'] ?? '';
+echo "Repo Admin ID: " . $repoAdminID;
 error_reporting(E_ALL);
 
 if (!isset($_SESSION['userlogin']) || empty($_SESSION['userlogin'])) {
     header('Location: login.php');
     exit;
 }
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hospitalName = $_POST['hospital-name'] ?? '';
@@ -28,9 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($connection->connect_error) {
         die("Connection failed: " . $connection->connect_error);
     }
+    
+    $repoAdminID = $_SESSION['repo_admin_id'] ?? '';
 
-    $stmt = $connection->prepare("INSERT INTO hospital_general_information (hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssssss", $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $hospitalEquipments);
+    $stmt = $connection->prepare("INSERT INTO hospital_general_information (repo_admin_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssssssss",$repoAdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $hospitalEquipments);
 
     if ($stmt->execute()) {
         header("Location: /hospital-information.php");

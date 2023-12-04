@@ -27,10 +27,6 @@
         margin-top: -1.5rem;
     }
 
-    /* ACTIVE NAV STATE */
-    .sample-active {
-        background-color: #A88C0A;
-    }
 
     /* LOGOUT */
     .out-container .out-button {
@@ -38,6 +34,7 @@
         bottom: 0;
         left: 0;
     }
+
 </style>
 
 <div class="sidebar" id="sidebar">
@@ -51,7 +48,7 @@
                         </span>
                     </a>
                     <br>
-                    <a href="../admin-index.php"><span class="text-white small user-role">CANCER REPO ADMIN</span></a>
+                    <a href="../admin-index.php"><span class="text-white small user-role">CANCER REPOSITORY ADMIN</span></a>
                 </li>
 
                 <!-- DASHBOARD -->

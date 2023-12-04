@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+error_reporting();
 session_start();
 include('config.php');
 
@@ -69,15 +69,31 @@ include('config.php');
     .bar-icon span {
         background-color: #000;
     }
+
+
+    .hide-logo {
+        display: none;
+    }   
+
+    .header-left {
+        display: flex;
+        justify-content: center; /* Horizontal alignment */
+        align-items: center; /* Vertical alignment */
+    }
+    
+
+
 </style>
 
-<div class="header">
+    <div class="header">
+
     <!-- LOGO -->
-    <div class="header-left">
-        <a href="./index.php" class="logo">
-            <img src="./assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo">
-        </a>
-    </div>
+        <div class="header-left" id="headerLeft">
+            <a href="./index.php" class="logo">
+                <img src="./assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo" id="logo">
+            </a>
+        </div>
+
 
     <!-- SIDEBAR TOGGLE -->
     <a id="toggle_btn" href="javascript:void(0);">
@@ -205,4 +221,22 @@ include('config.php');
     setInterval(updateDateTime, 1000);
 
     updateDateTime();
+
+
+
+//Para sa redundant logo
+let logo = document.getElementById("logo");
+let toggleButton = document.getElementById("toggle_btn");
+
+// Function to handle navbar toggle button click
+toggleButton.addEventListener("click", function() {
+
+    if (logo.style.display === "none" || logo.style.display === "") {
+        logo.style.display = "block"; 
+    } else {
+        logo.style.display = "none"; 
+    }
+});
+
+
 </script>
