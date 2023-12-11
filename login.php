@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // $hashedPassword = $_POST['password']; // Commenting out hashed password for testing purposes
     $plainPassword = $_POST['password']; // Store the plain password
     
-    $query = "SELECT admin_id, department FROM public.admin_users WHERE email = $1 AND password = $2";
+	$query = "SELECT admin_id, department FROM public.admin_users WHERE email = $1 AND password = $2";
     
     $stmt = pg_prepare($db_connection, "login_query", $query);
 
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $department = $row['department'];
                 $adminId = $row['admin_id'];
 
-                if ($department === 'Inventory') {
+                if ($department === 'repository') {
                     $_SESSION['admin_id'] = $adminId;
                     header("Location: index.php");
                     exit();

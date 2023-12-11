@@ -149,21 +149,24 @@ session_start();
             </div>
         </li>
         <?php
-            $query = "SELECT * FROM admin_user";
+            $loggedInAdminId = $_SESSION['admin_id']; // Retrieve the admin_id from the session
+
+            $query = "SELECT admin_id FROM admin_users WHERE admin_id = '$loggedInAdminId'";
             $result = pg_query($db_connection, $query);
-            
+
             if (!$result) {
                 echo "Error executing the query: " . pg_last_error($db_connection);
             } else {
-                // Fetching and displaying user data
-                while ($row = pg_fetch_assoc($result)) {
-                    echo "ID: " . $row['id'] . "<br>";
-                    echo "Username: " . $row['username'] . "<br>";
-                    echo "Email: " . $row['email'] . "<br>";
-                    // Fetch other columns as needed
-                    echo "<hr>";
+                // Fetching the admin_id for the current logged-in user
+                $userData = pg_fetch_assoc($result);
+
+                // Check if data was retrieved successfully
+                if ($userData) {
+                    $currentUserId = $userData['admin_id']; // Save the admin_id for further use
+                } else {
+                    echo "No data found for the current user.";
                 }
-            
+
                 // Free result set
                 pg_free_result($result);
             }

@@ -1,7 +1,12 @@
 <?php
 // Your database connection
-$host = "host=127.0.0.1 port=5432 dbname=pcc-cancer-repo-system user=postgres password=sbit4e-4thyear-capstone-2023";
-$db_connection = pg_connect($host);
+
+$host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
+$username = "postgres";
+$password = "sbit4e-4thyear-capstone-2023";
+$database = "postgres";
+
+$db_connection = pg_connect("$host dbname=$database user=$username password=$password");
 
 if (!$db_connection) {
     die("Connection failed: " . pg_last_error());
