@@ -1,115 +1,54 @@
 <?php
+$wrongusername = ''; // Initialize the variable
+$wrongpassword = ''; // Initialize the variable
+
+$host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
+$username = "postgres";
+$password = "sbit4e-4thyear-capstone-2023";
+$database = "postgres";
+
+$db_connection = pg_connect("$host dbname=$database user=$username password=$password");
 session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-include_once("includes/config.php");
 
-$wrongusername = ""; // Initialize $wrongusername
-$wrongpassword = ""; // Initialize $wrongpassword
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email'];
+    // $hashedPassword = $_POST['password']; // Commenting out hashed password for testing purposes
+    $plainPassword = $_POST['password']; // Store the plain password
+    
+    $query = "SELECT admin_id, department FROM public.admin_users WHERE email = $1 AND password = $2";
+    
+    $stmt = pg_prepare($db_connection, "login_query", $query);
 
-if (isset($_SESSION['userlogin']) && $_SESSION['userlogin'] > 0) {
-    header('location:index.php');
-    exit;
-} elseif (isset($_POST['login'])) {
-    $username = htmlspecialchars($_POST['username']);
-    $password = htmlspecialchars($_POST['password']);
+    if ($stmt) {
+        // $result = pg_execute($db_connection, "login_query", array($email, $hashedPassword));
+        $result = pg_execute($db_connection, "login_query", array($email, $plainPassword)); // Use plain password for testing
 
-    // Double initialize ng db abnormal yung includes/config eh
-    $dbHost = 'localhost';
-    $dbUsername = 'root'; 
-    $dbPassword = ''; 
-    $dbName = 'pcc-cancer-repo-system'; 
+        if ($result) {
+            $row = pg_fetch_assoc($result);
+            if ($row) {
+                $department = $row['department'];
+                $adminId = $row['admin_id'];
 
-    $connection = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
-
-    if ($connection->connect_error) {
-        die("Connection failed: " . $connection->connect_error);
-    }
-
-	// For admin login
-    $sqlAdmin = "SELECT admin_username, admin_password FROM repo_admin WHERE admin_username = ?";
-    $stmtAdmin = $connection->prepare($sqlAdmin);
-    $stmtAdmin->bind_param('s', $username);
-    $stmtAdmin->execute();
-    $resultAdmin = $stmtAdmin->get_result();
-    $admin = $resultAdmin->fetch_assoc();
-	// For user login
-    $sqlUser = "SELECT user_name, password FROM repo_user WHERE user_name = ?";
-    $stmtUser = $connection->prepare($sqlUser);
-    $stmtUser->bind_param('s', $username);
-    $stmtUser->execute();
-    $resultUser = $stmtUser->get_result();
-    $user = $resultUser->fetch_assoc();
-
-
-	//landing page kapag admin
-    //landing page kapag admin
-if ($admin) {
-    $hashpass = $admin['admin_password'];
-    if (password_verify($password, $hashpass)) {
-        $_SESSION['userlogin'] = $admin['admin_username'];
-
-        // Retrieve repo_admin_id from the database for the logged-in admin
-        $sqlRepoAdminID = "SELECT repo_admin_id FROM repo_admin WHERE admin_username = ?";
-        $stmtRepoAdminID = $connection->prepare($sqlRepoAdminID);
-        $stmtRepoAdminID->bind_param('s', $username);
-        $stmtRepoAdminID->execute();
-        $resultRepoAdminID = $stmtRepoAdminID->get_result();
-        $repoAdminID = $resultRepoAdminID->fetch_assoc()['repo_admin_id'];
-
-        // Set repo_admin_id into the session variable
-        $_SESSION['repo_admin_id'] = $repoAdminID;
-
-        header('location:index.php');
-        exit;
-    } else {
-            echo '
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Oh Snap!😕</strong> Alert <b class="alert-link">Password: </b>You entered the wrong password.
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>';
-        }
-	//landing page kapag user
-	} elseif ($user) {
-		$hashpass = $user['password'];
-		if (password_verify($password, $hashpass)) {
-			$_SESSION['userlogin'] = $user['user_name'];
-
-			// Retrieve repo_user_id from the database for the logged-in user
-			$sqlRepoUserID = "SELECT repo_user_id FROM repo_user WHERE user_name = ?";
-			$stmtRepoUserID = $connection->prepare($sqlRepoUserID);
-			$stmtRepoUserID->bind_param('s', $username);
-			$stmtRepoUserID->execute();
-			$resultRepoUserID = $stmtRepoUserID->get_result();
-			$repoUserID = $resultRepoUserID->fetch_assoc()['repo_user_id'];
-
-			// Set repo_user_id into the session variable
-			$_SESSION['repo_user_id'] = $repoUserID;
-
-			header('location:user-index.php');
-			exit;
-		} else {
-            echo '
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Oh Snap!😕</strong> Alert <b class="alert-link">Password: </b>You entered the wrong password.
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>';
+                if ($department === 'Inventory') {
+                    $_SESSION['admin_id'] = $adminId;
+                    header("Location: index.php");
+                    exit();
+                } else {
+                    $wrongusername = "You are not authorized to access this page.";
+                }
+            } else {
+                $wrongusername = "Invalid email or password.";
+            }
+        } else {
+            echo "Login failed. Please try again.";
         }
     } else {
-        echo '
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Oh Snap!🙃</strong> Alert <b class="alert-link">Username: </b>You entered the wrong username.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>';
+        echo "Statement preparation failed. Please try again.";
     }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -299,7 +238,7 @@ if ($admin) {
 				<form method="POST" enctype="multipart/form-data">
 					<div class="form-group">
 						<i class="fas fa-envelope icon"></i>
-						<input class="form-control" name="username" required type="text" placeholder="Email">
+						<input class="form-control" name="email" required type="text" placeholder="Email">
 					</div>
 					<?php if ($wrongusername) {
 						echo $wrongusername;

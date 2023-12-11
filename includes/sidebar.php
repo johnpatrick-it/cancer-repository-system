@@ -61,7 +61,7 @@
                 <li><a href="./hospital-information.php"><i class="la la-medkit"></i><span>Hospital Information</span></a></li>
 
                 <!-- USER INFORMATION -->
-                <!-- <li><a href="./user-information.php"><i class="la la-user"></i><span>User Information</span></a></li> -->
+                <li><a href="./user-information.php"><i class="la la-user"></i><span>User Information</span></a></li>
 
                 <!-- HOSPITAL MAPPING -->
                 <li><a href="#"><i class="la la-map"></i><span>Hospital Mapping</span></a></li>
