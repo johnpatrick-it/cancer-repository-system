@@ -1,34 +1,30 @@
 <?php
 // Your database connection
-$dbHost = 'localhost';
-$dbUsername = 'root'; 
-$dbPassword = '';     
-$dbName = 'pcc-cancer-repo-system';
+$host = "host=127.0.0.1 port=5432 dbname=pcc-cancer-repo-system user=postgres password=sbit4e-4thyear-capstone-2023";
+$db_connection = pg_connect($host);
 
-$connection = mysqli_connect($dbHost, $dbUsername, $dbPassword, $dbName);
-
-if (!$connection) {
-    die("Connection failed: " . mysqli_connect_error());
+if (!$db_connection) {
+    die("Connection failed: " . pg_last_error());
 }
 
 // Query to count the number of hospitals in the table
 $sql = "SELECT COUNT(*) as total_hospitals FROM hospital_general_information";
 
-$result = $connection->query($sql);
+$result = pg_query($db_connection, $sql);
 
 if (!$result) {
-    printf("Error: %s\n", $connection->error);
+    printf("Error: %s\n", pg_last_error($db_connection));
     exit();
 }
 
 $totalHospitals = 0;
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+if (pg_num_rows($result) > 0) {
+    $row = pg_fetch_assoc($result);
     $totalHospitals = $row["total_hospitals"];
 }
 
 // Close the connection
-$connection->close();
+pg_close($db_connection);
 ?>
 
 

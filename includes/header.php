@@ -1,8 +1,11 @@
 <?php
-error_reporting();
-session_start();
-include('config.php');
+$host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
+$username = "postgres";
+$password = "sbit4e-4thyear-capstone-2023";
+$database = "postgres";
 
+$db_connection = pg_connect("$host dbname=$database user=$username password=$password");
+session_start();
 ?>
 
 <style>
@@ -146,13 +149,23 @@ include('config.php');
             </div>
         </li>
         <?php
-            $sql = "SELECT * FROM repo_admin";
-            $query = mysqli_query($connection, $sql);
-
-            if ($query) {
-                $result = mysqli_fetch_assoc($query);
+            $query = "SELECT * FROM admin_user";
+            $result = pg_query($db_connection, $query);
+            
+            if (!$result) {
+                echo "Error executing the query: " . pg_last_error($db_connection);
             } else {
-                echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+                // Fetching and displaying user data
+                while ($row = pg_fetch_assoc($result)) {
+                    echo "ID: " . $row['id'] . "<br>";
+                    echo "Username: " . $row['username'] . "<br>";
+                    echo "Email: " . $row['email'] . "<br>";
+                    // Fetch other columns as needed
+                    echo "<hr>";
+                }
+            
+                // Free result set
+                pg_free_result($result);
             }
         ?>
         <!-- USER PROFILE -->
