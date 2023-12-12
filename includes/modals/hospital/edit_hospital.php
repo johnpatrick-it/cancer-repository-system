@@ -29,27 +29,27 @@
 							</div>
 						</div>
 						<div class="col-sm-6">
-							<div class="form-group col-md-3">
-								<label for="region">Region</label>
-								<select class="form-control select" name="region" id="region"></select>
+							<div class="form-group">
+								<label for="edit-region">Region</label>
+								<select class="form-control select" name="edit-region" id="edit-region"></select>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
-								<label for="province">Province</label>
-								<select class="form-control select" name="province" id="province"></select>
+								<label for="edit-province">Province</label>
+								<select class="form-control select" name="edit-province" id="edit-province"></select>
 							</div>
 						</div>
 						<div class="col-sm-6">
-							<div class="form-group col-md-3">
-								<label for="city">City/Municipality</label>
-								<select class="form-control select" name="city" id="city"></select>
+							<div class="form-group">
+								<label for="edit-city">City/Municipality</label>
+								<select class="form-control select" name="edit-city" id="edit-city"></select>
 							</div>
 						</div>
 						<div class="col-sm-6">
-							<div class="form-group col-md-3">
-								<label for="barangay">Barangay</label>
-								<select class="form-control select" name="barangay" id="barangay"></select>
+							<div class="form-group">
+								<label for="edit-barangay">Barangay</label>
+								<select class="form-control select" name="edit-barangay" id="edit-barangay"></select>
 							</div>
 						</div>
 						<div class="col-sm-6">
@@ -74,7 +74,7 @@
 <script>
 	$(document).ready(function () {
 		// Load Region
-		let regionDropdown = $('#region');
+		let regionDropdown = $('#edit-region');
 		regionDropdown.empty();
 		regionDropdown.append('<option selected="true" disabled>Choose Region</option>');
 		regionDropdown.prop('selectedIndex', 0);
@@ -88,14 +88,14 @@
 		});
 
 		// Change or Select Region
-		$('#region').on('change', function () {
+		$('#edit-region').on('change', function () {
 			// Load Provinces
 			var region_code = $(this).val();
 			var region_text = $(this).find("option:selected").text();
-			let region_input = $('#region-text');
+			let region_input = $('#edit-region-text');
 			region_input.val(region_text);
 
-			let provinceDropdown = $('#province');
+			let provinceDropdown = $('#edit-province');
 			provinceDropdown.empty();
 			provinceDropdown.append('<option selected="true" disabled>Choose State/Province</option>');
 			provinceDropdown.prop('selectedIndex', 0);
@@ -118,13 +118,13 @@
 		});
 
 		// Change or Select Province
-		$('#province').on('change', function () {
+		$('#edit-province').on('change', function () {
 			var province_code = $(this).val();
 			var province_text = $(this).find("option:selected").text();
 			let province_input = $('#province-text');
 			province_input.val(province_text);
 
-			let cityDropdown = $('#city');
+			let cityDropdown = $('#edit-city');
 			cityDropdown.empty();
 			cityDropdown.append('<option selected="true" disabled>Choose City/Municipality</option>');
 			cityDropdown.prop('selectedIndex', 0);
@@ -147,13 +147,13 @@
 		});
 
 		// Change or Select City
-		$('#city').on('change', function () {
+		$('#edit-city').on('change', function () {
 			var city_code = $(this).val();
 			var city_text = $(this).find("option:selected").text();
 			let city_input = $('#city-text');
 			city_input.val(city_text);
 
-			let barangayDropdown = $('#barangay');
+			let barangayDropdown = $('#edit-barangay');
 			barangayDropdown.empty();
 			barangayDropdown.append('<option selected="true" disabled>Choose Barangay</option>');
 			barangayDropdown.prop('selectedIndex', 0);

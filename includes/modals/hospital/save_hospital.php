@@ -1,17 +1,19 @@
 <?php
+  $host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
+  $username = "postgres";
+  $password = "sbit4e-4thyear-capstone-2023";
+  $database = "postgres";
 
+  $db_connection = pg_connect("$host dbname=$database user=$username password=$password");
 
 session_start();
-$repoAdminID = $_SESSION['repo_admin_id'] ?? '';
-echo "Repo Admin ID: " . $repoAdminID;
+$AdminID = $_SESSION['admin_id'] ?? '';
 error_reporting(E_ALL);
 
-if (!isset($_SESSION['userlogin']) || empty($_SESSION['userlogin'])) {
-    header('Location: login.php');
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
+    header('.../login.php');
     exit;
 }
-
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hospitalName = $_POST['hospital-name'] ?? '';
@@ -24,30 +26,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $street = $_POST['street'] ?? '';
     $hospitalEquipments = $_POST['hospital-equipment'] ?? '';
 
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'root');
-    define('DB_PASS', '');
-    define('DB_NAME', 'pcc-cancer-repo-system');
-
-    $connection = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-    if ($connection->connect_error) {
-        die("Connection failed: " . $connection->connect_error);
-    }
-    
-    $repoAdminID = $_SESSION['repo_admin_id'] ?? '';
-
-    $stmt = $connection->prepare("INSERT INTO hospital_general_information (repo_admin_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssssssss",$repoAdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $hospitalEquipments);
-
-    if ($stmt->execute()) {
-        header("Location: /hospital-information.php");
-        exit();
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-
-    $stmt->close();
-    $connection->close();
+    echo "Admin ID: " . $AdminID . "<br>";
+    echo "Hospital Name: " . $hospitalName . "<br>";
+    echo "Hospital Level:" . $hospitalLevel . "<br>";
+    echo "Institution:" . $institution . "<br>";
+    echo "Hospital Level:" . $region. "<br>";
+    echo "Hospital Level:" . $province . "<br>";
+    echo "Hospital Level:" . $city . "<br>";
+    echo "Hospital Level:" . $barangay . "<br>";
+    echo "Hospital Level:" . $street . "<br>";
+    echo "Hospital Level:" . $hospitalEquipments . "<br>";
+} else {
+    echo "No POST request received."; // Add this line for debugging
 }
-?>
+
+    if ($db_connection) {
+        $query = "INSERT INTO hospital_general_information (admin_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)";
+        
+        $result = pg_prepare($db_connection, "insert_query", $query);
+
+        if ($result) {
+            $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $hospitalEquipments));
+
+            if ($result_exec) {
+                header("Location: /hospital-information.php");
+                exit();
+            } else {
+                echo "Error executing query: " . pg_last_error($db_connection);
+            }
+        } else {
+            echo "Error preparing query: " . pg_last_error($db_connection);
+        }
+
+        pg_close($db_connection);
+    } else {
+        echo "Failed to connect to the database.";
+    }
+
+
+

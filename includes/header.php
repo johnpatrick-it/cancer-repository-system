@@ -1,11 +1,7 @@
 <?php
-$host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
-$username = "postgres";
-$password = "sbit4e-4thyear-capstone-2023";
-$database = "postgres";
-
-$db_connection = pg_connect("$host dbname=$database user=$username password=$password");
 session_start();
+error_reporting(0);
+include('includes/config.php');
 ?>
 
 <style>
@@ -149,7 +145,7 @@ session_start();
             </div>
         </li>
         <?php
-            $loggedInAdminId = $_SESSION['admin_id']; // Retrieve the admin_id from the session
+            $loggedInAdminId = $_SESSION['admin_id']; // Retrieving admin_id pag ka login sa session
 
             $query = "SELECT admin_id FROM admin_users WHERE admin_id = '$loggedInAdminId'";
             $result = pg_query($db_connection, $query);
@@ -157,10 +153,10 @@ session_start();
             if (!$result) {
                 echo "Error executing the query: " . pg_last_error($db_connection);
             } else {
-                // Fetching the admin_id for the current logged-in user
+                // Fetching yung current admin_user
                 $userData = pg_fetch_assoc($result);
 
-                // Check if data was retrieved successfully
+                // Checking kung successfull na fetch yung data
                 if ($userData) {
                     $currentUserId = $userData['admin_id']; // Save the admin_id for further use
                 } else {

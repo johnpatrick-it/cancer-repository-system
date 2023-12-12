@@ -124,7 +124,7 @@ include('includes/config.php');
                     <div class="page-header">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="page-title">Hospital Information</h3>
+                                <h3 class="page-title">User Information</h3>
                             </div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@ include('includes/config.php');
                             <div class="row">
                                 <div class="col-auto ml-auto m-right">
                                     <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_hospital">
-                                        <i class="fa fa-medkit"></i> Add Hospital
+                                        <i class="fa fa-medkit"></i> Add User
                                     </a>
                                 </div>
                                 <div class="col-auto">
@@ -170,16 +170,17 @@ include('includes/config.php');
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
-                                            <th>Hospital Name</th>
-                                            <th>Hospital Level</th>
-                                            <th>Type of Instituion</th>
-                                            <th>Hospital Location UACS CODE</th>
-                                            <th>Hospital Street</th> 
+                                            <th>First Name</th>
+                                            <th>Middle Name</th>
+                                            <th>Last Name</th>
+                                            <th>Hospital Affiliated With</th>
+                                            <th>Position</th> 
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
+                                        /*
                                            if (!$db_connection) {
                                                echo "Failed to connect to the database.";
                                            } else {
@@ -209,6 +210,7 @@ include('includes/config.php');
                                        
                                                pg_close($db_connection);
                                            }
+                                           */
                                        ?>                                       
                                     </tbody>
                                 </table>
@@ -218,8 +220,8 @@ include('includes/config.php');
                 </div>
             </div>
            
-            <!-- Add Hospital  Modal -->
-            <?php include_once 'includes/modals/hospital/add_hospital.php'; ?>
+            <!-- Add User Modal -->
+            <?php include_once 'includes/modals/hospital/add_user.php'; ?>
 
             <!-- Edit Hospital Modal -->
             <?php include_once 'includes/modals/hospital/edit_hospital.php'; ?>

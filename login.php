@@ -1,19 +1,15 @@
 <?php
+session_start();
+error_reporting(0);
+include('includes/config.php');
+
 $wrongusername = ''; // Initialize the variable
 $wrongpassword = ''; // Initialize the variable
 
-$host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
-$username = "postgres";
-$password = "sbit4e-4thyear-capstone-2023";
-$database = "postgres";
-
-$db_connection = pg_connect("$host dbname=$database user=$username password=$password");
-session_start();
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
-    // $hashedPassword = $_POST['password']; // Commenting out hashed password for testing purposes
-    $plainPassword = $_POST['password']; // Store the plain password
+    // $hashedPassword = $_POST['password']; // Commenting out ko muna hashed password for testing purposes
+    $plainPassword = $_POST['password']; // Storing the plain password
     
 	$query = "SELECT admin_id, department FROM public.admin_users WHERE email = $1 AND password = $2";
     

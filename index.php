@@ -1,12 +1,7 @@
 <?php
-// Your database connection
-
-$host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
-$username = "postgres";
-$password = "sbit4e-4thyear-capstone-2023";
-$database = "postgres";
-
-$db_connection = pg_connect("$host dbname=$database user=$username password=$password");
+session_start();
+error_reporting(0);
+include('includes/config.php');
 
 if (!$db_connection) {
     die("Connection failed: " . pg_last_error());
@@ -31,16 +26,6 @@ if (pg_num_rows($result) > 0) {
 // Close the connection
 pg_close($db_connection);
 ?>
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
