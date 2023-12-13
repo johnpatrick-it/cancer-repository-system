@@ -25,19 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $barangay = $_POST['barangay'] ?? '';
     $street = $_POST['street'] ?? '';
     $hospitalEquipments = $_POST['hospital-equipment'] ?? '';
-
-    echo "Admin ID: " . $AdminID . "<br>";
-    echo "Hospital Name: " . $hospitalName . "<br>";
-    echo "Hospital Level:" . $hospitalLevel . "<br>";
-    echo "Institution:" . $institution . "<br>";
-    echo "Hospital Level:" . $region. "<br>";
-    echo "Hospital Level:" . $province . "<br>";
-    echo "Hospital Level:" . $city . "<br>";
-    echo "Hospital Level:" . $barangay . "<br>";
-    echo "Hospital Level:" . $street . "<br>";
-    echo "Hospital Level:" . $hospitalEquipments . "<br>";
-} else {
-    echo "No POST request received."; // Add this line for debugging
 }
 
     if ($db_connection) {

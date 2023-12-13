@@ -28,7 +28,7 @@ h2 {
 				</button>
 			</div>
 			<div class="modal-body">
-				<form method="POST" action="/includes/modals/hospital/save_hospital.php" enctype="multipart/form-data">
+				<form method="POST" action="/includes/modals/hospital/save_user.php" enctype="multipart/form-data">
 					<h2>USER INFORMATION</h2>
 					<div class="form-row">
 						<div class="form-group col-md-3">
@@ -58,7 +58,6 @@ h2 {
                                 } else {
                                     echo "<option value=''>No hospitals found</option>";
                                 }
-
                                 // Close database connection
                                 pg_close($db_connection);
                                 ?>
@@ -68,7 +67,7 @@ h2 {
 					<div class="form-row">
 					    <div class="form-group col-md-3">
 							<label for="position">Position</label>
-							<input name="position" class="form-control" type="text" placeholder="User's Position" required>
+							<input name="position" class="form-control" type="text" placeholder="User's Work" required>
 						</div>
                         <div class="form-group col-md-3">
 							<label for="email">Email</label>
@@ -80,7 +79,7 @@ h2 {
 						</div>
 					</div>
 					<div class="submit-section">
-						<button type="submit" name="add_hospital" class="btn btn-primary submit-btn">Submit</button>
+						<button type="submit" name="add_user" class="btn btn-primary submit-btn">Submit</button>
 					</div>
 				</form>
 			</div>

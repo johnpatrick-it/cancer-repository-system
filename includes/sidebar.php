@@ -70,7 +70,7 @@
                 <li><a href="./activity-logs.php"><i class="la la-history"></i><span>Activity Logs</span></a></li>
 
                 <!-- SETTINGS -->
-                <li><a href="#"><i class="la la-file-text"></i><span>Personal Attendance</span></a></li>
+                <li><a href="#"><i class="la la-file-text"></i><span>Settings</span></a></li>
 
                 <!-- LOGOUT -->
                 <li class="out-container">
