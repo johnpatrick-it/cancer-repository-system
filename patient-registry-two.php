@@ -1,14 +1,28 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
+    // Redirect to the login page
+    header("Location: login.php");
+    exit; 
+}
+
+error_reporting(0);
+include('includes/config.php');
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="This is a Philippine Cancer Center HR Management System">
-    <meta name="keywords" content="PCC-HRMS, HRMS, Human Resource, Capstone, System, HR">
+    <meta name="description" content="This is a Philippine Cancer Repository System">
+    <meta name="keywords" content="PCC-CR, CR, Cancer Repository, Capstone, System, Repo">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
-    <title>PCC HRMS</title>
+    <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">
@@ -122,8 +136,8 @@
 
     <div class="main-wrapper">
 
-        <?php include_once("includes/header.php"); ?>
-        <?php include_once("includes/sidebar.php"); ?>
+        <?php include_once("includes/user-header.php"); ?>
+        <?php include_once("includes/user-sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="content container-fluid">

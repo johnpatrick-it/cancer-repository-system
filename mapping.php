@@ -1,10 +1,15 @@
 <?php
 session_start();
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
+    // Redirect to the login page
+    header("Location: login.php");
+    exit; 
+}
 error_reporting(0);
 include('includes/config.php');
 
-if (strlen($_SESSION['userlogin']) == 0) {
-    header('location:login.php');
+if (!$db_connection) {
+    die("Connection failed: " . pg_last_error());
 }
 ?>
 
@@ -14,11 +19,11 @@ if (strlen($_SESSION['userlogin']) == 0) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="This is a Philippine Cancer Center HR Management System">
-    <meta name="keywords" content="PCC-HRMS, HRMS, Human Resource, Capstone, System, HR">
+    <meta name="description" content="This is a Philippine Cancer Repository System">
+    <meta name="keywords" content="PCC-CR, CR, Cancer Repository, Capstone, System, Repo">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
-    <title>PCC HRMS</title>
+    <title>PCC CANCER REPOSITORY</title>
 
     <style>
         body{
