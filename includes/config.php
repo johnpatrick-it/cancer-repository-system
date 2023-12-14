@@ -18,4 +18,5 @@ $password = "sbit4e-4thyear-capstone-2023";
 $database = "postgres";
 
 $db_connection = pg_connect("$host dbname=$database user=$username password=$password");
+
 ?>
