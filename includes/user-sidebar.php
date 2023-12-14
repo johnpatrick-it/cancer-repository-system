@@ -49,31 +49,22 @@
                     <br>
                     <a href="../admin-index.php"><span class="text-white small user-role">CANCER REPOSITORY ADMIN</span></a>
                 </li>
-
-                <!-- DASHBOARD -->
-                <li class="sample-active mt-5"><a href="./index.php"><i class="la la-dashboard"></i> <span> Dashboard</span> </a></li>
-
-                <!-- CANCER STATISTICS -->
-                <li><a href="#"><i class="la la-bar-chart"></i><span>Cancer Statistics</span></a></li>
-
-                <!-- HOSPITAL INFORMATION -->
-                <li><a href="./hospital-information.php"><i class="la la-medkit"></i><span>Hospital Information</span></a></li>
-
-                <!-- USER INFORMATION -->
-                <li><a href="./user-information.php"><i class="la la-user"></i><span>User Information</span></a></li>
-
-                <!-- HOSPITAL MAPPING -->
-                <li><a href="./mapping.php"><i class="la la-map"></i><span>Hospital Mapping</span></a></li>
-
-                <!-- ACTIVITY LOGS -->
-                <li><a href="./activity-logs.php"><i class="la la-history"></i><span>Activity Logs</span></a></li>
-
-                <!-- SETTINGS -->
-                <li><a href="#"><i class="la la-file-text"></i><span>Settings</span></a></li>
-
                 <br>
                 <br>
                 <br>
+
+                <!-- User Dashboard -->
+                <li><a href="./user-index.php"><i class="la la-dashboard"></i><span>User Dashboard</span></a></li>
+
+                <!-- Manage Patient -->
+                <li><a href="./manage-patient.php"><i class="la la-users"></i><span>Manage Patient</span></a></li>
+
+                <!-- Patient Registry -->
+                <li><a href="./patient-registry-one.php"><i class="la la-user-plus"></i><span>Patient Registry</span></a></li>
+
+                <!-- Patient Report -->
+                <li><a href="./patient-report.php"><i class="la la-file-text-o"></i><span>Patient Report</span></a></li>
+
                 <!-- LOGOUT -->
                 <li class="out-container">
                     <a class="out-button" href="logout.php"><i class="la la-power-off"></i><span>Logout</span></a>

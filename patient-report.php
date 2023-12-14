@@ -1,7 +1,15 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
+    // Redirect to the login page
+    header("Location: login.php");
+    exit; 
+}
+
 error_reporting(0);
-include('./includes/config.php');
+include('includes/config.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +22,6 @@ include('./includes/config.php');
     <meta name="keywords" content="PCC-CR, CR, Cancer Repository, Capstone, System, Repo">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
@@ -113,8 +120,8 @@ include('./includes/config.php');
 <body>
     <div class="main-wrapper">
 
-        <?php include_once("./includes/header.php"); ?>
-        <?php include_once("./includes/sidebar.php"); ?>
+        <?php include_once("./includes/user-header.php"); ?>
+        <?php include_once("./includes/user-sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="content container-fluid">

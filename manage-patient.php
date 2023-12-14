@@ -1,7 +1,15 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
+    // Redirect to the login page
+    header("Location: login.php");
+    exit; 
+}
+
 error_reporting(0);
-include('./includes/config.php');
+include('includes/config.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -113,8 +121,8 @@ include('./includes/config.php');
 <body>
     <div class="main-wrapper">
 
-        <?php include_once("./includes/header.php"); ?>
-        <?php include_once("./includes/sidebar.php"); ?>
+        <?php include_once("./includes/user-header.php"); ?>
+        <?php include_once("./includes/user-sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="content container-fluid">

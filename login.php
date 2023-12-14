@@ -3,54 +3,79 @@ session_start();
 error_reporting(0);
 include('includes/config.php');
 
-// Your plaintext password
-
-$wrongusername = ''; // Initialize the variable
-$wrongpassword = ''; // Initialize the variable
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $query = "SELECT admin_id, department, password FROM public.admin_users WHERE email = $1";
-    $stmt = pg_prepare($db_connection, "fetch_password_query", $query);
+    // Admin Login Query
+    $adminQuery = "SELECT admin_id, department, password FROM public.admin_users WHERE email = $1";
+    $adminStmt = pg_prepare($db_connection, "fetch_admin_password_query", $adminQuery);
 
-    if ($stmt) {
-        $result = pg_execute($db_connection, "fetch_password_query", array($email));
+    if ($adminStmt) {
+        $adminResult = pg_execute($db_connection, "fetch_admin_password_query", array($email));
 
-        if ($result) {
-            $row = pg_fetch_assoc($result);
-            if ($row) {
-                $hashedPassword = $row['password'];
+        if ($adminResult) {
+            $adminRow = pg_fetch_assoc($adminResult);
+            if ($adminRow) {
+                $hashedAdminPassword = $adminRow['password'];
 
-                // Verifieng password
-                if (password_verify($password, $hashedPassword)) {
-                    // Password is correct
-                    $department = $row['department'];
-                    $adminId = $row['admin_id'];
+                if (password_verify($password, $hashedAdminPassword)) {
+
+                    $department = $adminRow['department'];
+                    $adminId = $adminRow['admin_id'];
 
                     if ($department === 'Repository') {
                         $_SESSION['admin_id'] = $adminId;
                         header("Location: index.php");
                         exit();
                     } else {
-                        $wrongusername = "You are not authorized to access this page.";
+                        echo "You are not authorized to access this page.";
                     }
                 } else {
-                    // Password is incorrect
-                    $wrongpassword = "Invalid email or password.";
+                    // Admin Password is incorrect
+                    echo "Invalid email or password.";
                 }
             } else {
-                $wrongusername = "Invalid email or password.";
-            }
-        } else {
-            echo "Login failed. Please try again.";
-        }
-    } else {
-        echo "Statement preparation failed. Please try again.";
-    }
-}
+                //  proceed sa user if hindi admin
+                $userQuery = "SELECT repo_user_id, password FROM public.repo_user WHERE email = $1";
+                $userStmt = pg_prepare($db_connection, "fetch_user_password_query", $userQuery);
+
+				if ($userStmt) {
+					$userResult = pg_execute($db_connection, "fetch_user_password_query", array($email));
+				
+					if ($userResult) {
+						$userRow = pg_fetch_assoc($userResult);
+						if ($userRow) {
+							$hashedUserPassword = $userRow['password'];
+				
+							if (password_verify($password, $hashedUserPassword)) {
+								// User Password is correct
+								$userId = $userRow['repo_user_id'];
+								
+								$_SESSION['repo_user_id'] = $userId; // Set the 'repo_user_id' in the session
+								
+								header("Location: user-landing-page.php");
+								exit();
+							} else {
+								// Incorrect password or user not found
+								echo "Invalid email or password for user.";
+							}
+						} else {
+							// Invalid email or password
+							echo "Invalid email or password.";
+						}
+					} else {
+						echo "User login query execution failed.";
+					}
+				} else {
+					echo "User statement preparation failed.";
+				}
+			}
+		}
+	}
+}	
 ?>
+
 
 
 
