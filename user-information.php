@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
+    // Redirect to the login page
+    header("Location: login.php");
+    exit; 
+}
 error_reporting(0);
 include('includes/config.php');
 ?>
@@ -180,38 +186,49 @@ include('includes/config.php');
                                     </thead>
                                     <tbody>
                                         <?php
-                                        /*
-                                           if (!$db_connection) {
-                                               echo "Failed to connect to the database.";
-                                           } else {
-                                               $query = "SELECT hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street FROM hospital_general_information";
-                                               $result = pg_query($db_connection, $query);
-                                       
-                                               if ($result && pg_num_rows($result) > 0) {
-                                                   echo "<tbody>";
-                                       
-                                                   while ($row = pg_fetch_assoc($result)) {
-                                                       echo "<tr>";
-                                                       echo "<td>" . $row['hospital_name'] . "</td>";
-                                                       echo "<td>" . $row['hospital_level'] . "</td>";
-                                                       echo "<td>" . $row['type_of_institution'] . "</td>";
-                                                       echo "<td>" . $row['hospital_barangay'] . "</td>";
-                                                       echo "<td>" . $row['hospital_street'] . "</td>";
-                                                       echo "<td>";
-                                                       echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>";
-                                                       echo "</td>";
-                                                       echo "</tr>";
-                                                   }
-                                       
-                                                   echo "</tbody>";
-                                               } else {
-                                                   echo "<tbody><tr><td colspan='5'>No hospitals found</td></tr></tbody>";
-                                               }
-                                       
-                                               pg_close($db_connection);
-                                           }
-                                           */
-                                       ?>                                       
+                                        //fetching data sa hospital-general-information at user-repo 
+                                        if (!$db_connection) {
+                                            echo "Failed to connect to the database.";
+                                        } else {
+                                            $query = "SELECT 
+                                                        ru.user_fname AS \"First Name\",
+                                                        ru.user_mname AS \"Middle Name\",
+                                                        ru.user_lname AS \"Last Name\",
+                                                        hgi.hospital_name AS \"Hospital Affiliated With\",
+                                                        ru.position AS \"Position\"
+                                                      FROM 
+                                                        repo_user ru
+                                                      JOIN 
+                                                        hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id";
+                                        
+                                            $result = pg_query($db_connection, $query);
+                                        
+                                            if ($result && pg_num_rows($result) > 0) {
+                                                echo "<tbody>";
+                                        
+                                                while ($row = pg_fetch_assoc($result)) {
+                                                    echo "<tr>";
+                                                    echo "<td>" . $row['First Name'] . "</td>";
+                                                    echo "<td>" . $row['Middle Name'] . "</td>";
+                                                    echo "<td>" . $row['Last Name'] . "</td>";
+                                                    echo "<td>" . $row['Hospital Affiliated With'] . "</td>";
+                                                    echo "<td>" . $row['Position'] . "</td>";
+                                                    echo "<td>";
+                                                    echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>";
+                                                    echo "<a href='#' data-toggle='modal' data-target='#delete_hospital' title='Delete' class='btn text-xs text-white btn-danger action-icon ml-2'><i class='fa fa-trash'></i></a>";
+                                                    echo "</td>";
+                                                    echo "</tr>";
+                                                }
+                                        
+                                                echo "</tbody>";
+                                            } else {
+                                                echo "<tbody><tr><td colspan='5'>No data found</td></tr></tbody>";
+                                            }
+                                        
+                                            // Close the database connection
+                                            pg_close($db_connection);
+                                        }
+                                        ?>                                     
                                     </tbody>
                                 </table>
                             </div>

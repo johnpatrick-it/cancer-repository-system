@@ -28,7 +28,11 @@ h2 {
 				</button>
 			</div>
 			<div class="modal-body">
+<<<<<<< Updated upstream
 				<form method="POST" action="/includes/modals/hospital/save_user.php" enctype="multipart/form-data">
+=======
+				<form method="POST" action="/includes/modals/hospital/save_user.php" enctype="multipart/form-data">
+>>>>>>> Stashed changes
 					<h2>USER INFORMATION</h2>
 					<div class="form-row">
 						<div class="form-group col-md-3">

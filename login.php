@@ -3,34 +3,42 @@ session_start();
 error_reporting(0);
 include('includes/config.php');
 
+// Your plaintext password
+
 $wrongusername = ''; // Initialize the variable
 $wrongpassword = ''; // Initialize the variable
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
-    // $hashedPassword = $_POST['password']; // Commenting out ko muna hashed password for testing purposes
-    $plainPassword = $_POST['password']; // Storing the plain password
-    
-	$query = "SELECT admin_id, department FROM public.admin_users WHERE email = $1 AND password = $2";
-    
-    $stmt = pg_prepare($db_connection, "login_query", $query);
+    $password = $_POST['password'];
+
+    $query = "SELECT admin_id, department, password FROM public.admin_users WHERE email = $1";
+    $stmt = pg_prepare($db_connection, "fetch_password_query", $query);
 
     if ($stmt) {
-        // $result = pg_execute($db_connection, "login_query", array($email, $hashedPassword));
-        $result = pg_execute($db_connection, "login_query", array($email, $plainPassword)); // Use plain password for testing
+        $result = pg_execute($db_connection, "fetch_password_query", array($email));
 
         if ($result) {
             $row = pg_fetch_assoc($result);
             if ($row) {
-                $department = $row['department'];
-                $adminId = $row['admin_id'];
+                $hashedPassword = $row['password'];
 
-                if ($department === 'repository') {
-                    $_SESSION['admin_id'] = $adminId;
-                    header("Location: index.php");
-                    exit();
+                // Verifieng password
+                if (password_verify($password, $hashedPassword)) {
+                    // Password is correct
+                    $department = $row['department'];
+                    $adminId = $row['admin_id'];
+
+                    if ($department === 'Repository') {
+                        $_SESSION['admin_id'] = $adminId;
+                        header("Location: index.php");
+                        exit();
+                    } else {
+                        $wrongusername = "You are not authorized to access this page.";
+                    }
                 } else {
-                    $wrongusername = "You are not authorized to access this page.";
+                    // Password is incorrect
+                    $wrongpassword = "Invalid email or password.";
                 }
             } else {
                 $wrongusername = "Invalid email or password.";
