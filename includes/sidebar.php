@@ -34,7 +34,6 @@
         bottom: 0;
         left: 0;
     }
-
 </style>
 
 <div class="sidebar" id="sidebar">
@@ -71,6 +70,22 @@
 
                 <!-- SETTINGS -->
                 <li><a href="#"><i class="la la-file-text"></i><span>Settings</span></a></li>
+
+                <br>
+                <br>
+                <br>
+
+                <!-- User Dashboard -->
+                <li><a href="./user-index.php"><i class="la la-dashboard"></i><span>User Dashboard</span></a></li>
+
+                <!-- Manage Patient -->
+                <li><a href="./manage-patient.php"><i class="la la-users"></i><span>Manage Patient</span></a></li>
+
+                <!-- Patient Registry -->
+                <li><a href="./patient-registry-one.php"><i class="la la-user-plus"></i><span>Patient Registry</span></a></li>
+
+                <!-- Patient Report -->
+                <li><a href="./patient-report.php"><i class="la la-file-text-o"></i><span>Patient Report</span></a></li>
 
                 <!-- LOGOUT -->
                 <li class="out-container">
