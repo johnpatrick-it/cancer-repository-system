@@ -201,11 +201,7 @@ include('includes/config.php');
                                                       JOIN 
                                                         hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id";
                                         
-                                            $result = pg_query($db_connection, $query);
-                                        
-                                            if ($result && pg_num_rows($result) > 0) {
-                                                echo "<tbody>";
-                                        
+                                            $result = pg_query($db_connection, $query);                                    
                                                 while ($row = pg_fetch_assoc($result)) {
                                                     echo "<tr>";
                                                     echo "<td>" . $row['First Name'] . "</td>";
@@ -219,15 +215,10 @@ include('includes/config.php');
                                                     echo "</td>";
                                                     echo "</tr>";
                                                 }
-                                        
-                                                echo "</tbody>";
-                                            } else {
-                                                echo "<tbody><tr><td colspan='5'>No data found</td></tr></tbody>";
                                             }
                                         
                                             // Close the database connection
                                             pg_close($db_connection);
-                                        }
                                         ?>                                     
                                     </tbody>
                                 </table>

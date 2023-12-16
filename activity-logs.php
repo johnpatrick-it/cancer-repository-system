@@ -1,11 +1,14 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
+    // Redirect to the login page
+    header("Location: login.php");
+    exit; 
+}
+
 error_reporting(0);
 include('includes/config.php');
-
-if (strlen($_SESSION['userlogin']) == 0) {
-    header('location:login.php');
-}
 ?>
 
 <!DOCTYPE html>

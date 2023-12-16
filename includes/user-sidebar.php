@@ -54,7 +54,7 @@
                 <br>
 
                 <!-- User Dashboard -->
-                <li><a href="./user-index.php"><i class="la la-dashboard"></i><span>User Dashboard</span></a></li>
+                <li><a href="./user-landing-page.php"><i class="la la-dashboard"></i><span>User Dashboard</span></a></li>
 
                 <!-- Manage Patient -->
                 <li><a href="./manage-patient.php"><i class="la la-users"></i><span>Manage Patient</span></a></li>

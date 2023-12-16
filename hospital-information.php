@@ -192,10 +192,6 @@ include('includes/config.php');
                                            } else {
                                                $query = "SELECT hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street FROM hospital_general_information";
                                                $result = pg_query($db_connection, $query);
-                                       
-                                               if ($result && pg_num_rows($result) > 0) {
-                                                   echo "<tbody>";
-                                       
                                                    while ($row = pg_fetch_assoc($result)) {
                                                        echo "<tr>";
                                                        echo "<td>" . $row['hospital_name'] . "</td>";
@@ -208,14 +204,11 @@ include('includes/config.php');
                                                        echo "</td>";
                                                        echo "</tr>";
                                                    }
-                                       
                                                    echo "</tbody>";
-                                               } else {
-                                                   echo "<tbody><tr><td colspan='5'>No hospitals found</td></tr></tbody>";
-                                               }
+                                                }
                                        
                                                pg_close($db_connection);
-                                           }
+                                           
                                        ?>                                       
                                     </tbody>
                                 </table>
