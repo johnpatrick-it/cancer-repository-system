@@ -60,7 +60,7 @@
                 <li><a href="./manage-patient.php"><i class="la la-users"></i><span>Manage Patient</span></a></li>
 
                 <!-- Patient Registry -->
-                <li><a href="./patient-registry-one.php"><i class="la la-user-plus"></i><span>Patient Registry</span></a></li>
+                <li><a href="./patientform/patient-registry-one.php"><i class="la la-user-plus"></i><span>Patient Registry</span></a></li>
 
                 <!-- Patient Report -->
                 <li><a href="./patient-report.php"><i class="la la-file-text-o"></i><span>Patient Report</span></a></li>

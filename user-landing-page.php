@@ -6,7 +6,6 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
-
 error_reporting(0);
 include('includes/config.php');
 
@@ -159,6 +158,7 @@ include('includes/config.php');
                         <div class="col-sm-12">
                             <div class="welcome d-flex justify-content-between align-items-center">
                                 <h3 class="page-title">Display Hospital Name</h3>
+
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item active"></li>
