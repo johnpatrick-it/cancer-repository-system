@@ -1,8 +1,8 @@
 <?php
 session_start();
 
+//SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
-    // Redirect to the login page
     header("Location: login.php");
     exit; 
 }
@@ -126,97 +126,93 @@ include('./includes/config.php');
                     <hr>
                 </div>
 
-                <form action="" class="" method="post">
-
+                <form action="patient-registry-one-submit.php" method="post">
                     <div class="row form-rows">
-                    <div class="col-md-3">
+                        <div class="col-md-3">
                             <label>Type of Patient</label>
-                            <select name="type-of-patient" id="type-of-patient">
-                                <option value=""></option>
-                                <option value="out-patient">Out-patient</option>
-                                <option value="in-patient">In-patient</option>
-                        </div>
-                        <div class="col-md-3">
-                            <label>Surname</label>
-                            <input type="text" name="surname" id="surname" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Given name</label>
-                            <input type="text" name="given-name" id="given-name" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Middle name (Optional)</label>
-                            <input type="text" name="middle-name" id="middle-name" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Suffix</label>
-                            <input type="text" name="suffix" id="suffix" value="">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label>Gender</label>
-                            <input type="text" name="gender" id="gender" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Civil Status</label>
-                            <select name="civil-status" id="civil-status">
-                                <option value="test">Single</option>
-                                <option value="test">Married</option>
-                                <option value="test">Divorced</option>
-                                <option value="test">Widowed</option>
+                            <select name="type_of_patient" id="type_of_patient">
+                                <option value="" disabled selected>Select Type</option>
+                                <option value="out_patient">Out-patient</option>
+                                <option value="in_patient">In-patient</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label>Birth Date</label>
-                            <input type="date" name="birth-date" id="birth-date" value="">
+                            <label>Surname</label>
+                            <input type="text" name="patient_lname_initial" id="patient_lname_initial" value="">
                         </div>
                         <div class="col-md-3">
-                            <label>Place of Birth</label>
-                            <input type="text" name="birth-place" id="birth-place" value="">
+                            <label>Given name</label>
+                            <input type="text" name="patient_fname_initial" id="patient_fname_initial" value="">
                         </div>
-                    </div>
+                        <div class="col-md-3">
+                            <label>Middle name(Optional)</label>
+                            <input type="text" name="patient_mname" id="patient_mname" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Suffix</label>
+                            <input type="text" name="patient_suffix" id="patient_suffix" value="">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Gender</label>
+                                <select name="sex" id="sex">
+                                    <option value="" disabled selected>Select Type</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Civil Status</label>
+                                <select name="civil_status" id="civil_status">
+                                    <option value="" disabled selected>Select Type</option>
+                                    <option value="single">Single</option>
+                                    <option value="married">Married</option>
+                                    <option value="divorced">Divorce</option>
+                                    <option value="widowed">Widowed</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label>Birth Date</label>
+                                <input type="date" name="birthday" id="birthday" value="">
+                            </div>
+                        </div>
 
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label>Permanent Address</label>
-                            <input type="text" name="address" id="address" value="">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Permanent Address</label>
+                                <input type="text" name="address_region" id="address_region" value="">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Barangay</label>
+                                <input type="text" name="address_barangay" id="address_barangay" value="">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Province</label>
+                                <input type="text" name="address_province" id="address_province" value="">
+                            </div>
+                            <div class="col-md-3">
+                                <label>City/Municipality</label>
+                                <input type="text" name="address_city_municipality" id="address_city_municipality" value="">
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <label>Barangay</label>
-                            <input type="text" name="barangay" id="barangay" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Province</label>
-                            <input type="text" name="province" id="province" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>City/Municipality</label>
-                            <input type="text" name="city" id="city" value="">
-                        </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label>Contact Number</label>
-                            <input type="text" name="firstname" id="firstname" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Nationality</label>
-                            <input type="text" name="nationality" id="nationality" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Educational Attainment</label>
-                            <input type="text" name="educational" id="educational" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Occupation</label>
-                            <input type="text" name="occupation" id="occupation" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Race</label>
-                            <input type="text" name="race" id="race" value="">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label>Nationality</label>
+                                <input type="text" name="nationality" id="nationality" value="">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Occupation</label>
+                                <input type="text" name="occupation" id="occupation" value="">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Educational Attainment</label>
+                                <input type="text" name="educational_attainment" id="educational_attainment" value="">
+                            </div>
+                            <div class="col-md-3">
+                                <label>Race</label>
+                                <input type="text" name="race" id="race" value="">
+                            </div>
                         </div>
                     </div>
 
@@ -232,25 +228,20 @@ include('./includes/config.php');
                         </div>
                         <div class="col-md-3">
                             <div class="submit-btn">
-                                <!-- <input type="submit" name="submit" value="Next"> -->
-                                <input type="button" name="" value="Next" onclick="redirectToEditPatientPage()">
+                                <!--<input type="submit" name="submit" value="Next">-->
+                                <!--<input type="button" name="" value="Next" onclick="redirectToEditPatientPage()">-->
+                                <input type="submit" name="submit" value="Save">
+                                <div class="col-md-3">
+                        </div>
                             </div>
                         </div>
                     </div>
-
                 </form>
 
             </div>
         </div>
 
     </div>
-
-    <!-- FOR STATIC REDIRECT -->
-    <script>
-        function redirectToEditPatientPage() {
-            window.location.href = 'patient-registry-two.php';
-        }
-    </script>
 
     <script src="assets/js/jquery-3.2.1.min.js"></script>
 

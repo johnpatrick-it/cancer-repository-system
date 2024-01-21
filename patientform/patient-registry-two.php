@@ -1,15 +1,20 @@
 <?php
-session_start();
+    session_start();
 
-if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
-    // Redirect to the login page
-    header("Location: login.php");
-    exit; 
-}
+    //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
+    if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
+        header("Location: login.php");
+        exit; 
+    }
 
-error_reporting(0);
-include('./includes/config.php');
+    error_reporting(0);
+    include('./includes/config.php');
+
+
+    //Session para sa patient_id, gagamitin para sa fk 
+    $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
 ?>
+
 
 
 <!DOCTYPE html>
@@ -163,77 +168,106 @@ include('./includes/config.php');
                     <hr>
                 </div>
 
-                <form action="" class="" method="post">
-
+                <form action="patient-registry-two-submit.php" method="post">
                     <div class="row form-rows">
                         <div class="col-md-3 radio-container">
                             <label>Smoking</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="smoking-no" name="smoking" value="no">
-                                    <label for="smoking-no">No</label>
+                                    <input type="radio" id="smoking_no" name="smoking" value="no">
+                                    <label for="smoking_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="smoking-yes" name="smoking" value="yes">
-                                    <label for="smoking-yes">Yes</label>
+                                    <input type="radio" id="smoking_yes" name="smoking" value="yes">
+                                    <label for="smoking_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label>No. of years smoking</label>
-                            <input type="text" name="years-smoking" id="years-smoking" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Year started smoking</label>
-                            <input type="text" name="started-smoking" id="started-smoking" value="">
+                            <label>Estimated number of years smoking</label>
+                            <input type="text" name="estimate_years_smoking" id="estimate_years_smoking" value="">
                         </div>
                         <div class="col-md-3 radio-container">
                             <label>Physical Activity</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="physical-activity-no" name="physical-activity" value="no">
-                                    <label for="physical-activity-no">No</label>
+                                    <input type="radio" id="physical_activity_no" name="physical_activity" value="no">
+                                    <label for="physical_activity_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="physical-activity-yes" name="physical-activity" value="yes">
-                                    <label for="physical-activity-yes">Yes</label>
+                                    <input type="radio" id="physical_activity_yes" name="physical_activity" value="yes">
+                                    <label for="physical_activity_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
+                        <div class="row form-rows">
+                            <div class="col-md-3 checkbox-container">
+                                <label>Diet</label>
+                                <div class="checkboxes">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="diet_meat" name="diet[]" value="meat">
+                                        <label for="diet_meat">Meat</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="diet_fruit" name="diet[]" value="fruit">
+                                        <label for="diet_fruit">Fruit</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="diet_carbohydrates" name="diet[]" value="carbohydrates">
+                                        <label for="diet_carbohydrates">Carbohydrates</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="diet_other" name="diet[]" value="other">
+                                        <label for="diet_other">other</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <div class="row">
                         <div class="col-md-3 radio-container">
                             <label>Drinking of Alcohol</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="drinking-alcohol-no" name="drinking-alcohol" value="no">
-                                    <label for="drinking-alcohol-no">No</label>
+                                    <input type="radio" id="drinking_alcohol_no" name="drinking_alcohol" value="no">
+                                    <label for="drinking_alcohol_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="drinking-alcohol-yes" name="drinking-alcohol" value="yes">
-                                    <label for="drinking-alcohol-yes">Yes</label>
+                                    <input type="radio" id="drinking_alcohol_yes" name="drinking_alcohol" value="yes">
+                                    <label for="drinking_alcohol_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label>No. of years drinking</label>
-                            <input type="text" name="years-drinking" id="years-drinking" value="">
+                            <label>Estimate Number of Years Drinking</label>
+                            <input type="text" name="estimate_years_alcohol" id="estimate_years_alcohol" value="">
                         </div>
                         <div class="col-md-3">
-                            <label>No. of sexual-partners</label>
-                            <input type="text" name="sexual-partners" id="sexual-partners" value="">
+                            <label>Number of Sexual-Partners</label>
+                            <input type="text" name="no_of_sexual_partners" id="no_of_sexual_partners" value="">
                         </div>
                         <div class="col-md-3 radio-container">
                             <label>Use of Contraceptives</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="contraceptives-no" name="contraceptives" value="no">
-                                    <label for="contraceptives-no">No</label>
+                                    <input type="radio" id="contraceptives_no" name="use_of_contraceptive" value="no">
+                                    <label for="contraceptives_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="contraceptives-yes" name="contraceptives" value="yes">
-                                    <label for="contraceptives-yes">Yes</label>
+                                    <input type="radio" id="contraceptives_yes" name="use_of_contraceptive" value="yes">
+                                    <label for="contraceptives_yes">Yes</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 radio-container">
+                            <label>Early Age Sexual Intercourse</label>
+                            <div class="radios">
+                                <div class="no-radio">
+                                    <input type="radio" id="early_age_sexual_intercourse_no" name="early_age_sexual_intercourse" value="no">
+                                    <label for="early_age_sexual_intercourse_no">No</label>
+                                </div>
+                                <div class="yes-radio">
+                                    <input type="radio" id="early_age_sexual_intercourse_yes" name="early_age_sexual_intercourse" value="yes">
+                                    <label for="early_age_sexual_intercourse_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
@@ -241,12 +275,12 @@ include('./includes/config.php');
                             <label>Chemical Exposure</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="chemical-exposure-no" name="chemical-exposure" value="no">
-                                    <label for="chemical-exposure-no">No</label>
+                                    <input type="radio" id="chemical_exposure_no" name="chemical_exposure" value="no">
+                                    <label for="chemical_exposure_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="chemical-exposure-yes" name="chemical-exposure" value="yes">
-                                    <label for="chemical-exposure-yes">Yes</label>
+                                    <input type="radio" id="chemical_exposure_yes" name="chemical_exposure" value="yes">
+                                    <label for="chemical_exposure_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
@@ -254,12 +288,12 @@ include('./includes/config.php');
                             <label>Family History/Cancer</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="family-history-no" name="family-history" value="no">
-                                    <label for="family-history-no">No</label>
+                                    <input type="radio" id="family_history_no" name="family_history" value="no">
+                                    <label for="family_history_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="family-history-yes" name="family-history" value="yes">
-                                    <label for="family-history-yes">Yes</label>
+                                    <input type="radio" id="family_history_yes" name="family_history" value="yes">
+                                    <label for="family_history_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
@@ -273,8 +307,8 @@ include('./includes/config.php');
                         </div>
                         <div class="col-md-3">
                             <label>BMI Classification</label>
-                            <select name="bmi" id="bmi">
-                                <option value=""></option>
+                            <select name="classification_bmi" id="classification_bmi">
+                                <option value="" disabled selected>Select Type</option>
                                 <option value="Under-weight">Under-weight</option>
                                 <option value="Normal">Normal</option>
                                 <option value="Over-weight">Over-weight</option>
@@ -282,18 +316,17 @@ include('./includes/config.php');
                             </select>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-3 radio-container">
                             <label>Human Papilloma Virus Infection</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="human-papilloma-no" name="human-papilloma" value="no">
-                                    <label for="human-papilloma-no">No</label>
+                                    <input type="radio" id="human_papilloma_no" name="human_papilloma" value="no">
+                                    <label for="human_papilloma_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="human-papilloma-yes" name="human-papilloma" value="yes">
-                                    <label for="human-papilloma-yes">Yes</label>
+                                    <input type="radio" id="human_papilloma_yes" name="human_papilloma" value="yes">
+                                    <label for="human_papilloma_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
@@ -301,12 +334,12 @@ include('./includes/config.php');
                             <label>Helicobacter Pylori Virus Infection</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="helicobacter-pylori-no" name="helicobacter-pylori" value="no">
-                                    <label for="helicobacter-pylori-no">No</label>
+                                    <input type="radio" id="helicobacter_pylori_no" name="helicobacter_pylori" value="no">
+                                    <label for="helicobacter_pylori_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="helicobacter-pylori-yes" name="helicobacter-pylori" value="yes">
-                                    <label for="helicobacter-pylori-yes">Yes</label>
+                                    <input type="radio" id="helicobacter_pylori_yes" name="helicobacter_pylori" value="yes">
+                                    <label for="helicobacter_pylori_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
@@ -314,12 +347,12 @@ include('./includes/config.php');
                             <label>Helicobacter Pylori Virus Infection</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="helicobacter-pylorii-no" name="helicobacter-pylorii" value="no">
-                                    <label for="helicobacter-pylorii-no">No</label>
+                                    <input type="radio" id="helicobacter_pylorii_no" name="helicobacter_pylorii" value="no">
+                                    <label for="helicobacter_pylorii_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="helicobacter-pylorii-yes" name="helicobacter-pylorii" value="yes">
-                                    <label for="helicobacter-pylorii-yes">Yes</label>
+                                    <input type="radio" id="helicobacter_pylorii_yes" name="helicobacter_pylorii" value="yes">
+                                    <label for="helicobacter_pylorii_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
@@ -343,11 +376,11 @@ include('./includes/config.php');
                         <div class="col-md-3">
                             <div class="next-btn">
                                 <!-- <input type="submit" name="submit" value="Next"> -->
-                                <input type="button" name="" value="Next" onclick="redirectToThirdPage()">
+                                <!--<input type="button" name="" value="Next" onclick="redirectToThirdPage()">-->
+                                <input type="submit" name="submit" value="Save">
                             </div>
                         </div>
                     </div>
-
                 </form>
 
             </div>
@@ -387,3 +420,5 @@ include('./includes/config.php');
 </body>
 
 </html>
+
+patient-registry-two
