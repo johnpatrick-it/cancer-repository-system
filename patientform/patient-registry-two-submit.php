@@ -19,7 +19,7 @@ $db_connection = pg_connect("$host dbname=$database user=$username password=$pas
 if (!$db_connection) {
     die("Error connecting to the database: " . pg_last_error());
 }
-
+//Issue on getting the latest patient_id NEED FIX 
 $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
 
 // Retrieve patient_id from the URL parameters
