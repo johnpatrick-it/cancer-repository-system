@@ -130,7 +130,7 @@ include('./includes/config.php');
                     <div class="row form-rows">
                         <div class="col-md-3">
                             <label>Type of Patient</label>
-                            <select name="type_of_patient" id="type_of_patient">
+                            <select name="type_of_patient" id="type_of_patient" required>
                                 <option value="" disabled selected>Select Type</option>
                                 <option value="out_patient">Out-patient</option>
                                 <option value="in_patient">In-patient</option>
@@ -138,24 +138,24 @@ include('./includes/config.php');
                         </div>
                         <div class="col-md-3">
                             <label>Surname</label>
-                            <input type="text" name="patient_lname_initial" id="patient_lname_initial" value="">
+                            <input type="text" name="patient_lname_initial" id="patient_lname_initial" value="" required>
                         </div>
                         <div class="col-md-3">
                             <label>Given name</label>
-                            <input type="text" name="patient_fname_initial" id="patient_fname_initial" value="">
+                            <input type="text" name="patient_fname_initial" id="patient_fname_initial" value="" required>
                         </div>
                         <div class="col-md-3">
                             <label>Middle name(Optional)</label>
-                            <input type="text" name="patient_mname" id="patient_mname" value="">
+                            <input type="text" name="patient_mname" id="patient_mname" value="" required>
                         </div>
                         <div class="col-md-3">
                             <label>Suffix</label>
-                            <input type="text" name="patient_suffix" id="patient_suffix" value="">
+                            <input type="text" name="patient_suffix" id="patient_suffix" value="" required>
                         </div>
                         <div class="row">
                             <div class="col-md-3">
                                 <label>Gender</label>
-                                <select name="sex" id="sex">
+                                <select name="sex" id="sex" required>
                                     <option value="" disabled selected>Select Type</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
@@ -163,7 +163,7 @@ include('./includes/config.php');
                             </div>
                             <div class="col-md-3">
                                 <label>Civil Status</label>
-                                <select name="civil_status" id="civil_status">
+                                <select name="civil_status" id="civil_status" required>
                                     <option value="" disabled selected>Select Type</option>
                                     <option value="single">Single</option>
                                     <option value="married">Married</option>
@@ -173,45 +173,45 @@ include('./includes/config.php');
                             </div>
                             <div class="col-md-3">
                                 <label>Birth Date</label>
-                                <input type="date" name="birthday" id="birthday" value="">
+                                <input type="date" name="birthday" id="birthday" value="" required>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-3">
                                 <label>Permanent Address</label>
-                                <input type="text" name="address_region" id="address_region" value="">
+                                <input type="text" name="address_region" id="address_region" value="" required>
                             </div>
                             <div class="col-md-3">
                                 <label>Barangay</label>
-                                <input type="text" name="address_barangay" id="address_barangay" value="">
+                                <input type="text" name="address_barangay" id="address_barangay" value="" required>
                             </div>
                             <div class="col-md-3">
                                 <label>Province</label>
-                                <input type="text" name="address_province" id="address_province" value="">
+                                <input type="text" name="address_province" id="address_province" value="" required>
                             </div>
                             <div class="col-md-3">
                                 <label>City/Municipality</label>
-                                <input type="text" name="address_city_municipality" id="address_city_municipality" value="">
+                                <input type="text" name="address_city_municipality" id="address_city_municipality" value="" required>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-3">
                                 <label>Nationality</label>
-                                <input type="text" name="nationality" id="nationality" value="">
+                                <input type="text" name="nationality" id="nationality" value="" required>
                             </div>
                             <div class="col-md-3">
                                 <label>Occupation</label>
-                                <input type="text" name="occupation" id="occupation" value="">
+                                <input type="text" name="occupation" id="occupation" value="" required>
                             </div>
                             <div class="col-md-3">
                                 <label>Educational Attainment</label>
-                                <input type="text" name="educational_attainment" id="educational_attainment" value="">
+                                <input type="text" name="educational_attainment" id="educational_attainment" value="" required>
                             </div>
                             <div class="col-md-3">
                                 <label>Race</label>
-                                <input type="text" name="race" id="race" value="">
+                                <input type="text" name="race" id="race" value="" required>
                             </div>
                         </div>
                     </div>

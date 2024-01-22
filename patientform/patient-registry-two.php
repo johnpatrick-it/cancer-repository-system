@@ -185,7 +185,7 @@
                         </div>
                         <div class="col-md-3">
                             <label>Estimated number of years smoking</label>
-                            <input type="text" name="estimate_years_smoking" id="estimate_years_smoking" value="">
+                            <input type="number" name="estimate_years_smoking" id="estimate_years_smoking" value="" required>
                         </div>
                         <div class="col-md-3 radio-container">
                             <label>Physical Activity</label>
@@ -205,19 +205,19 @@
                                 <label>Diet</label>
                                 <div class="checkboxes">
                                     <div class="checkbox-item">
-                                        <input type="checkbox" id="diet_meat" name="diet[]" value="meat">
+                                        <input type="checkbox" id="diet_meat" name="diet" value="meat">
                                         <label for="diet_meat">Meat</label>
                                     </div>
                                     <div class="checkbox-item">
-                                        <input type="checkbox" id="diet_fruit" name="diet[]" value="fruit">
+                                        <input type="checkbox" id="diet_fruit" name="diet" value="fruit">
                                         <label for="diet_fruit">Fruit</label>
                                     </div>
                                     <div class="checkbox-item">
-                                        <input type="checkbox" id="diet_carbohydrates" name="diet[]" value="carbohydrates">
+                                        <input type="checkbox" id="diet_carbohydrates" name="diet" value="carbohydrates">
                                         <label for="diet_carbohydrates">Carbohydrates</label>
                                     </div>
                                     <div class="checkbox-item">
-                                        <input type="checkbox" id="diet_other" name="diet[]" value="other">
+                                        <input type="checkbox" id="diet_other" name="diet" value="other">
                                         <label for="diet_other">other</label>
                                     </div>
                                 </div>
@@ -239,11 +239,11 @@
                         </div>
                         <div class="col-md-3">
                             <label>Estimate Number of Years Drinking</label>
-                            <input type="text" name="estimate_years_alcohol" id="estimate_years_alcohol" value="">
+                            <input type="number" name="estimate_years_alcohol" id="estimate_years_alcohol" value="">
                         </div>
                         <div class="col-md-3">
                             <label>Number of Sexual-Partners</label>
-                            <input type="text" name="no_of_sexual_partners" id="no_of_sexual_partners" value="">
+                            <input type="number" name="no_of_sexual_partners" id="no_of_sexual_partners" value="" required>
                         </div>
                         <div class="col-md-3 radio-container">
                             <label>Use of Contraceptives</label>
@@ -288,22 +288,22 @@
                             <label>Family History/Cancer</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="family_history_no" name="family_history" value="no">
+                                    <input type="radio" id="family_history_no" name="family_history_with_cancer" value="no">
                                     <label for="family_history_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="family_history_yes" name="family_history" value="yes">
+                                    <input type="radio" id="family_history_yes" name="family_history_with_cancer" value="yes">
                                     <label for="family_history_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <label>Height</label>
-                            <input type="text" name="height" id="height" value="">
+                            <input type="number" name="height" id="height" value="">
                         </div>
                         <div class="col-md-3">
                             <label>Weight</label>
-                            <input type="text" name="weight" id="weight" value="">
+                            <input type="number" name="weight" id="weight" value="">
                         </div>
                         <div class="col-md-3">
                             <label>BMI Classification</label>
@@ -321,11 +321,11 @@
                             <label>Human Papilloma Virus Infection</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="human_papilloma_no" name="human_papilloma" value="no">
+                                    <input type="radio" id="human_papilloma_no" name="human_papillomavirus" value="no">
                                     <label for="human_papilloma_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="human_papilloma_yes" name="human_papilloma" value="yes">
+                                    <input type="radio" id="human_papilloma_yes" name="human_papillomavirus" value="yes">
                                     <label for="human_papilloma_yes">Yes</label>
                                 </div>
                             </div>
@@ -334,26 +334,26 @@
                             <label>Helicobacter Pylori Virus Infection</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="helicobacter_pylori_no" name="helicobacter_pylori" value="no">
+                                    <input type="radio" id="helicobacter_pylori_no" name="helicobacter_pylori_virus" value="no">
                                     <label for="helicobacter_pylori_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="helicobacter_pylori_yes" name="helicobacter_pylori" value="yes">
+                                    <input type="radio" id="helicobacter_pylori_yes" name="helicobacter_pylori_virus" value="yes">
                                     <label for="helicobacter_pylori_yes">Yes</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3 radio-container">
-                            <label>Helicobacter Pylori Virus Infection</label>
+                            <label>Hepatitis B Virus</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="helicobacter_pylorii_no" name="helicobacter_pylorii" value="no">
-                                    <label for="helicobacter_pylorii_no">No</label>
+                                    <input type="radio" id="hepatitis_b_virus_no" name="hepatitis_b_virus" value="no">
+                                    <label for="hepatitis_b_virus_yes">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="helicobacter_pylorii_yes" name="helicobacter_pylorii" value="yes">
-                                    <label for="helicobacter_pylorii_yes">Yes</label>
-                                </div>
+                                    <input type="radio" id="hepatitis_b_virus_yes" name="hepatitis_b_virus" value="yes">
+                                    <label for="hepatitis_b_virus_yes">Yes</label>
+                                   </div>
                             </div>
                         </div>
                         <div class="col-md-3">

@@ -34,23 +34,24 @@ $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve form data
-    $smoking = isset($_POST['smoking']) ? $_POST['smoking'] : '';
+    $smoking = $_POST['smoking'];
     $estimate_years_smoking = $_POST['estimate_years_smoking'];
-    $physical_activity = isset($_POST['physical_activity']) ? $_POST['physical_activity'] : '';
-    $diet = implode(', ', isset($_POST['diet']) ? $_POST['diet'] : []);
-    $drinking_alcohol = isset($_POST['drinking_alcohol']) ? $_POST['drinking_alcohol'] : '';
+    $physical_activity = $_POST['physical_activity'];
+    $diet = $_POST['diet'];
+    $drinking_alcohol = $_POST['drinking_alcohol'];
     $estimate_years_alcohol = $_POST['estimate_years_alcohol'];
-    $chemical_exposure = isset($_POST['chemical_exposure']) ? $_POST['chemical_exposure'] : '';
     $no_of_sexual_partners = $_POST['no_of_sexual_partners'];
-    $early_age_sexual_intercourse = $_POST['early_age_sexual_intercourse'];
     $use_of_contraceptive = $_POST['use_of_contraceptive'];
-    $family_history_with_cancer = isset($_POST['family_history']) ? $_POST['family_history'] : '';
+    $early_age_sexual_intercourse = $_POST['early_age_sexual_intercourse'];
+    $chemical_exposure = $_POST['chemical_exposure'];
+    $family_history_with_cancer = $_POST['family_history_with_cancer'];
     $height = $_POST['height'];
     $weight = $_POST['weight'];
     $classification_bmi = $_POST['classification_bmi'];
-    $human_papillomavirus = isset($_POST['human_papillomavirus']) ? $_POST['human_papillomavirus'] : '';
-    $helicobacter_pylori_virus = isset($_POST['helicobacter_pylori_virus']) ? $_POST['helicobacter_pylori_virus'] : '';
-    $hepatitis_b_virus = isset($_POST['hepatitis_b_virus']) ? $_POST['hepatitis_b_virus'] : '';
+    $human_papillomavirus = $_POST['human_papillomavirus'];    
+    $helicobacter_pylori_virus = $_POST['helicobacter_pylori_virus'];
+    $hepatitis_b_virus = $_POST['hepatitis_b_virus'];
+
 
     // Prepare and execute the parameterized SQL query
     $query = "INSERT INTO public.patient_history_info (
@@ -75,8 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     if ($result) {
-        echo "Data inserted successfully.";
-        // Redirect or perform other actions as needed
+        header('Location: patient-registry-three.php');
     } else {
         echo "Error inserting data: " . pg_last_error($db_connection);
     }

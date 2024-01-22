@@ -62,7 +62,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $result = pg_query_params($db_connection, $query, $params);
 
 if ($result) {
-    // Fetch the patient_id
+
+    //In this function I query the lastest patient_id then I store it in SESSION then if the insert query is successful it will 
+    //go the patient-registry-two where I also put the patient_id session to use as Foreign Key for patient_history table
+
     $query = "SELECT patient_id FROM public.patient_general_info WHERE repo_user_id = $1 ORDER BY patient_id DESC LIMIT 1";
     $result_patient_id = pg_query_params($db_connection, $query, array($repoUserId));
 
@@ -70,10 +73,10 @@ if ($result) {
         $row_patient_id = pg_fetch_assoc($result_patient_id);
         $patient_id = $row_patient_id['patient_id'];
 
-        // Store patient_id in session
+
         $_SESSION['patient_id'] = $patient_id;
 
-        // Redirect to the next page
+
         header('Location: patient-registry-two.php');
         exit;
     } else {
@@ -85,5 +88,3 @@ if ($result) {
 
    
 pg_close($db_connection);
-
-
