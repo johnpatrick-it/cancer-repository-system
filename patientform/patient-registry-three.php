@@ -157,16 +157,16 @@
                     <hr>
                 </div>
 
-                <form action="" class="" method="post">
+                <form action="patient-registry-three-submit.php" class="" method="post">
 
                     <div class="row form-rows">
                         <div class="col-md-3">
                             <label>Date of Consultation</label>
-                            <input type="date" name="consultation-date" id="consultation-date" value="">
+                            <input type="date" name="consultation_date" id="consultation_date" value="">
                         </div>
                         <div class="col-md-3">
                             <label>Date of Diagnosis</label>
-                            <input type="date" name="diagnosis-date" id="diagnosis-date" value="">
+                            <input type="date" name="diagnosis_date" id="diagnosis_date" value="">
                         </div>
 
                         <div class="col-md-3">
@@ -503,7 +503,7 @@
                     <div class="row">
                          <div class="col-md-3">
                             <label>Tumor Size</label>
-                            <input type="number" name="tumor-size" id="tumor-size" value="">
+                            <input type="number" name="tumor_size" id="tumor_size" value="">
                         </div>
                         <div class="col-md-3 radio-container">
                             <label>Nodes</label>
@@ -543,7 +543,7 @@
                         </div>
                         <div class="col-md-3">
                             <label>Final Diagnosis</label>
-                            <textarea id="final-diagnosis" name="final-diagnosis"></textarea>
+                            <textarea id="final_diagnosis" name="final_diagnosis"></textarea>
                         </div>   
                     </div>
                         <div>
@@ -558,7 +558,7 @@
                         </div>
                         <div>
                             <label>Patient Status</label>
-                            <select name="patient-status" id="patient-status">
+                            <select name="patient_status" id="patient_status">
                                 <option value=""disabled selected>Select Type</option>
                                 <option value="alive">Alive</option>
                                 <option value="disposition">Disposition</option>
@@ -572,10 +572,6 @@
                         <div class="col-md-3">
                             <label>Cause of Death</label>
                             <input type="text" name="place_of_death" id="place_of_death" value="">
-                        </div>
-                        <div class="col-md-3">
-                            <label>Date of Death</label>
-                            <input type="date" name="date_of_death" id="date_of_death" value="">
                         </div>
                         <div class="col-md-3">
                             <label>Date of Death</label>
@@ -611,7 +607,7 @@
                         </div>
                         <div class="col-md-3">
                             <label>Disignation</label>
-                            <input type="text" name="disignation" id="disignation" value="">
+                            <input type="text" name="designation" id="designation" value="">
                         </div>
                         <div class="col-md-3">
                             <label>Date of data inserted</label>
