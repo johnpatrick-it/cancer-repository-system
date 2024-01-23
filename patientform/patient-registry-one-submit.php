@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $1, $2, $3, $4,
         $5, $6, $7, $8, $9,
         $10, $11, $12, $13, $14, $15, $16
-    )";
+    ) RETURNING patient_id";
 
     $params = array(
         $type_of_patient, $patient_last_name, $patient_first_name, $patient_middle_name,
@@ -59,32 +59,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $address_region, $address_barangay, $address_province, $address_city_municipality
     );
 
-$result = pg_query_params($db_connection, $query, $params);
+    $result_patient_id = pg_query_params($db_connection, $query, $params);
 
-if ($result) {
+if ($result_patient_id) {
+    $row_patient_id = pg_fetch_assoc($result_patient_id);
+    $patient_id = $row_patient_id['patient_id'];
 
-    //In this function I query the lastest patient_id then I store it in SESSION then if the insert query is successful it will 
-    //go the patient-registry-two where I also put the patient_id session to use as Foreign Key for patient_history table
+    // Store patient_id in session
+    $_SESSION['patient_id'] = $patient_id;
 
-    $query = "SELECT patient_id FROM public.patient_general_info WHERE repo_user_id = $1 ORDER BY patient_id DESC LIMIT 1";
-    $result_patient_id = pg_query_params($db_connection, $query, array($repoUserId));
-
-    if ($result_patient_id) {
-        $row_patient_id = pg_fetch_assoc($result_patient_id);
-        $patient_id = $row_patient_id['patient_id'];
-
-
-        $_SESSION['patient_id'] = $patient_id;
-
-
-        header('Location: patient-registry-two.php');
-        exit;
-    } else {
-        echo "Error fetching patient_id: " . pg_last_error($db_connection);
-    }
-} }else {
-    echo "Error inserting data: " . pg_last_error($db_connection);
+    // Redirect to patient-registry-two.php
+    header('Location: patient-registry-two.php');
+    exit;
+} else {
+    // Handle error fetching patient_id
+    echo "Error fetching patient_id: " . pg_last_error($db_connection);
 }
 
-   
+
+}
 pg_close($db_connection);

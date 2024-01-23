@@ -74,15 +74,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Execute the parameterized query
     $result = pg_query_params($db_connection, $query, $params);
 
-
+    // Debugging statements
+    echo "Before unset: " . $_SESSION['patient_id'] . "<br>";
+    
     if ($result) {
-        header('Location: patient-registry-three.php');
-    } else {
+        // Destroy the patient_id session
+        unset($_SESSION['patient_id']);
+        echo "After unset: " . $_SESSION['patient_id'] . "<br>";
+    
+        // Redirect to patient-registry-one.php
+        header("Location: patient-registry-one.php");
+        exit;
+    } }else {
         echo "Error inserting data: " . pg_last_error($db_connection);
     }
-} else {
-    echo "Invalid request.";
-}
-
+    
 // Close the database connection
 pg_close($db_connection);
