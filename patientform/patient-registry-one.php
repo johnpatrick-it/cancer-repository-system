@@ -6,12 +6,6 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
-
-unset($_SESSION['patient_id']);
-
-echo "Session patient_id: " . $_SESSION['patient_id'];
-
-
 error_reporting(0);
 include('./includes/config.php');
 ?>

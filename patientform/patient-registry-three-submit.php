@@ -23,9 +23,12 @@ if (!$db_connection) {
 // Retrieve patient_id from the session
 $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
 
-// Check if the form is submitted
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve form data
     $consultation_date = $_POST['consultation_date'];
     $diagnosis_date = $_POST['diagnosis_date'];
     $valid_diagnosis_non_microscopic = $_POST['valid_diagnosis_non_microscopic'];
@@ -72,57 +75,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $date_completed = $_POST['date_completed'];
 
         // Prepare and execute the parameterized SQL query
-    $query = "INSERT INTO public.patient_cancer_info (
-        patient_id, consultation_date, diagnosis_date, valid_diagnosis_non_microscopic,
-        valid_diagnosis_microscopic, multiple_primaries, primary_site_brain,
-        primary_site_bladder, primary_site_breast, primary_site_colon,
-        primary_site_corpus_uteri, primary_site_esophagus, primary_site_kidney,
-        primary_site_larynx, primary_site_leukemia, primary_site_liver,
-        primary_site_lung, primary_site_skin, primary_site_nasopharynx,
-        primary_site_oral, primary_site_ovary, primary_site_prostate,
-        primary_site_rectum, primary_site_stomach, primary_site_testis,
-        primary_site_thyroid, primary_site_uterine_cervix, primary_site_others,
-        tumor_size, nodes, metastasis, cancer_stage, final_diagnosis,
-        patient_treatment, patient_status, cause_of_death, place_of_death,
-        date_of_death, transferred_hospital, reason_for_referral,
-        completed_by_lname, completed_by_fname, completed_by_mname, designation,
-        date_completed
-    ) 
-    VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
-        $21, $22, $23, $24, $25, $26, $27, $28, $29, $30,
-        $31, $32, $33, $34, $35, $36, $37, $38, $39, $40,
-        $41, $42, $43, $44, $45, $46, $47, $48, $49, $50
-    )";
+        $query = "INSERT INTO public.patient_cancer_info (
+            patient_id, consultation_date, diagnosis_date, valid_diagnosis_non_microscopic,
+            valid_diagnosis_microscopic, multiple_primaries, primary_site_brain,
+            primary_site_bladder, primary_site_breast, primary_site_colon,
+            primary_site_corpus_uteri, primary_site_esophagus, primary_site_kidney,
+            primary_site_larynx, primary_site_leukemia, primary_site_liver,
+            primary_site_lung, primary_site_skin, primary_site_nasopharynx,
+            primary_site_oral, primary_site_ovary, primary_site_prostate,
+            primary_site_rectum, primary_site_stomach, primary_site_testis,
+            primary_site_thyroid, primary_site_uterine_cervix, primary_site_others,
+            tumor_size, nodes, metastasis, cancer_stage, final_diagnosis,
+            patient_treatment, patient_status, cause_of_death, place_of_death,
+            date_of_death, transferred_hospital, reason_for_referral,
+            completed_by_lname, completed_by_fname, completed_by_mname, designation,
+            date_completed
+        ) 
+        VALUES (
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+            $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
+            $21, $22, $23, $24, $25, $26, $27, $28, $29, $30,
+            $31, $32, $33, $34, $35, $36, $37, $38, $39, $40,
+            $41, $42, $43, $44, $45
+        )";
+        
+        $params = array(
+            $patient_id, $consultation_date, $diagnosis_date,
+            $valid_diagnosis_non_microscopic, $valid_diagnosis_microscopic, $multiple_primaries,
+            $primary_site_brain, $primary_site_bladder, $primary_site_breast, $primary_site_colon,
+            $primary_site_corpus_uteri, $primary_site_esophagus, $primary_site_kidney,
+            $primary_site_larynx, $primary_site_leukemia, $primary_site_liver,
+            $primary_site_lung, $primary_site_skin, $primary_site_nasopharynx,
+            $primary_site_oral, $primary_site_ovary, $primary_site_prostate,
+            $primary_site_rectum, $primary_site_stomach, $primary_site_testis,
+            $primary_site_thyroid, $primary_site_uterine_cervix, $primary_site_others,
+            $tumor_size, $nodes, $metastasis, $cancer_stage, $final_diagnosis,
+            $patient_treatment, $patient_status, $cause_of_death, $place_of_death,
+            $date_of_death, $transferred_hospital, $reason_for_referral,
+            $completed_by_lname, $completed_by_fname, $completed_by_mname, $designation,
+            $date_completed
+        );
+        
+        $result = pg_query_params($db_connection, $query, $params);
 
-    $params = array(
-        $patient_id, $consultation_date, $diagnosis_date,
-        $valid_diagnosis_non_microscopic, $valid_diagnosis_microscopic, $multiple_primaries,
-        $primary_site_brain, $primary_site_bladder, $primary_site_breast, $primary_site_colon,
-        $primary_site_corpus_uteri, $primary_site_esophagus, $primary_site_kidney,
-        $primary_site_larynx, $primary_site_leukemia, $primary_site_liver,
-        $primary_site_lung, $primary_site_skin, $primary_site_nasopharynx,
-        $primary_site_oral, $primary_site_ovary, $primary_site_prostate,
-        $primary_site_rectum, $primary_site_stomach, $primary_site_testis,
-        $primary_site_thyroid, $primary_site_uterine_cervix, $primary_site_others,
-        $tumor_size, $nodes, $metastasis, $cancer_stage, $final_diagnosis,
-        $patient_treatment, $patient_status, $cause_of_death, $place_of_death,
-        $date_of_death, $transferred_hospital, $reason_for_referral,
-        $completed_by_lname, $completed_by_fname, $completed_by_mname, $designation,
-        $date_completed
-    );
+    //para sa destroy patient session
+    if ($result) {
 
-    $result = pg_query_params($db_connection, $query, $params);
-
-    if (!$result) {
-        die("Error inserting data: " . pg_last_error());
+        unset($_SESSION['patient_id']);
+    
+        header("Location: patient-registry-one.php");
+        exit;
+    } }else {
+        echo "Error inserting data: " . pg_last_error($db_connection);
     }
+pg_close($db_connection);
 
-    // Destroy the patient_id session
-    unset($_SESSION['patient_id']);
-
-    // Redirect to patient-registry-one.php
-    header("Location: patient-registry-one.php");
-    exit;
-}

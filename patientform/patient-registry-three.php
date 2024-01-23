@@ -214,11 +214,11 @@
                             <label>Multiple Primaries</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="multiple_primaries-no" name="multiple_primaries" value="no">
+                                    <input type="radio" id="multiple_primaries-no" name="multiple_primaries" value="false">
                                     <label for="multiple_primaries-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="multiple_primaries-yes" name="multiple_primaries" value="yes">
+                                    <input type="radio" id="multiple_primaries-yes" name="multiple_primaries" value="true">
                                     <label for="multiple_primaries-yes">Yes</label>
                                 </div>
                             </div>
@@ -227,11 +227,11 @@
                             <label>Brain</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="brain-no" name="primary_site_brain" value="no">
+                                    <input type="radio" id="brain-no" name="primary_site_brain" value="false">
                                     <label for="brain-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="brain-yes" name="primary_site_brain" value="yes">
+                                    <input type="radio" id="brain-yes" name="primary_site_brain" value="true">
                                     <label for="brain-yes">Yes</label>
                                 </div>
                             </div>
@@ -240,6 +240,7 @@
                             <label>Bladder</label>
                             <select name="primary_site_bladder" id="primary_site_bladder" required>
                                 <option value="" disabled selected>Select Type</option>
+                                <option value="N/A">N/A</option>
                                 <option value="Urinary">Urinary</option>
                                 <option value="Gall">Gall</option>
                             </select>
@@ -248,11 +249,11 @@
                             <label>Breast</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="breast-no" name="primary_site_breast" value="no">
+                                    <input type="radio" id="breast-no" name="primary_site_breast" value="false">
                                     <label for="breast-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="breast-yes" name="primary_site_breast" value="yes">
+                                    <input type="radio" id="breast-yes" name="primary_site_breast" value="true">
                                     <label for="breast-yes">Yes</label>
                                 </div>
                             </div>
@@ -261,7 +262,7 @@
                             <label>Colon</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="colon-no" name="primary_site_colon" value="no">
+                                    <input type="radio" id="colon-no" name="primary_site_colon" value="false">
                                     <label for="colon-no">No</label>
                                 </div>
                                 <div class="yes-radio">
@@ -277,11 +278,11 @@
                             <label>Corpus Uteri</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="corpus-uteri-no" name="primary_site_corpus_uteri" value="no">
+                                    <input type="radio" id="corpus-uteri-no" name="primary_site_corpus_uteri" value="false">
                                     <label for="corpus-uteri-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="corpus-uteri-yes" name="primary_site_corpus_uteri" value="yes">
+                                    <input type="radio" id="corpus-uteri-yes" name="primary_site_corpus_uteri" value="true">
                                     <label for="corpus-uteri-yes">Yes</label>
                                 </div>
                             </div>
@@ -290,11 +291,11 @@
                             <label>Esophagus</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="esophagus-no" name="primary_site_esophagus" value="no">
+                                    <input type="radio" id="esophagus-no" name="primary_site_esophagus" value="false">
                                     <label for="esophagus-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="esophagus-yes" name="primary_site_esophagus" value="yes">
+                                    <input type="radio" id="esophagus-yes" name="primary_site_esophagus" value="true">
                                     <label for="esophagus-yes">Yes</label>
                                 </div>
                             </div>
@@ -303,11 +304,11 @@
                             <label>Kidney</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="kidney-no" name="primary_site_kidney" value="no">
+                                    <input type="radio" id="kidney-no" name="primary_site_kidney" value="false">
                                     <label for="kidney-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="kidney-yes" name="primary_site_kidney" value="yes">
+                                    <input type="radio" id="kidney-yes" name="primary_site_kidney" value="true">
                                     <label for="kidney-yes">Yes</label>
                                 </div>
                             </div>
@@ -316,11 +317,11 @@
                             <label>Larynx</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="larynx-no" name="primary_site_larynx" value="no">
+                                    <input type="radio" id="larynx-no" name="primary_site_larynx" value="false">
                                     <label for="larynx-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="larynx-yes" name="primary_site_larynx" value="yes">
+                                    <input type="radio" id="larynx-yes" name="primary_site_larynx" value="true">
                                     <label for="larynx-yes">Yes</label>
                                 </div>
                             </div>
@@ -329,11 +330,11 @@
                             <label>Leukemia</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="leukemia-no" name="primary_site_leukemia" value="no">
+                                    <input type="radio" id="leukemia-no" name="primary_site_leukemia" value="false">
                                     <label for="leukemia-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="leukemia-yes" name="primary_site_leukemia" value="yes">
+                                    <input type="radio" id="leukemia-yes" name="primary_site_leukemia" value="true">
                                     <label for="leukemia-yes">Yes</label>
                                 </div>
                             </div>
@@ -342,11 +343,11 @@
                             <label>Liver</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="liver-no" name="primary_site_liver" value="no">
+                                    <input type="radio" id="liver-no" name="primary_site_liver" value="false">
                                     <label for="liver-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="liver-yes" name="primary_site_liver" value="yes">
+                                    <input type="radio" id="liver-yes" name="primary_site_liver" value="true">
                                     <label for="liver-yes">Yes</label>
                                 </div>
                             </div>
@@ -355,11 +356,11 @@
                             <label>Lung</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="lung-no" name="primary_site_lung" value="no">
+                                    <input type="radio" id="lung-no" name="primary_site_lung" value="false">
                                     <label for="lung-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="lung-yes" name="primary_site_lung" value="yes">
+                                    <input type="radio" id="lung-yes" name="primary_site_lung" value="true">
                                     <label for="lung-yes">Yes</label>
                                 </div>
                             </div>
@@ -368,11 +369,11 @@
                             <label>Skin</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="skin-no" name="primary_site_skin" value="no">
+                                    <input type="radio" id="skin-no" name="primary_site_skin" value="false">
                                     <label for="skin-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="skin-yes" name="primary_site_skin" value="yes">
+                                    <input type="radio" id="skin-yes" name="primary_site_skin" value="true">
                                     <label for="skin-yes">Yes</label>
                                 </div>
                             </div>
@@ -381,11 +382,11 @@
                             <label>Nasopharynx</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="nasopharynx-no" name="primary_site_nasopharynx" value="no">
+                                    <input type="radio" id="nasopharynx-no" name="primary_site_nasopharynx" value="false">
                                     <label for="nasopharynx-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="nasopharynx-yes" name="primary_site_nasopharynx" value="yes">
+                                    <input type="radio" id="nasopharynx-yes" name="primary_site_nasopharynx" value="true">
                                     <label for="nasopharynx-yes">Yes</label>
                                 </div>
                             </div>
@@ -394,11 +395,11 @@
                             <label>Oral</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="oral-no" name="primary_site_oral" value="no">
+                                    <input type="radio" id="oral-no" name="primary_site_oral" value="false">
                                     <label for="oral-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="oral-yes" name="primary_site_oral" value="yes">
+                                    <input type="radio" id="oral-yes" name="primary_site_oral" value="true">
                                     <label for="oral-yes">Yes</label>
                                 </div>
                             </div>
@@ -407,11 +408,11 @@
                             <label>Ovary</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="ovary-no" name="primary_site_ovary" value="no">
+                                    <input type="radio" id="ovary-no" name="primary_site_ovary" value="false">
                                     <label for="ovary-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="ovary-yes" name="primary_site_ovary" value="yes">
+                                    <input type="radio" id="ovary-yes" name="primary_site_ovary" value="true">
                                     <label for="ovary-yes">Yes</label>
                                 </div>
                             </div>
@@ -420,11 +421,11 @@
                             <label>Prostate</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="prostate-no" name="primary_site_prostate" value="no">
+                                    <input type="radio" id="prostate-no" name="primary_site_prostate" value="false">
                                     <label for="prostate-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="prostate-yes" name="primary_site_prostate" value="yes">
+                                    <input type="radio" id="prostate-yes" name="primary_site_prostate" value="true">
                                     <label for="prostate-yes">Yes</label>
                                 </div>
                             </div>
@@ -433,11 +434,11 @@
                             <label>Rectum</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="rectum-no" name="primary_site_rectum" value="no">
+                                    <input type="radio" id="rectum-no" name="primary_site_rectum" value="false">
                                     <label for="rectum-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="rectum-yes" name="primary_site_rectum" value="yes">
+                                    <input type="radio" id="rectum-yes" name="primary_site_rectum" value="true">
                                     <label for="rectum-yes">Yes</label>
                                 </div>
                             </div>
@@ -446,11 +447,11 @@
                             <label>Stomach</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="stomach-no" name="primary_site_stomach" value="no">
+                                    <input type="radio" id="stomach-no" name="primary_site_stomach" value="false">
                                     <label for="stomach-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="stomach-yes" name="primary_site_stomach" value="yes">
+                                    <input type="radio" id="stomach-yes" name="primary_site_stomach" value="true">
                                     <label for="stomach-yes">Yes</label>
                                 </div>
                             </div>
@@ -459,11 +460,11 @@
                             <label>Testis</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="testis-no" name="primary_site_testis" value="no">
+                                    <input type="radio" id="testis-no" name="primary_site_testis" value="false">
                                     <label for="testis-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="testis-yes" name="primary_site_testis" value="yes">
+                                    <input type="radio" id="testis-yes" name="primary_site_testis" value="true">
                                     <label for="testis-yes">Yes</label>
                                 </div>
                             </div>
@@ -472,11 +473,11 @@
                             <label>Thyroid</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="thyroid-no" name="primary_site_thyroid" value="no">
+                                    <input type="radio" id="thyroid-no" name="primary_site_thyroid" value="false">
                                     <label for="thyroid-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="thyroid-yes" name="primary_site_thyroid" value="yes">
+                                    <input type="radio" id="thyroid-yes" name="primary_site_thyroid" value="true">
                                     <label for="thyroid-yes">Yes</label>
                                 </div>
                             </div>
@@ -485,11 +486,11 @@
                             <label>Cervix</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="cervix-no" name="primary_site_uterine_cervix" value="no">
+                                    <input type="radio" id="cervix-no" name="primary_site_uterine_cervix" value="false">
                                     <label for="cervix-no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="cervix-yes" name="primary_site_uterine_cervix" value="yes">
+                                    <input type="radio" id="cervix-yes" name="primary_site_uterine_cervix" value="true">
                                     <label for="cervix-yes">Yes</label>
                                 </div>
                             </div>
@@ -509,24 +510,24 @@
                             <label>Nodes</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="nodes-no" name="nodes" value="no">
+                                    <input type="radio" id="nodes-no" name="nodes" value="false">
                                     <label for="nodes-no">Negative</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="nodes-yes" name="nodes" value="yes">
+                                    <input type="radio" id="nodes-yes" name="nodes" value="true">
                                     <label for="nodes-yes">Positive</label>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3 radio-container">
-                            <label>Nodes</label>
+                            <label>Metastatis</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="metastasis-no" name="metastasis" value="no">
+                                    <input type="radio" id="metastasis-no" name="metastasis" value="false">
                                     <label for="metastasis-no">Absent</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="metastasis-yes" name="metastasis" value="yes">
+                                    <input type="radio" id="metastasis-yes" name="metastasis" value="true">
                                     <label for="metastasis-yes">Present</label>
                                 </div>
                             </div>
@@ -635,7 +636,6 @@
                             </div>
                         </div>
                     </div>
-
                 </form>
 
             </div>

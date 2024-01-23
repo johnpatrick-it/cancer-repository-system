@@ -176,11 +176,11 @@
                             <label>Smoking</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="smoking_no" name="smoking" value="no">
+                                    <input type="radio" id="smoking_no" name="smoking" value="false">
                                     <label for="smoking_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="smoking_yes" name="smoking" value="yes">
+                                    <input type="radio" id="smoking_yes" name="smoking" value="true">
                                     <label for="smoking_yes">Yes</label>
                                 </div>
                             </div>
@@ -193,11 +193,11 @@
                             <label>Physical Activity</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="physical_activity_no" name="physical_activity" value="no">
+                                    <input type="radio" id="physical_activity_no" name="physical_activity" value="false">
                                     <label for="physical_activity_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="physical_activity_yes" name="physical_activity" value="yes">
+                                    <input type="radio" id="physical_activity_yes" name="physical_activity" value="true">
                                     <label for="physical_activity_yes">Yes</label>
                                 </div>
                             </div>
@@ -230,11 +230,11 @@
                             <label>Drinking of Alcohol</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="drinking_alcohol_no" name="drinking_alcohol" value="no">
+                                    <input type="radio" id="drinking_alcohol_no" name="drinking_alcohol" value="false">
                                     <label for="drinking_alcohol_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="drinking_alcohol_yes" name="drinking_alcohol" value="yes">
+                                    <input type="radio" id="drinking_alcohol_yes" name="drinking_alcohol" value="true">
                                     <label for="drinking_alcohol_yes">Yes</label>
                                 </div>
                             </div>
@@ -251,11 +251,11 @@
                             <label>Use of Contraceptives</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="contraceptives_no" name="use_of_contraceptive" value="no">
+                                    <input type="radio" id="contraceptives_no" name="use_of_contraceptive" value="false">
                                     <label for="contraceptives_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="contraceptives_yes" name="use_of_contraceptive" value="yes">
+                                    <input type="radio" id="contraceptives_yes" name="use_of_contraceptive" value="true">
                                     <label for="contraceptives_yes">Yes</label>
                                 </div>
                             </div>
@@ -264,11 +264,11 @@
                             <label>Early Age Sexual Intercourse</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="early_age_sexual_intercourse_no" name="early_age_sexual_intercourse" value="no">
+                                    <input type="radio" id="early_age_sexual_intercourse_no" name="early_age_sexual_intercourse" value="false">
                                     <label for="early_age_sexual_intercourse_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="early_age_sexual_intercourse_yes" name="early_age_sexual_intercourse" value="yes">
+                                    <input type="radio" id="early_age_sexual_intercourse_yes" name="early_age_sexual_intercourse" value="true">
                                     <label for="early_age_sexual_intercourse_yes">Yes</label>
                                 </div>
                             </div>
@@ -277,11 +277,11 @@
                             <label>Chemical Exposure</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="chemical_exposure_no" name="chemical_exposure" value="no">
+                                    <input type="radio" id="chemical_exposure_no" name="chemical_exposure" value="false">
                                     <label for="chemical_exposure_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="chemical_exposure_yes" name="chemical_exposure" value="yes">
+                                    <input type="radio" id="chemical_exposure_yes" name="chemical_exposure" value="true">
                                     <label for="chemical_exposure_yes">Yes</label>
                                 </div>
                             </div>
@@ -290,11 +290,11 @@
                             <label>Family History/Cancer</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="family_history_no" name="family_history_with_cancer" value="no">
+                                    <input type="radio" id="family_history_no" name="family_history_with_cancer" value="false">
                                     <label for="family_history_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="family_history_yes" name="family_history_with_cancer" value="yes">
+                                    <input type="radio" id="family_history_yes" name="family_history_with_cancer" value="true">
                                     <label for="family_history_yes">Yes</label>
                                 </div>
                             </div>
@@ -323,11 +323,11 @@
                             <label>Human Papilloma Virus Infection</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="human_papilloma_no" name="human_papillomavirus" value="no">
+                                    <input type="radio" id="human_papilloma_no" name="human_papillomavirus" value="false">
                                     <label for="human_papilloma_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="human_papilloma_yes" name="human_papillomavirus" value="yes">
+                                    <input type="radio" id="human_papilloma_yes" name="human_papillomavirus" value="true">
                                     <label for="human_papilloma_yes">Yes</label>
                                 </div>
                             </div>
@@ -336,11 +336,11 @@
                             <label>Helicobacter Pylori Virus Infection</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="helicobacter_pylori_no" name="helicobacter_pylori_virus" value="no">
+                                    <input type="radio" id="helicobacter_pylori_no" name="helicobacter_pylori_virus" value="false">
                                     <label for="helicobacter_pylori_no">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="helicobacter_pylori_yes" name="helicobacter_pylori_virus" value="yes">
+                                    <input type="radio" id="helicobacter_pylori_yes" name="helicobacter_pylori_virus" value="true">
                                     <label for="helicobacter_pylori_yes">Yes</label>
                                 </div>
                             </div>
@@ -349,11 +349,11 @@
                             <label>Hepatitis B Virus</label>
                             <div class="radios">
                                 <div class="no-radio">
-                                    <input type="radio" id="hepatitis_b_virus_no" name="hepatitis_b_virus" value="no">
+                                    <input type="radio" id="hepatitis_b_virus_no" name="hepatitis_b_virus" value="false">
                                     <label for="hepatitis_b_virus_yes">No</label>
                                 </div>
                                 <div class="yes-radio">
-                                    <input type="radio" id="hepatitis_b_virus_yes" name="hepatitis_b_virus" value="yes">
+                                    <input type="radio" id="hepatitis_b_virus_yes" name="hepatitis_b_virus" value="true">
                                     <label for="hepatitis_b_virus_yes">Yes</label>
                                    </div>
                             </div>
@@ -422,5 +422,3 @@
 </body>
 
 </html>
-
-patient-registry-two

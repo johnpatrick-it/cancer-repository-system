@@ -1,9 +1,9 @@
 <?php 
 session_start();
 
-//This function is saving the patient-registry-one to patient_general_info
+//This function is for saving the patient-registry-two to patient_history_info
 
-//SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
+//SESSION FOR REPO_USER_ID (NEEDED FOR EVERY repo_user FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
@@ -19,21 +19,17 @@ $db_connection = pg_connect("$host dbname=$database user=$username password=$pas
 if (!$db_connection) {
     die("Error connecting to the database: " . pg_last_error());
 }
+
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
+
+
 //Issue on getting the latest patient_id NEED FIX 
 $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
 
-// Retrieve patient_id from the URL parameters
-//$patient_id = isset($_GET['patient_id']) ? $_GET['patient_id'] : null;
 
-//if (!$patient_id) {
-    // Handle the case where patient_id is not provided
-    //echo "Invalid request.";
-    //exit;
-//}
-
-// Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve form data
     $smoking = $_POST['smoking'];
     $estimate_years_smoking = $_POST['estimate_years_smoking'];
     $physical_activity = $_POST['physical_activity'];
@@ -53,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hepatitis_b_virus = $_POST['hepatitis_b_virus'];
 
 
-    // Prepare and execute the parameterized SQL query
+    //parameterized SQL query
     $query = "INSERT INTO public.patient_history_info (
         smoking, estimate_years_smoking, physical_activity, diet, drinking_alcohol, 
         estimate_years_alcohol, chemical_exposure, no_of_sexual_partners, 
@@ -71,23 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hepatitis_b_virus, $patient_id
     );
 
-    // Execute the parameterized query
     $result = pg_query_params($db_connection, $query, $params);
 
-    // Debugging statements
-    echo "Before unset: " . $_SESSION['patient_id'] . "<br>";
-    
     if ($result) {
-        // Destroy the patient_id session
-        unset($_SESSION['patient_id']);
-        echo "After unset: " . $_SESSION['patient_id'] . "<br>";
-    
-        // Redirect to patient-registry-one.php
-        header("Location: patient-registry-one.php");
+        header("Location: patient-registry-three.php");
         exit;
     } }else {
         echo "Error inserting data: " . pg_last_error($db_connection);
     }
-    
-// Close the database connection
 pg_close($db_connection);
