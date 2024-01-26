@@ -13,8 +13,6 @@
 
     //Session para sa patient_id, gagamitin para sa fk 
     $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
-
-    echo $patient_id;
 ?>
 
 

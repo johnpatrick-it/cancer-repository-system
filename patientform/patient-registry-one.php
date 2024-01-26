@@ -132,8 +132,8 @@ include('./includes/config.php');
                             <label>Type of Patient</label>
                             <select name="type_of_patient" id="type_of_patient" required>
                                 <option value="" disabled selected>Select Type</option>
-                                <option value="out_patient">Out-patient</option>
-                                <option value="in_patient">In-patient</option>
+                                <option value="Out-patient">Out-patient</option>
+                                <option value="In-patient">In-patient</option>
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -157,18 +157,18 @@ include('./includes/config.php');
                                 <label>Gender</label>
                                 <select name="sex" id="sex" required>
                                     <option value="" disabled selected>Select Type</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label>Civil Status</label>
                                 <select name="civil_status" id="civil_status" required>
                                     <option value="" disabled selected>Select Type</option>
-                                    <option value="single">Single</option>
-                                    <option value="married">Married</option>
-                                    <option value="divorced">Divorce</option>
-                                    <option value="widowed">Widowed</option>
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Divorced">Divorce</option>
+                                    <option value="Widowed">Widowed</option>
                                 </select>
                             </div>
                             <div class="col-md-3">

@@ -226,37 +226,67 @@ include('includes/config.php');
                             </div>
                         </div>
                     </div>
+<!-- Assuming you have already established a PostgreSQL connection ($db_connection) -->
 
-                    <!-- TABLE -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped custom-table datatable">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Age</th>
-                                            <th>Gender</th>
-                                            <th>Type of Cancer</th>
-                                            <th>Cancer Stage</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+<!-- TABLE -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped custom-table datatable">
+                <thead>
+                    <tr>
+                        <th>Patient Type</th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Gender</th>
+                        <th>Cancer Stage</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if (!$db_connection) {
+                        echo "Failed to connect to the database.";
+                    } else {
+                        $query = "
+                            SELECT 
+                                pgi.type_of_patient,
+                                pgi.patient_last_name,
+                                pgi.patient_first_name,
+                                pgi.sex,
+                                pci.cancer_stage,
+                                pci.patient_status
+                            FROM 
+                                patient_general_info pgi
+                            JOIN 
+                                patient_cancer_info pci  ON pgi.patient_id = pci.patient_id
+                        ";
+                        
+                        $result = pg_query($db_connection, $query);
+                        
+                        while ($row = pg_fetch_assoc($result)) {
+                            echo "<tr>";
+                            echo "<td>" . $row['type_of_patient'] . "</td>";
+                            echo "<td>" . $row['patient_last_name'] . "</td>";
+                            echo "<td>" . $row['patient_first_name'] . "</td>";
+                            echo "<td>" . $row['sex'] . "</td>";
+                            echo "<td>" . $row['cancer_stage'] . "</td>";
+                            echo "<td>" . $row['patient_status'] . "</td>";
+                            echo "</tr>";
+                        }
+
+                        echo "</tbody>";
+                    }
+
+                    pg_close($db_connection);
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
                 </div>
-
             </div>
         </div>
     </div>
