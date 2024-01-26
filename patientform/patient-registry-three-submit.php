@@ -20,7 +20,7 @@ if (!$db_connection) {
     die("Error connecting to the database: " . pg_last_error());
 }
 
-// Retrieve patient_id from the session
+// patient_id sessio (VERY IMPORTANT )
 $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
 
 echo '<pre>';
@@ -121,12 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //para sa destroy patient session
     if ($result) {
 
-        unset($_SESSION['patient_id']);
-    
-        header("Location: patient-registry-one.php");
-        exit;
-    } }else {
-        echo "Error inserting data: " . pg_last_error($db_connection);
-    }
-pg_close($db_connection);
+    // Destroy the patient_id session
+    unset($_SESSION['patient_id']);
 
+    // Redirect to patient-registry-one.php
+    header("Location: patient-registry-one.php");
+    exit;
+}

@@ -1,7 +1,8 @@
 <?php 
 session_start();
 
-//This function is saving the patient-registry-one to patient_general_info
+//This function is saving the patient-registry-one to patient_general_info using 
+//postgre sql insert
 
 //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
@@ -20,7 +21,7 @@ if (!$db_connection) {
     die("Error connecting to the database: " . pg_last_error());
 }
 
-    // Retrieve form data
+    // Retrieving data sa patient-registry-one.php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type_of_patient = $_POST['type_of_patient'];
     $patient_last_name = $_POST['patient_lname_initial'];
@@ -40,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $repoUserId = $_SESSION['repo_user_id'];
 
-    // Prepare the SQL query
+    // Insert SQL query to public.patient_general_info 
     $query = "INSERT INTO public.patient_general_info (
         type_of_patient, patient_last_name, patient_first_name, patient_middle_name,
         sex, civil_status, birthday, nationality,
@@ -50,8 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $1, $2, $3, $4,
         $5, $6, $7, $8, $9,
         $10, $11, $12, $13, $14, $15, $16
-    ) RETURNING patient_id";
 
+    ) RETURNING patient_id";
+//RETURNING patient_id (VERY IMPORTANT FOR FK IN OTHER FORMS)
     $params = array(
         $type_of_patient, $patient_last_name, $patient_first_name, $patient_middle_name,
         $sex, $civil_status, $birthday, $nationality,
@@ -60,21 +62,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     $result_patient_id = pg_query_params($db_connection, $query, $params);
-
+//FUNCTION OF THIS CODE IS TO CHECK KUNG MERON NA DAGDAG NA ROW PAG KA SUBMIT 
 if ($result_patient_id) {
     $row_patient_id = pg_fetch_assoc($result_patient_id);
     $patient_id = $row_patient_id['patient_id'];
 
-    // Store patient_id in session
+    //Storing patient_id session (VERY IMPORTANT!)
     $_SESSION['patient_id'] = $patient_id;
 
     // Redirect to patient-registry-two.php
     header('Location: patient-registry-two.php');
     exit;
-} else {
-    // Handle error fetching patient_id
-    echo "Error fetching patient_id: " . pg_last_error($db_connection);
-}
+} 
 
 
 }
