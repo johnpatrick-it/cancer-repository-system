@@ -28,8 +28,26 @@ if (pg_num_rows($result) > 0) {
     $totalHospitals = $row["total_hospitals"];
 }
 
+// Query to count the number of repo_users in the table
+$sql_repo_users = "SELECT COUNT(*) as total_repo_users FROM repo_user";
+
+$result_repo_users = pg_query($db_connection, $sql_repo_users);
+
+if (!$result_repo_users) {
+    printf("Error: %s\n", pg_last_error($db_connection));
+    exit();
+}
+
+$totalRepoUsers = 0;
+if (pg_num_rows($result_repo_users) > 0) {
+    $row_repo_users = pg_fetch_assoc($result_repo_users);
+    $totalRepoUsers = $row_repo_users["total_repo_users"];
+}
+
 pg_close($db_connection);
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -157,26 +175,30 @@ pg_close($db_connection);
                 <!-- METRICS -->
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="card dash-widget">
-                            <div class="card-body">
-                                <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
-                                <div class="dash-widget-info">
-                                    <h3>15</h3>
-                                    <span>New Cases</span>
+                        <a href="user-information.php">
+                            <div class="card dash-widget">
+                                <div class="card-body">
+                                    <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
+                                    <div class="dash-widget-info">
+                                        <h3><?php echo $totalRepoUsers; ?></h3>
+                                        <span>Total Users</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                        <div class="card dash-widget">
-                            <div class="card-body">
-                                <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
-                                <div class="dash-widget-info">
-                                    <h3><?php echo $totalHospitals; ?></h3>
-                                    <span>Total Hospitals</span>
+                        <a href="hospital-information.php">
+                            <div class="card dash-widget">
+                                <div class="card-body">
+                                    <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+                                    <div class="dash-widget-info">
+                                        <h3><?php echo $totalHospitals; ?></h3>
+                                        <span>Total Hospitals</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="card dash-widget">

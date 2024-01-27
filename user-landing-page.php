@@ -8,7 +8,25 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
 error_reporting(0);
 include('includes/config.php');
 
+$repo_user_id = $_SESSION['repo_user_id'];
+
+$query_affiliation = "SELECT hgi.hospital_name
+                      FROM repo_user ru
+                      JOIN hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id
+                      WHERE ru.repo_user_id = '$repo_user_id'::uuid";
+$result_affiliation = pg_query($db_connection, $query_affiliation);
+
+if (!$result_affiliation) {
+    echo "Error in query_affiliation: " . pg_last_error($db_connection);
+    exit;
+}
+
+$row_affiliation = pg_fetch_assoc($result_affiliation);
+$hospital_name = $row_affiliation['hospital_name'];
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -156,7 +174,7 @@ include('includes/config.php');
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="welcome d-flex justify-content-between align-items-center">
-                                <h3 class="page-title">Display Hospital Name</h3>
+                                <h3 class="page-title"><?php echo $hospital_name; ?> Repository</h3>
 
                             </div>
                             <ul class="breadcrumb">
