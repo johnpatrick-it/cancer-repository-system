@@ -8,7 +8,8 @@
     }
 
     error_reporting(0);
-    include('./includes/config.php');
+    include_once("../includes/config.php");
+
 
 
     //Session para sa patient_id, gagamitin para sa fk(important)

@@ -7,7 +7,7 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     exit; 
 }
 error_reporting(0);
-include('./includes/config.php');
+include_once("../includes/config.php");
 ?>
 
 

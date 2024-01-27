@@ -8,8 +8,7 @@
     }
 
     error_reporting(0);
-    include('./includes/config.php');
-
+    include_once("../includes/config.php");
 
     //Session para sa patient_id, gagamitin para sa fk 
     $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;

@@ -2,7 +2,6 @@
 session_start();
 
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
-    // Redirect to the login page
     header("Location: login.php");
     exit; 
 }

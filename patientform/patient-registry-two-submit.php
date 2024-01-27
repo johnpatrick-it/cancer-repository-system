@@ -1,20 +1,13 @@
 <?php 
 session_start();
+include_once("../includes/config.php");
 
 //This function is for saving the patient-registry-two to patient_history_info
-
 //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY repo_user FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
-
-$host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
-$username = "postgres";
-$password = "sbit4e-4thyear-capstone-2023";
-$database = "postgres";
-
-$db_connection = pg_connect("$host dbname=$database user=$username password=$password");
 
 if (!$db_connection) {
     die("Error connecting to the database: " . pg_last_error());

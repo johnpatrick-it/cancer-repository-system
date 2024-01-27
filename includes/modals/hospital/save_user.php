@@ -1,12 +1,7 @@
 <?php
-$host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
-$username = "postgres";
-$password = "sbit4e-4thyear-capstone-2023";
-$database = "postgres";
-
-$db_connection = pg_connect("$host dbname=$database user=$username password=$password");
-
 session_start();
+include_once("../../../includes/config.php");
+
 $AdminID = $_SESSION['admin_id'] ?? '';
 error_reporting(E_ALL);
 

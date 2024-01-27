@@ -1,19 +1,14 @@
 <?php 
 session_start();
 
-//This function is saving the patient-registry-one to patient_general_info using 
-//postgre sql insert
+include_once("../includes/config.php");
 
+//This function is saving the patient-registry-one to patient_general_info using postgre sql insert
 //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
-
-$host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
-$username = "postgres";
-$password = "sbit4e-4thyear-capstone-2023";
-$database = "postgres";
 
 $db_connection = pg_connect("$host dbname=$database user=$username password=$password");
 

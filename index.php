@@ -2,7 +2,6 @@
 session_start();
 
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
-    // Redirect to the login page
     header("Location: login.php");
     exit; 
 }
@@ -29,7 +28,6 @@ if (pg_num_rows($result) > 0) {
     $totalHospitals = $row["total_hospitals"];
 }
 
-// Close the connection
 pg_close($db_connection);
 ?>
 <!DOCTYPE html>

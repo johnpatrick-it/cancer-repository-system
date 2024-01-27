@@ -1,12 +1,7 @@
 <?php
-  $host = "user=postgres password=[sbit4e-4thyear-capstone-2023] host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres";
-  $username = "postgres";
-  $password = "sbit4e-4thyear-capstone-2023";
-  $database = "postgres";
-
-  $db_connection = pg_connect("$host dbname=$database user=$username password=$password");
-
 session_start();
+include_once("../../../includes/config.php");
+
 $AdminID = $_SESSION['admin_id'] ?? '';
 error_reporting(E_ALL);
 
@@ -28,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
     if ($db_connection) {
-        $query = "INSERT INTO hospital_general_information (admin_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)";
+        $query = "INSERT INTO hospital_general_information (admin_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)";
         
         $result = pg_prepare($db_connection, "insert_query", $query);
 
