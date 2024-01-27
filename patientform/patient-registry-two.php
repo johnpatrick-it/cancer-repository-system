@@ -13,6 +13,10 @@
 
     //Session para sa patient_id, gagamitin para sa fk 
     $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
+
+    $hospital_id = isset($_SESSION['hospital_id']) ? $_SESSION['hospital_id'] : null;
+
+    echo $hospital_id;
 ?>
 
 
