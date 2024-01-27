@@ -245,9 +245,28 @@ include('includes/config.php');
                 </thead>
                 <tbody>
                     <?php
+                    //FUNCTION NG CODE NA TO IS:
+                    //KUKUHAIN NYA KUNG ANONG HOSPITAL NI CURRENT REPO_USER LOGIN SESSION
+                    //THEN I S-SAVE YUNG HOSPITAL-ID
+                    //THEN I QUERY KUNG ANONG PATIENT IS YUNG EQUAL DOON SA HOSPITAL-ID NA YON AT AYON YUNG I D-DISPLAY SA TABLE
                     if (!$db_connection) {
                         echo "Failed to connect to the database.";
                     } else {
+                        $repo_user_id = $_SESSION['repo_user_id'];
+                    //QUERY PARA SA HOSPITAL ID THE I S-SAVE AS $HOSPITAL_ID
+                        $query_affiliation = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'";
+                        $result_affiliation = pg_query($db_connection, $query_affiliation);
+                        
+                        if (!$result_affiliation) {
+                            echo "Error in query_affiliation: " . pg_last_error($db_connection);
+                            exit;
+                        }
+
+                        $row_affiliation = pg_fetch_assoc($result_affiliation);
+
+                        $hospital_id = $row_affiliation['hospital_id'];
+
+                        // PUTANG INANG SQL JOIN TO PUTANG INA MO
                         $query = "
                             SELECT 
                                 pgi.type_of_patient,
@@ -259,11 +278,19 @@ include('includes/config.php');
                             FROM 
                                 patient_general_info pgi
                             JOIN 
-                                patient_cancer_info pci  ON pgi.patient_id = pci.patient_id
+                                patient_cancer_info pci ON pgi.patient_id = pci.patient_id
+                            JOIN
+                                hospital_general_information hgi ON pgi.hospital_id = hgi.hospital_id
+                            WHERE
+                                hgi.hospital_id = '$hospital_id'
                         ";
-                        
                         $result = pg_query($db_connection, $query);
-                        
+
+                        if (!$result) {
+                            echo "Error in query: " . pg_last_error($db_connection);
+                            exit;
+                        }
+                        //TABLE DISPLAY
                         while ($row = pg_fetch_assoc($result)) {
                             echo "<tr>";
                             echo "<td>" . $row['type_of_patient'] . "</td>";
