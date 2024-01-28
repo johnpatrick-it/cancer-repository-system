@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
-
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])){
     header("Location: login.php");
     exit;
 }
@@ -10,11 +9,10 @@ if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
 error_reporting(0);
 include('includes/config.php');
 
-// Fetch activity logs from the database
+// Fetching data sa Repo-log nasababa yung query
 $query = "SELECT * FROM repo_logs";
 $result = pg_query($db_connection, $query);
 
-// Check if the query was successful
 if (!$result) {
     echo "Error in query: " . pg_last_error($db_connection);
     exit;
