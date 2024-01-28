@@ -10,6 +10,8 @@ include('includes/config.php');
 
 $repo_user_id = $_SESSION['repo_user_id'];
 
+
+//Querying yung mga Patient na same Hospital with the current in-session Repo user, then ilalagay sa table 
 $query_affiliation = "SELECT hgi.hospital_name
                       FROM repo_user ru
                       JOIN hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id
@@ -23,7 +25,33 @@ if (!$result_affiliation) {
 
 $row_affiliation = pg_fetch_assoc($result_affiliation);
 $hospital_name = $row_affiliation['hospital_name'];
+
+
+//Querying yung total count ng patient
+$query_hospital_id = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'::uuid";
+$result_hospital_id = pg_query($db_connection, $query_hospital_id);
+
+$row_hospital_id = pg_fetch_assoc($result_hospital_id);
+$hospital_id = $row_hospital_id['hospital_id'];
+
+// Check if $hospital_id is empty
+if (empty($hospital_id)) {
+    echo "Error: Unable to retrieve the hospital ID. Please check the data in the repo_user table.";
+    exit;
+}
+
+$query_total_patients = "SELECT COUNT(*) AS total_patients FROM patient_general_info WHERE hospital_id = '$hospital_id'::uuid";
+$result_total_patients = pg_query($db_connection, $query_total_patients);
+
+if (!$result_total_patients) {
+    echo "Error in query_total_patients: " . pg_last_error($db_connection);
+    exit;
+}
+
+$row_total_patients = pg_fetch_assoc($result_total_patients);
+$total_patients = $row_total_patients['total_patients'];
 ?>
+
 
 
 
@@ -202,7 +230,7 @@ $hospital_name = $row_affiliation['hospital_name'];
                             <div class="card-body">
                                 <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
                                 <div class="dash-widget-info">
-                                    <h3>341</h3>
+                                    <h3><?php echo $total_patients; ?></h3>
                                     <span class="span-text">Total Patients</span>
                                 </div>
                             </div>
