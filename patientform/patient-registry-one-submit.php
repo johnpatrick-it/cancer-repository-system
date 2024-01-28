@@ -16,7 +16,7 @@ if (!$db_connection) {
     die("Error connecting to the database: " . pg_last_error());
 }
 
-
+//FETCHING HOSPITAL_ID FOR FK PURPOSES
 $query_fetch_hospital_id = "SELECT hospital_id FROM public.repo_user WHERE repo_user_id = $1";
 $params_fetch_hospital_id = array($_SESSION['repo_user_id']);
 $result_hospital_id = pg_query_params($db_connection, $query_fetch_hospital_id, $params_fetch_hospital_id);
@@ -50,14 +50,13 @@ if ($result_hospital_id) {
     $query = "INSERT INTO public.patient_general_info (
         type_of_patient, patient_last_name, patient_first_name, patient_middle_name,
         sex, civil_status, birthday, nationality, occupation, educational_attainment, 
-        race, repo_user_id, hospital_id, address_region, address_barangay, address_province, address_city_municipality,
-        insertion_time
+        race, repo_user_id, hospital_id, address_region, address_barangay, address_province, address_city_municipality
     ) 
     VALUES (
         $1, $2, $3, $4,
         $5, $6, $7, $8, $9,
         $10, $11, $12, $13, 
-        $14, $15, $16, $17, NOW()
+        $14, $15, $16, $17
     ) RETURNING patient_id";
 
     $params = array(

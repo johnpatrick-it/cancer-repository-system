@@ -13,11 +13,6 @@ if (!$db_connection) {
     die("Error connecting to the database: " . pg_last_error());
 }
 
-echo '<pre>';
-print_r($_POST);
-echo '</pre>';
-
-
 //Issue on getting the latest patient_id NEED FIX 
 $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
 
