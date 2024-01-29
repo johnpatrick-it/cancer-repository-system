@@ -264,10 +264,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				<h3 class="login-header">Welcome!</h3>
 				<p class="login-subheader">Please enter your details</p>
 
-				<form method="POST" enctype="multipart/form-data">
+				<form method="POST" enctype="multipart/form-data" autocomplete="off">
 					<div class="form-group">
 						<i class="fas fa-envelope icon"></i>
-						<input class="form-control" name="email" required type="text" placeholder="Email">
+						<input class="form-control" name="email" required type="email" placeholder="Email">
 					</div>
 					<?php if ($wrongusername) {
 						echo $wrongusername;

@@ -171,7 +171,7 @@
                     <hr>
                 </div>
 
-                <form action="patient-registry-two-submit.php" method="post">
+                <form action="patient-registry-two-submit.php" method="post" autocomplete="off">
                     <div class="row form-rows">
                         <div class="col-md-3 radio-container">
                             <label>Smoking</label>

@@ -12,6 +12,7 @@ $repo_user_id = $_SESSION['repo_user_id'];
 
 
 //Querying yung mga Patient na same Hospital with the current in-session Repo user, then ilalagay sa table 
+//Nasa table sa baba yung next query nitong function nato haha
 $query_affiliation = "SELECT hgi.hospital_name
                       FROM repo_user ru
                       JOIN hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id
@@ -27,7 +28,7 @@ $row_affiliation = pg_fetch_assoc($result_affiliation);
 $hospital_name = $row_affiliation['hospital_name'];
 
 
-//Querying yung total count ng patient
+//Querying yung total count ng patient para i display sa Metrics
 $query_hospital_id = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'::uuid";
 $result_hospital_id = pg_query($db_connection, $query_hospital_id);
 
@@ -43,6 +44,7 @@ if (empty($hospital_id)) {
 $query_total_patients = "SELECT COUNT(*) AS total_patients FROM patient_general_info WHERE hospital_id = '$hospital_id'::uuid";
 $result_total_patients = pg_query($db_connection, $query_total_patients);
 
+// Check kung yung $result is empty
 if (!$result_total_patients) {
     echo "Error in query_total_patients: " . pg_last_error($db_connection);
     exit;
@@ -226,15 +228,17 @@ $total_patients = $row_total_patients['total_patients'];
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
-                        <div class="card dash-widget">
-                            <div class="card-body">
-                                <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
-                                <div class="dash-widget-info">
-                                    <h3><?php echo $total_patients; ?></h3>
-                                    <span class="span-text">Total Patients</span>
+                        <a href="manage-patient.php">
+                            <div class="card dash-widget">
+                                <div class="card-body">
+                                    <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
+                                    <div class="dash-widget-info">
+                                        <h3><?php echo $total_patients; ?></h3>
+                                        <span class="span-text">Total Patients</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
 
@@ -273,90 +277,90 @@ $total_patients = $row_total_patients['total_patients'];
                     </div>
 <!-- Assuming you have already established a PostgreSQL connection ($db_connection) -->
 
-<!-- TABLE -->
-<div class="row">
-    <div class="col-md-12">
-        <div class="table-responsive">
-            <table class="table table-striped custom-table datatable">
-                <thead>
-                    <tr>
-                        <th>Patient Type</th>
-                        <th>Last Name</th>
-                        <th>First Name</th>
-                        <th>Gender</th>
-                        <th>Cancer Stage</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    //FUNCTION NG CODE NA TO IS:
-                    //KUKUHAIN NYA KUNG ANONG HOSPITAL NI CURRENT REPO_USER LOGIN SESSION
-                    //THEN I S-SAVE YUNG HOSPITAL-ID
-                    //THEN I QUERY KUNG ANONG PATIENT IS YUNG EQUAL DOON SA HOSPITAL-ID NA YON AT AYON YUNG I D-DISPLAY SA TABLE
-                    if (!$db_connection) {
-                        echo "Failed to connect to the database.";
-                    } else {
-                        $repo_user_id = $_SESSION['repo_user_id'];
-                    //QUERY PARA SA HOSPITAL ID THE I S-SAVE AS $HOSPITAL_ID
-                        $query_affiliation = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'";
-                        $result_affiliation = pg_query($db_connection, $query_affiliation);
-                        
-                        if (!$result_affiliation) {
-                            echo "Error in query_affiliation: " . pg_last_error($db_connection);
-                            exit;
-                        }
+                    <!-- TABLE -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-striped custom-table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>Patient Type</th>
+                                            <th>Last Name</th>
+                                            <th>First Name</th>
+                                            <th>Gender</th>
+                                            <th>Cancer Stage</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        //FUNCTION NG CODE NA TO IS:
+                                        //KUKUHAIN NYA KUNG ANONG HOSPITAL NI CURRENT REPO_USER LOGIN SESSION
+                                        //THEN I S-SAVE YUNG HOSPITAL-ID
+                                        //THEN I QUERY KUNG ANONG PATIENT IS YUNG EQUAL DOON SA HOSPITAL-ID NA YON AT AYON YUNG I D-DISPLAY SA TABLE
+                                        if (!$db_connection) {
+                                            echo "Failed to connect to the database.";
+                                        } else {
+                                            $repo_user_id = $_SESSION['repo_user_id'];
+                                        //QUERY PARA SA HOSPITAL ID THE I S-SAVE AS $HOSPITAL_ID
+                                            $query_affiliation = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'";
+                                            $result_affiliation = pg_query($db_connection, $query_affiliation);
+                                            
+                                            if (!$result_affiliation) {
+                                                echo "Error in query_affiliation: " . pg_last_error($db_connection);
+                                                exit;
+                                            }
 
-                        $row_affiliation = pg_fetch_assoc($result_affiliation);
+                                            $row_affiliation = pg_fetch_assoc($result_affiliation);
 
-                        $hospital_id = $row_affiliation['hospital_id'];
+                                            $hospital_id = $row_affiliation['hospital_id'];
 
-                        // PUTANG INANG SQL JOIN TO PUTANG INA MO
-                        $query = "
-                            SELECT 
-                                pgi.type_of_patient,
-                                pgi.patient_last_name,
-                                pgi.patient_first_name,
-                                pgi.sex,
-                                pci.cancer_stage,
-                                pci.patient_status
-                            FROM 
-                                patient_general_info pgi
-                            JOIN 
-                                patient_cancer_info pci ON pgi.patient_id = pci.patient_id
-                            JOIN
-                                hospital_general_information hgi ON pgi.hospital_id = hgi.hospital_id
-                            WHERE
-                                hgi.hospital_id = '$hospital_id'
-                        ";
-                        $result = pg_query($db_connection, $query);
+                                            // PUTANG INANG SQL JOIN TO PUTANG INA MO
+                                            $query = "
+                                                SELECT 
+                                                    pgi.type_of_patient,
+                                                    pgi.patient_last_name,
+                                                    pgi.patient_first_name,
+                                                    pgi.sex,
+                                                    pci.cancer_stage,
+                                                    pci.patient_status
+                                                FROM 
+                                                    patient_general_info pgi
+                                                JOIN 
+                                                    patient_cancer_info pci ON pgi.patient_id = pci.patient_id
+                                                JOIN
+                                                    hospital_general_information hgi ON pgi.hospital_id = hgi.hospital_id
+                                                WHERE
+                                                    hgi.hospital_id = '$hospital_id'
+                                            ";
+                                            $result = pg_query($db_connection, $query);
 
-                        if (!$result) {
-                            echo "Error in query: " . pg_last_error($db_connection);
-                            exit;
-                        }
-                        //TABLE DISPLAY
-                        while ($row = pg_fetch_assoc($result)) {
-                            echo "<tr>";
-                            echo "<td>" . $row['type_of_patient'] . "</td>";
-                            echo "<td>" . $row['patient_last_name'] . "</td>";
-                            echo "<td>" . $row['patient_first_name'] . "</td>";
-                            echo "<td>" . $row['sex'] . "</td>";
-                            echo "<td>" . $row['cancer_stage'] . "</td>";
-                            echo "<td>" . $row['patient_status'] . "</td>";
-                            echo "</tr>";
-                        }
+                                            if (!$result) {
+                                                echo "Error in query: " . pg_last_error($db_connection);
+                                                exit;
+                                            }
+                                            //TABLE DISPLAY
+                                            while ($row = pg_fetch_assoc($result)) {
+                                                echo "<tr>";
+                                                echo "<td>" . $row['type_of_patient'] . "</td>";
+                                                echo "<td>" . $row['patient_last_name'] . "</td>";
+                                                echo "<td>" . $row['patient_first_name'] . "</td>";
+                                                echo "<td>" . $row['sex'] . "</td>";
+                                                echo "<td>" . $row['cancer_stage'] . "</td>";
+                                                echo "<td>" . $row['patient_status'] . "</td>";
+                                                echo "</tr>";
+                                            }
 
-                        echo "</tbody>";
-                    }
+                                            echo "</tbody>";
+                                        }
 
-                    pg_close($db_connection);
-                    ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+                                        pg_close($db_connection);
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>

@@ -23,7 +23,7 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<form method="POST" action="/includes/modals/hospital/save_hospital.php" enctype="multipart/form-data">
+				<form method="POST" action="/includes/modals/hospital/save_hospital.php" enctype="multipart/form-data" autocomplete="off">
 					<h2>HOSPITAL INFORMATION</h2>
 					<div class="form-row">
 						<div class="form-group col-md-3">

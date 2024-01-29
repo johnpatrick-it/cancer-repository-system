@@ -126,7 +126,7 @@ include_once("../includes/config.php");
                     <hr>
                 </div>
 
-                <form action="patient-registry-one-submit.php" method="post">
+                <form action="patient-registry-one-submit.php" method="post" autocomplete="off">
                     <div class="row form-rows">
                         <div class="col-md-3">
                             <label>Type of Patient</label>

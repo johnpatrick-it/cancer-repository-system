@@ -35,8 +35,7 @@ h2 {
 				</button>
 			</div>
 			<div class="modal-body">
-				<form method="POST" action="/includes/modals/hospital/save_user.php" enctype="multipart/form-data">
-
+				<form method="POST" action="/includes/modals/hospital/save_user.php" enctype="multipart/form-data" autocomplete="off">
 					<h2>USER INFORMATION</h2>
 					<div class="form-row">
 						<div class="form-group col-md-3">
@@ -79,7 +78,7 @@ h2 {
 						</div>
                         <div class="form-group col-md-3">
 							<label for="email">Email</label>
-							<input name="email" class="form-control" type="text" placeholder="User's Email" required>
+							<input name="email" class="form-control" type="email" placeholder="User's Email" required>
 						</div>
                         <div class="form-group col-md-3">
 							<label for="password">Password</label>

@@ -157,7 +157,7 @@
                     <hr>
                 </div>
 
-                <form action="patient-registry-three-submit.php" class="" method="post">
+                <form action="patient-registry-three-submit.php" class="" method="post" autocomplete="off">
 
                     <div class="row form-rows">
                         <div class="col-md-3">

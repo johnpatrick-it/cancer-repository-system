@@ -186,6 +186,8 @@ include('includes/config.php');
                                     <tbody>
                                         <?php
                                         //fetching data sa hospital-general-information at user-repo 
+                                        //putangina
+                                        //IDK WHEN ALL THE DATA WAS DELETED HINDI GUMAGANA YUNG ADD USER MODAL LOL ??
                                         if (!$db_connection) {
                                             echo "Failed to connect to the database.";
                                         } else {
@@ -215,9 +217,6 @@ include('includes/config.php');
                                                     echo "</tr>";
                                                 }
                                             }
-                                        
-                                            // Close the database connection
-                                            pg_close($db_connection);
                                         ?>                                     
                                     </tbody>
                                 </table>

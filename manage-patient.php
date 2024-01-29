@@ -164,7 +164,6 @@ include('includes/config.php');
                             </div>
                         </div>
                     </div>
-
                     <!-- TABLE -->
                     <div class="row">
                         <div class="col-md-12">
@@ -173,8 +172,8 @@ include('includes/config.php');
                                     <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Age</th>
-                                            <th>Gender</th>
+                                            <th>Surname</th>
+                                            <th>Hospital</th>
                                             <th>Type of Cancer</th>
                                             <th>Cancer Stage</th>
                                             <th>Status</th>
@@ -182,16 +181,54 @@ include('includes/config.php');
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>
-                                            <a href="./edit-patient.php" title="Edit" id="action-btn" class="btn text-xs text-white btn-blue action-icon"><i class="fa fa-pencil"></i></a>
-                                            <a href="#" title="Delete" id="action-btn" class="btn text-xs text-white btn-danger action-icon"><i class="fa fa-trash-o"></i></a>
-                                        </td>
+                                        <?php
+                                        // Assuming you have a database connection ($db_connection)
+
+                                        // Add your SQL query to fetch patient data with joins
+                                        $query = "SELECT
+                                                    pgi.patient_last_name AS name,
+                                                    pgi.patient_first_name AS surname,
+                                                    hgi.hospital_name AS hospital,
+                                                    pci.primary_site AS type_of_cancer,
+                                                    pci.cancer_stage,
+                                                    pci.patient_status AS status
+                                                FROM
+                                                    patient_general_info pgi
+                                                JOIN
+                                                    hospital_general_information hgi ON pgi.hospital_id = hgi.hospital_id
+                                                JOIN
+                                                    patient_cancer_info pci ON pgi.patient_id = pci.patient_id";
+
+                                        $result = pg_query($db_connection, $query);
+
+                                        // Check if the query was successful
+                                        if ($result) {
+                                            // Loop through each row in the result set
+                                            while ($row = pg_fetch_assoc($result)) {
+                                                echo "<tr>";
+                                                echo "<td>" . $row['name'] . "</td>";
+                                                echo "<td>" . $row['surname'] . "</td>";
+                                                echo "<td>" . $row['hospital'] . "</td>";
+                                                echo "<td>" . $row['type_of_cancer'] . "</td>";
+                                                echo "<td>" . $row['cancer_stage'] . "</td>";
+                                                echo "<td>" . $row['status'] . "</td>";
+                                                echo "<td>
+                                                        <a href='./edit-patient.php?id=" . $row['patient_id'] . "' title='Edit' id='action-btn' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
+                                                        <a href='#' title='Delete' id='action-btn' class='btn text-xs text-white btn-danger action-icon'><i class='fa fa-trash-o'></i></a>
+                                                    </td>";
+                                                echo "</tr>";
+                                            }
+
+                                            // Free result set
+                                            pg_free_result($result);
+                                        } else {
+                                            // Handle the case where the query fails
+                                            echo "Error in query: " . pg_last_error($db_connection);
+                                        }
+
+                                        // Close the database connection
+                                        pg_close($db_connection);
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
