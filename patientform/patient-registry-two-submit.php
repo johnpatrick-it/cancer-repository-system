@@ -69,3 +69,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Error inserting data: " . pg_last_error($db_connection);
     }
 pg_close($db_connection);
+
+
+
+
+
+
+
+
+
+
+
+
+
