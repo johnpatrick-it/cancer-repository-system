@@ -200,15 +200,37 @@ pg_close($db_connection);
                             </div>
                         </a>
                     </div>
+                    <?php
+                        // Add your SQL query to count the total number of patients
+                        $sql = "SELECT COUNT(*) as total_patients FROM patient_general_info";
+
+                        $result = pg_query($db_connection, $sql);
+
+                        // Check if the query was successful
+                        if ($result) {
+                            // Fetch the count from the result
+                            $row = pg_fetch_assoc($result);
+                            $totalPatients = $row["total_patients"];
+
+                            // Free result set
+                            pg_free_result($result);
+                        } else {
+                            // Handle the case where the query fails
+                            echo "Error in query: " . pg_last_error($db_connection);
+                            $totalPatients = 0; // Set a default value
+                        }
+                        ?>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="card dash-widget">
-                            <div class="card-body">
-                                <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
-                                <div class="dash-widget-info">
-                                    <h3>15</h3>
-                                    <span>Total Cases</span>
+                            <a href="activity-logs.php">
+                                <div class="card-body">
+                                    <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+                                    <div class="dash-widget-info">
+                                        <h3><?php echo $totalPatients ?></h3>
+                                        <span>Total Patient</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>    
                         </div>
                     </div>
                 </div>
