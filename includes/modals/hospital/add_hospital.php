@@ -105,7 +105,7 @@
     function removeEquipment(e) {
         e.target.closest('.form-row').remove();
     }
-
+	//NEED FOR OPTIMIZATION FOR THIS AND BUG FIX
     document.querySelector('.add-equipment-btn').addEventListener('click', function() {
         var newTextBox = document.createElement('div');
         newTextBox.className = 'form-group col-md-3';

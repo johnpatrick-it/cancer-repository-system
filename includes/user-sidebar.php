@@ -56,11 +56,11 @@
                 <!-- User Dashboard -->
                 <li><a href="./user-landing-page.php"><i class="la la-dashboard"></i><span>User Dashboard</span></a></li>
 
-                <!-- Manage Patient -->
-                <li><a href="./manage-patient.php"><i class="la la-users"></i><span>Manage Patient</span></a></li>
-
                 <!-- Patient Registry -->
                 <li><a href="./patientform/patient-registry-one.php"><i class="la la-user-plus"></i><span>Patient Registry</span></a></li>
+                
+                <!-- Manage Patient -->
+                <li><a href="./manage-patient.php"><i class="la la-users"></i><span>Manage Patient</span></a></li>
 
                 <!-- Patient Report -->
                 <li><a href="./patient-report.php"><i class="la la-file-text-o"></i><span>Patient Report</span></a></li>
