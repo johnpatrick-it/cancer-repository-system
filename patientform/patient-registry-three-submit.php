@@ -16,10 +16,6 @@ if (!$db_connection) {
 // patient_id sessio (VERY IMPORTANT )
 $patient_id = isset($_SESSION['patient_id']) ? $_SESSION['patient_id'] : null;
 
-echo '<pre>';
-print_r($_POST);
-echo '</pre>';
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $consultation_date = $_POST['consultation_date'];
@@ -55,12 +51,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             patient_treatment, patient_status, cause_of_death, place_of_death,
             date_of_death, transferred_hospital, reason_for_referral,
             completed_by_lname, completed_by_fname, completed_by_mname, designation,
-            date_completed
+            date_completed, time_stamp
         ) 
         VALUES (
             $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
             $11, $12, $13, $14, $15, $16, $17, $18, $19, $20,
-            $21, $22, $23, $24, $25
+            $21, $22, $23, $24, $25, NOW()
         )";
         
         $params = array(
@@ -77,12 +73,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //para sa destroy patient session
     if ($result) {
+        // Insert a log entry in repo_logs table
+        $log_action = "Patient Registered";
+        $repo_user_id = $_SESSION['repo_user_id'];
+        $log_query = "INSERT INTO repo_logs (repo_user_id, patient_id, log_action) VALUES ($1, $2, $3)";
+        $log_params = array($repo_user_id, $patient_id, $log_action);
+        $log_result = pg_query_params($db_connection, $log_query, $log_params);
 
-    // Destroy the patient_id session
-    unset($_SESSION['patient_id']);
+        // Check if the log insertion was successful
+        if (!$log_result) {
+            // Handle the error for log insertion
+            die("Error inserting log entry: " . pg_last_error());
+        }
 
-    // Redirect to patient-registry-one.php
-    header("Location: patient-registry-one.php");
-    exit;
-}
+        // Destroy the patient_id session
+        unset($_SESSION['patient_id']);
+
+        // Redirect to patient-registry-one.php
+        header("Location: patient-registry-one.php");
+        exit;
+    } else {
+        // Handle the error for patient_cancer_info insertion
+        die("Error inserting patient information: " . pg_last_error());
+    }
 }

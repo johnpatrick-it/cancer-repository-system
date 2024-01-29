@@ -1,14 +1,22 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
-    // Redirect to the login page
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])){
     header("Location: login.php");
-    exit; 
+    exit;
 }
 
 error_reporting(0);
 include('includes/config.php');
+
+// Fetching data sa Repo-log nasababa yung query
+$query = "SELECT * FROM repo_logs";
+$result = pg_query($db_connection, $query);
+
+if (!$result) {
+    echo "Error in query: " . pg_last_error($db_connection);
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -135,19 +143,36 @@ include('includes/config.php');
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
-                                            <th>Employee ID</th>
+                                            <th>Log-id</th>
                                             <th>Name</th>
+                                            <th>Surname</th>
                                             <th>Date</th>
                                             <th>Description</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>EMP-284627</td>
-                                            <td>Heion</td>
-                                            <td>11-20-23</td>
-                                            <td>added new employee</td>
-                                        </tr>
+                                        <?php
+                                        //Query for logid, name and surname nung repo_user na nag registered ng patient
+                                            $query_logs = "SELECT rl.log_id, ru.user_fname, ru.user_lname, rl.log_timestamp, rl.log_action
+                                                            FROM repo_logs rl
+                                                            JOIN repo_user ru ON rl.repo_user_id = ru.repo_user_id
+                                                            ORDER BY rl.log_timestamp DESC";
+                                            $result_logs = pg_query($db_connection, $query_logs);
+                                            if ($result_logs) {
+                                                while ($row = pg_fetch_assoc($result_logs)) {
+                                                    echo "<tr>";
+                                                    echo "<td>{$row['log_id']}</td>";
+                                                    echo "<td>{$row['user_fname']}</td>";
+                                                    echo "<td>{$row['user_lname']}</td>";
+                                                    echo "<td>{$row['log_timestamp']}</td>";
+                                                    echo "<td>{$row['log_action']}</td>";
+                                                    echo "</tr>";
+                                                }
+                                            } else {
+                                                // Handle the error for the logs query
+                                                echo "Error fetching logs: " . pg_last_error($db_connection);
+                                            }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>

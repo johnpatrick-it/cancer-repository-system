@@ -16,7 +16,7 @@ if (!$db_connection) {
     die("Error connecting to the database: " . pg_last_error());
 }
 
-
+//FETCHING HOSPITAL_ID FOR FK PURPOSES
 $query_fetch_hospital_id = "SELECT hospital_id FROM public.repo_user WHERE repo_user_id = $1";
 $params_fetch_hospital_id = array($_SESSION['repo_user_id']);
 $result_hospital_id = pg_query_params($db_connection, $query_fetch_hospital_id, $params_fetch_hospital_id);
