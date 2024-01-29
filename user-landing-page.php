@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+//VERY IMPORTANT DONT ERASE
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 

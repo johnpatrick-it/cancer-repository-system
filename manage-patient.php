@@ -184,46 +184,60 @@ include('includes/config.php');
                                         <?php
                                         // Assuming you have a database connection ($db_connection)
 
-                                        // Add your SQL query to fetch patient data with joins
-                                        $query = "SELECT
-                                                    pgi.patient_last_name AS name,
-                                                    pgi.patient_first_name AS surname,
-                                                    hgi.hospital_name AS hospital,
-                                                    pci.primary_site AS type_of_cancer,
-                                                    pci.cancer_stage,
-                                                    pci.patient_status AS status
-                                                FROM
-                                                    patient_general_info pgi
-                                                JOIN
-                                                    hospital_general_information hgi ON pgi.hospital_id = hgi.hospital_id
-                                                JOIN
-                                                    patient_cancer_info pci ON pgi.patient_id = pci.patient_id";
+                                        // Get the hospital_id associated with the current repo_user
+                                        $repo_user_id = $_SESSION['repo_user_id'];
+                                        $query_hospital_id = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'";
+                                        $result_hospital_id = pg_query($db_connection, $query_hospital_id);
 
-                                        $result = pg_query($db_connection, $query);
+                                        if ($result_hospital_id && $row_hospital_id = pg_fetch_assoc($result_hospital_id)) {
+                                            $hospital_id = $row_hospital_id['hospital_id'];
 
-                                        // Check if the query was successful
-                                        if ($result) {
-                                            // Loop through each row in the result set
-                                            while ($row = pg_fetch_assoc($result)) {
-                                                echo "<tr>";
-                                                echo "<td>" . $row['name'] . "</td>";
-                                                echo "<td>" . $row['surname'] . "</td>";
-                                                echo "<td>" . $row['hospital'] . "</td>";
-                                                echo "<td>" . $row['type_of_cancer'] . "</td>";
-                                                echo "<td>" . $row['cancer_stage'] . "</td>";
-                                                echo "<td>" . $row['status'] . "</td>";
-                                                echo "<td>
-                                                        <a href='./edit-patient.php?id=" . $row['patient_id'] . "' title='Edit' id='action-btn' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
-                                                        <a href='#' title='Delete' id='action-btn' class='btn text-xs text-white btn-danger action-icon'><i class='fa fa-trash-o'></i></a>
-                                                    </td>";
-                                                echo "</tr>";
+                                            // Add your SQL query to fetch patient data with joins and a filter for hospital_id
+                                            $query = "SELECT
+                                                        pgi.patient_last_name AS name,
+                                                        pgi.patient_first_name AS surname,
+                                                        hgi.hospital_name AS hospital,
+                                                        pci.primary_site AS type_of_cancer,
+                                                        pci.cancer_stage,
+                                                        pci.patient_status AS status
+                                                    FROM
+                                                        patient_general_info pgi
+                                                    JOIN
+                                                        hospital_general_information hgi ON pgi.hospital_id = hgi.hospital_id
+                                                    JOIN
+                                                        patient_cancer_info pci ON pgi.patient_id = pci.patient_id
+                                                    WHERE
+                                                        pgi.hospital_id = '$hospital_id'";
+
+                                            $result = pg_query($db_connection, $query);
+
+                                            // Check if the query was successful
+                                            if ($result) {
+                                                // Loop through each row in the result set
+                                                while ($row = pg_fetch_assoc($result)) {
+                                                    echo "<tr>";
+                                                    echo "<td>" . $row['name'] . "</td>";
+                                                    echo "<td>" . $row['surname'] . "</td>";
+                                                    echo "<td>" . $row['hospital'] . "</td>";
+                                                    echo "<td>" . $row['type_of_cancer'] . "</td>";
+                                                    echo "<td>" . $row['cancer_stage'] . "</td>";
+                                                    echo "<td>" . $row['status'] . "</td>";
+                                                    echo "<td>
+                                                            <a href='./edit-patient.php?id=" . $row['patient_id'] . "' title='Edit' id='action-btn' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
+                                                            <a href='#' title='Delete' id='action-btn' class='btn text-xs text-white btn-danger action-icon'><i class='fa fa-trash-o'></i></a>
+                                                        </td>";
+                                                    echo "</tr>";
+                                                }
+
+                                                // Free result set
+                                                pg_free_result($result);
+                                            } else {
+                                                // Handle the case where the query fails
+                                                echo "Error in query: " . pg_last_error($db_connection);
                                             }
-
-                                            // Free result set
-                                            pg_free_result($result);
                                         } else {
-                                            // Handle the case where the query fails
-                                            echo "Error in query: " . pg_last_error($db_connection);
+                                            // Handle the case where fetching hospital_id fails
+                                            echo "Error fetching hospital_id: " . pg_last_error($db_connection);
                                         }
 
                                         // Close the database connection

@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+//VERY IMPORTANT
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
@@ -163,7 +164,6 @@ include('includes/config.php');
                             </div>
                         </div>
                     </div>
-
                     <!-- TABLE -->
                     <div class="row">
                         <div class="col-md-12">
@@ -171,21 +171,46 @@ include('includes/config.php');
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
-                                            <th>Patient Name</th>
+                                            <th>Log-id</th>
+                                            <th>Patient-id</th>
                                             <th>Date</th>
-                                            <th>Gender</th>
-                                            <th>Cancer Type</th>
-                                            <th>Cancer Stage</th>
-                                            <th>Status</th>
+                                            <th>Description</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
-                                        <td>test</td>
+                                        <?php
+                                        //FUNCTION NG CODE NA TO IS TO FETCH THE LOGS DOON SA REPO-LOGS SABAY
+                                        //ILALAGAY DITO SA TABLE
+                                        //THE ONLY LOGS THAT WILL APPEAR IS IF SAME NG REPO_USER_ID YUNG SUBMITTER
+                                        //TYAKA NAKA SESSION NA REPO_USER
+                                        $current_repo_user_id = $_SESSION['repo_user_id'];
+                                        //PUTANG INANG JOIN QUERY
+                                        $query = "SELECT
+                                                    rl.log_id,
+                                                    rl.patient_id,
+                                                    rl.log_timestamp AS date,
+                                                    rl.log_action AS description
+                                                FROM
+                                                    repo_logs rl
+                                                WHERE
+                                                    rl.repo_user_id = '$current_repo_user_id'";
+
+                                        $result = pg_query($db_connection, $query);
+                                        if ($result) {
+                                            while ($row = pg_fetch_assoc($result)) {
+                                                echo "<tr>";
+                                                echo "<td>" . $row['log_id'] . "</td>";
+                                                echo "<td>" . $row['patient_id'] . "</td>";
+                                                echo "<td>" . $row['date'] . "</td>";
+                                                echo "<td>" . $row['description'] . "</td>";
+                                                echo "</tr>";
+                                            }
+                                            pg_free_result($result);
+                                        } else {
+                                            echo "Error in query: " . pg_last_error($db_connection);
+                                        }
+                                        pg_close($db_connection);
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
