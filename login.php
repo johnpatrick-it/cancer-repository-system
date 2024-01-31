@@ -281,7 +281,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 					} ?>
 					<div class="form-group text-center">
 						<div class="col-auto pt-2">
-							<a class="float-left forgot-password" href="forgot-password.php">
+							<a class="float-left forgot-password" href="password-reset-email.php">
 								Forgot password?
 							</a>
 						</div>
