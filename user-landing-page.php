@@ -217,17 +217,17 @@ $total_patients = $row_total_patients['total_patients'];
 
                 <!-- METRICS -->
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
-                        <div class="card dash-widget">
-                            <div class="card-body">
-                                <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
-                                <div class="dash-widget-info">
-                                    <h3>32</h3>
-                                    <span class="span-text">New Patients</span>
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="card dash-widget">
+                                <div class="card-body">
+                                    <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+                                    <div class="dash-widget-info">
+                                        <h3>32</h3>
+                                        <span class="span-text">New Patients</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                         <a href="manage-patient.php">
                             <div class="card dash-widget">
