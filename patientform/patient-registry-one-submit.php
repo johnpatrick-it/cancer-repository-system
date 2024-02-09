@@ -10,12 +10,6 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     exit; 
 }
 
-$db_connection = pg_connect("$host dbname=$database user=$username password=$password");
-
-if (!$db_connection) {
-    die("Error connecting to the database: " . pg_last_error());
-}
-
 //FETCHING HOSPITAL_ID FOR FK PURPOSES
 $query_fetch_hospital_id = "SELECT hospital_id FROM public.repo_user WHERE repo_user_id = $1";
 $params_fetch_hospital_id = array($_SESSION['repo_user_id']);

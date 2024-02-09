@@ -1,4 +1,8 @@
 <?php
+
+$wrongpassword = "";
+$wrongusername = "";
+
 session_start();
 
 include('includes/config.php');
@@ -32,52 +36,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         echo "You are not authorized to access this page.";
                     }
                 } else {
-                    // Admin Password is incorrect
-                    echo "Invalid email or password.";
+                    // Proceed to user login if not admin
+                    userLogin($email, $password);
                 }
             } else {
-                //  proceed sa user if hindi admin
-                $userQuery = "SELECT repo_user_id, password FROM public.repo_user WHERE email = $1";
-                $userStmt = pg_prepare($db_connection, "fetch_user_password_query", $userQuery);
+                // Proceed to user login if not admin
+                userLogin($email, $password);
+            }
+        } else {
+            echo "Admin login query execution failed.";
+        }
+    } else {
+        echo "Admin statement preparation failed.";
+    }
+}
 
-				if ($userStmt) {
-					$userResult = pg_execute($db_connection, "fetch_user_password_query", array($email));
-				
-					if ($userResult) {
-						$userRow = pg_fetch_assoc($userResult);
-						if ($userRow) {
-							$hashedUserPassword = $userRow['password'];
-				
-							if (password_verify($password, $hashedUserPassword)) {
-								// User Password is correct
-								$userId = $userRow['repo_user_id'];
-								
-								$_SESSION['repo_user_id'] = $userId; // Set the 'repo_user_id' in the session
-								
-								header("Location: user-landing-page.php");
-								exit();
-							} else {
-								// Incorrect password or user not found
-								echo "Invalid email or password for user.";
-							}
-						} else {
-							// Invalid email or password
-							echo "Invalid email or password.";
-						}
-					} else {
-						echo "User login query execution failed.";
-					}
-				} else {
-					echo "User statement preparation failed.";
-				}
-			}
-		}
-	}
-}	
+function userLogin($email, $password) {
+    global $db_connection;
+
+    // User Login Query
+    $userQuery = "SELECT repo_user_id, password, salt FROM public.repo_user WHERE email = $1";
+    $userStmt = pg_prepare($db_connection, "fetch_user_password_query", $userQuery);
+
+    if ($userStmt) {
+        $userResult = pg_execute($db_connection, "fetch_user_password_query", array($email));
+
+        if ($userResult) {
+            $userRow = pg_fetch_assoc($userResult);
+            if ($userRow) {
+                $hashedUserPassword = $userRow['password'];
+                $salt = $userRow['salt'];
+
+                if (isset($salt)) {
+                    if (password_verify($password . $salt, $hashedUserPassword)) {
+                        $userId = $userRow['repo_user_id'];
+                        $_SESSION['repo_user_id'] = $userId;
+                        header("Location: user-landing-page.php");
+                        exit();
+                    } else {
+                        // Incorrect password or user not found
+                        echo "Invalid email or password for user.";
+                    }
+                } else {
+                    // Salt value is not retrieved from the database
+                    echo "Salt value not found for user.";
+                }
+            } else {
+                // Invalid email or password
+                echo "Invalid email or password.";
+            }
+        } else {
+            echo "User login query execution failed.";
+        }
+    } else {
+        echo "User statement preparation failed.";
+    }
+}
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
