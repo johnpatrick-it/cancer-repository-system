@@ -1,15 +1,27 @@
 <?php
 
-$wrongpassword = "";
-$wrongusername = "";
-
 session_start();
 
 include('includes/config.php');
 
+
+function sanitizeInput($input) {
+    // Use htmlspecialchars to prevent XSS attacks
+    return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+ 
+       // Sanitize user input
+       $email = sanitizeInput($_POST['email']);
+       $password = sanitizeInput($_POST['password']);
+
+    
+      // Check for empty fields
+      if (empty($email) || empty($password)) {
+        $_SESSION['emptyfields'] = "Please fill out all the fields";
+        header("location: login.php");
+        exit;
+    }
 
     // Admin Login Query
     $adminQuery = "SELECT admin_id, department, password FROM public.admin_users WHERE email = $1";
@@ -54,6 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 function userLogin($email, $password) {
     global $db_connection;
 
+
+
     // User Login Query
     $userQuery = "SELECT repo_user_id, password, salt FROM public.repo_user WHERE email = $1";
     $userStmt = pg_prepare($db_connection, "fetch_user_password_query", $userQuery);
@@ -74,16 +88,22 @@ function userLogin($email, $password) {
                         header("Location: user-landing-page.php");
                         exit();
                     } else {
-                        // Incorrect password or user not found
-                        echo "Invalid email or password for user.";
+                           // Invalid email or password
+                $_SESSION['not-found'] = "User not found";
+                header("location: login.php");
+                exit;
                     }
                 } else {
-                    // Salt value is not retrieved from the database
-                    echo "Salt value not found for user.";
+                   // Invalid email or password
+                $_SESSION['not-found'] = "User not found";
+                header("location: login.php");
+                exit;
                 }
             } else {
                 // Invalid email or password
-                echo "Invalid email or password.";
+                $_SESSION['wrong-credentials'] = "Incorrect password";
+                header("location: login.php");
+                exit;
             }
         } else {
             echo "User login query execution failed.";
@@ -274,6 +294,7 @@ function userLogin($email, $password) {
                 <a href="index.php"><img src="assets/img/pcc-logo.png" alt="Company Logo"></a>
             </div>
         </div>
+        
         <!-- RIGHT SIDE CONTAINER -->
         <div class="account-content">
             <div class="account-wrapper">
@@ -283,18 +304,14 @@ function userLogin($email, $password) {
                 <form method="POST" enctype="multipart/form-data" autocomplete="off">
                     <div class="form-group">
                         <i class="fas fa-envelope icon"></i>
-                        <input class="form-control" name="email" required type="email" placeholder="Email">
+                        <input class="form-control" name="email"  placeholder="Email">
                     </div>
-                    <?php if ($wrongusername) {
-						echo $wrongusername;
-					} ?>
+          
                     <div class="form-group">
                         <i class="fas fa-lock icon"></i>
-                        <input class="form-control" name="password" required type="password" placeholder="Password">
+                        <input class="form-control" name="password"  placeholder="Password">
                     </div>
-                    <?php if ($wrongpassword) {
-						echo $wrongpassword;
-					} ?>
+             
                     <div class="form-group text-center">
                         <div class="col-auto pt-2">
                             <a class="float-left forgot-password" href="forgot-password.php">
@@ -312,16 +329,81 @@ function userLogin($email, $password) {
         </div>
     </div>
 
+<!-- jQuery -->
+<script src="assets/js/jquery-3.2.1.min.js"></script>
 
-    <!-- jQuery -->
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Bootstrap Core JS -->
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+<!-- Bootstrap Core JS -->
+<script src="assets/js/popper.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
 
-    <!-- Custom JS -->
-    <script src="assets/js/app.js"></script>
+<!-- Custom JS -->
+<script src="assets/js/app.js"></script>
+<!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function () {
+        <?php
+        if (isset($_SESSION['wrong-credentials'])) {
+            $error = $_SESSION['wrong-credentials'];
+            // Clear the session error variable
+            unset($_SESSION['wrong-credentials']);
+
+            // Display the error for incorrect password 
+            echo "Swal.fire({
+                title: 'Error!',
+                text: '$error',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });";
+        }
+        ?>
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        <?php
+        if (isset($_SESSION['not-found'])) {
+            $error = $_SESSION['not-found'];
+            // Clear the session error variable
+            unset($_SESSION['not-found']);
+
+            // Display the error for incorrect password 
+            echo "Swal.fire({
+                title: 'Error!',
+                text: '$error',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });";
+        }
+        ?>
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        <?php
+        if (isset($_SESSION['emptyfields'])) {
+            $error = $_SESSION['emptyfields'];
+            // Clear the session error variable
+            unset($_SESSION['emptyfields']);
+
+            // Display the error for incorrect password 
+            echo "Swal.fire({
+                title: 'Error!',
+                text: '$error',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });";
+        }
+        ?>
+    });
+</script>
+
 </body>
 
 </html>
