@@ -26,7 +26,49 @@
         <!-- LEFT SIDE CONTAINER -->
         
         <div class="left-side slanted-divider">
-        <script>
+            <div class="account-logo">  
+                <a href="index.php"><img src="assets/img/pcc-logo.png" alt="Company Logo"></a>
+            </div>
+        </div>
+        
+        
+        <!-- RIGHT SIDE CONTAINER -->
+        <div class="account-content">
+            <div class="account-wrapper">
+                <h3 class="login-header">Welcome!</h3>
+                <p class="login-subheader">Please enter your details</p>
+
+                <form method="POST" enctype="multipart/form-data" autocomplete="off">
+                    <div class="form-group">
+                        <i class="fas fa-envelope icon"></i>
+                        <input class="form-control" name="email" type="email" placeholder="Email">
+                    </div>
+          
+                    <div class="form-group">
+                        <i class="fas fa-lock icon"></i>
+                        <input class="form-control" name="password" type="password" placeholder="Password">
+                    </div>
+             
+                    <div class="form-group text-center">
+                        <div class="col-auto pt-2">
+                            <a class="float-left forgot-password" href="forgot-password.php">
+                                Forgot password?
+                            </a>
+                        </div>
+                        <button class="btn btn-primary login-btn" name="login" type="submit">Login</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <div class="help-link">
+            <a href="#"><span>Need Help?</span></a>
+        </div>
+    </div>
+
+     <!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+<script>
     function displayWrongCredentialsAlert(error) {
         Swal.fire({
             title: 'Error!',
@@ -89,48 +131,5 @@
         ?>
     });
 </script>
-            <div class="account-logo">  
-                <a href="index.php"><img src="assets/img/pcc-logo.png" alt="Company Logo"></a>
-            </div>
-        </div>
-        
-        
-        <!-- RIGHT SIDE CONTAINER -->
-        <div class="account-content">
-            <div class="account-wrapper">
-                <h3 class="login-header">Welcome!</h3>
-                <p class="login-subheader">Please enter your details</p>
-
-                <form method="POST" enctype="multipart/form-data" autocomplete="off">
-                    <div class="form-group">
-                        <i class="fas fa-envelope icon"></i>
-                        <input class="form-control" name="email" type="email" placeholder="Email">
-                    </div>
-          
-                    <div class="form-group">
-                        <i class="fas fa-lock icon"></i>
-                        <input class="form-control" name="password" type="password" placeholder="Password">
-                    </div>
-             
-                    <div class="form-group text-center">
-                        <div class="col-auto pt-2">
-                            <a class="float-left forgot-password" href="forgot-password.php">
-                                Forgot password?
-                            </a>
-                        </div>
-                        <button class="btn btn-primary login-btn" name="login" type="submit">Login</button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-        <div class="help-link">
-            <a href="#"><span>Need Help?</span></a>
-        </div>
-    </div>
-
-     <!-- Include SweetAlert library -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
-
 </body>
 </html>
