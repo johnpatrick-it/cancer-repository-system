@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalID, $firstName, $middleName, $lastName, $position, $email, $password, $salt));
             
             if ($result_exec) {
+                $_SESSION['add-user'] = "New user added successfully!";
                 header("Location: /user-information.php");
                 exit();
             } else {

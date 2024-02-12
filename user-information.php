@@ -44,6 +44,9 @@ include('includes/config.php');
     <!-- Datetimepicker CSS -->
     <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
 
+    <!-- Sweetalert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@latest/dist/sweetalert2.min.css">
+
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 
@@ -262,6 +265,38 @@ include('includes/config.php');
 
     <!-- Custom JS -->
     <script src="assets/js/app.js"></script>
+
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>   
+
+    <script>
+
+
+    function addUser(success) {
+        swal.fire({
+            title: 'Success!',
+            text: success,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
+    
+    document.addEventListener('DOMContentLoaded', function () {
+
+        <?php
+        if (isset($_SESSION['add-user'])) {
+            $success = $_SESSION['add-user'];
+            // Clear the session variable
+            unset($_SESSION['add-user']);
+
+            // Call the function to display success message
+            echo "addUser('$success');";
+        }
+        ?>
+
+       
+    });
+</script>
 </body>
 
 </html>

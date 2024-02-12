@@ -47,7 +47,10 @@ include('includes/config.php');
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
-
+    
+    <!-- Sweetalert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@latest/dist/sweetalert2.min.css">
+   
     <style>
         body {
             background-color: #D4DEDB;
@@ -229,7 +232,8 @@ include('includes/config.php');
         </div>
     </div>
 
-
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>                                            
     <!-- jQuery -->
     <script src=" assets/js/jquery-3.2.1.min.js"></script>
 
@@ -253,6 +257,34 @@ include('includes/config.php');
 
     <!-- Custom JS -->
     <script src="assets/js/app.js"></script>
+
+    <script>
+    function addHospital(success) {
+        Swal.fire({
+            title: 'Success!',
+            text: success,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        <?php
+        if (isset($_SESSION['add-hospital'])) {
+            $success = $_SESSION['add-hospital'];
+            // Clear the session variable
+            unset($_SESSION['add-hospital']);
+
+            // Call the function to display success message
+            echo "addHospital('$success');";
+        }
+        ?>
+
+       
+    });
+</script>
+
 </body>
 
 </html>
