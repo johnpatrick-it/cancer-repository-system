@@ -177,7 +177,7 @@ include('includes/config.php');
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-striped custom-table datatable">
+                            <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
                                             <th>Hospital Name</th>
@@ -190,29 +190,35 @@ include('includes/config.php');
                                     </thead>
                                     <tbody>
                                         <?php
-                                           if (!$db_connection) {
-                                               echo "Failed to connect to the database.";
-                                           } else {
-                                               $query = "SELECT hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street FROM hospital_general_information";
-                                               $result = pg_query($db_connection, $query);
-                                                   while ($row = pg_fetch_assoc($result)) {
-                                                       echo "<tr>";
-                                                       echo "<td>" . $row['hospital_name'] . "</td>";
-                                                       echo "<td>" . $row['hospital_level'] . "</td>";
-                                                       echo "<td>" . $row['type_of_institution'] . "</td>";
-                                                       echo "<td>" . $row['hospital_barangay'] . "</td>";
-                                                       echo "<td>" . $row['hospital_street'] . "</td>";
-                                                       echo "<td>";
-                                                       echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>";
-                                                       echo "</td>";
-                                                       echo "</tr>";
-                                                   }
-                                                   echo "</tbody>";
+                                            if (!$db_connection) {
+                                                echo "Failed to connect to the database.";
+                                            } else {
+                                                $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information";
+                                                $result = pg_query($db_connection, $query);
+                                                while ($row = pg_fetch_assoc($result)) {
+                                                    echo "<tr>";
+                                                    echo "<td class='hospital-name'>" . $row['hospital_name'] . "</td>";
+                                                    echo "<td class='hospital-level'>" . $row['hospital_level'] . "</td>";
+                                                    echo "<td class='type-of-institution'>" . $row['type_of_institution'] . "</td>";
+                                                    echo "<td class='hospital-barangay'>" . $row['hospital_barangay'] . "</td>";
+                                                    echo "<td class='hospital-street'>" . $row['hospital_street'] . "</td>";
+                                                
+                                                    // Populate hidden input fields for additional data
+                                                    echo "<input type='hidden' class='hospital-region' value='" . $row['hospital_region'] . "'>";
+                                                    echo "<input type='hidden' class='hospital-province' value='" . $row['hospital_province'] . "'>";
+                                                    echo "<input type='hidden' class='hospital-city' value='" . $row['hospital_city'] . "'>";
+                                                    echo "<input type='hidden' class='hospital-streets' value='" . $row['hospital_street'] . "'>";
+                                                    echo "<input type='hidden' class='hospital-equipments' value='" . $row['hospital_equipments'] . "'>";
+                                                
+                                                    echo "<td>";
+                                                    echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . $row['hospital_id'] . "'><i class='fa fa-pencil'></i></a>";
+                                                    echo "</td>";
+                                                    echo "</tr>";
                                                 }
-                                       
-                                               pg_close($db_connection);
-                                           
-                                       ?>                                       
+                                                
+                                            }
+                                            pg_close($db_connection);
+                                        ?>                                       
                                     </tbody>
                                 </table>
                             </div>

@@ -8,59 +8,84 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<form>
+				<form id="editHospitalForm" method="post">
 					<div class="row">
+
+						<!-- Hidden input field to store the Hospital ID -->
+						<input type="hidden" id="editHospitalId">
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="col-form-label">Hospital Name</span></label>
-								<input class="form-control"  type="text" placeholder="Hospital Location">
+								<input class="form-control" id="editHospitalName" type="text" placeholder="Hospital Location">
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="col-form-label">Hospital Level</label>
-								<input class="form-control"  type="text" placeholder="Hospital Level">
+								<select class="form-control select" id="editHospitalLevel" required>
+								<option disabled selected>Select Level</option>
+								<option>Level 1 General Hospital</option>
+								<option>Level 2 General Hospital</option>
+								<option>Level 3 General Hospital</option>
+							</select>
 							</div>
 						</div>
+						
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="col-form-label">Type of Institution</span></label>
-								<input class="form-control"  type="text" placeholder="Type of Institution">
+								<select class="form-control select"  id="editTypeInstitution" required>
+								<option disabled selected>Select institution</option>
+								<option>Government</option>
+								<option>Private</option>
+							</select>
 							</div>
 						</div>
+
+
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label for="edit-region">Region</label>
-								<select class="form-control select" name="edit-region" id="edit-region"></select>
+								<select class="form-control select" id="edit-region" type="text"></select>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label for="edit-province">Province</label>
-								<select class="form-control select" name="edit-province" id="edit-province"></select>
+								<select class="form-control select" id="edit-province" type="text"></select>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label for="edit-city">City/Municipality</label>
-								<select class="form-control select" name="edit-city" id="edit-city"></select>
+								<select class="form-control select"  id="edit-city" type="text"></select>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label for="edit-barangay">Barangay</label>
-								<select class="form-control select" name="edit-barangay" id="edit-barangay"></select>
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label class="col-form-label">Equipments</label>
-								<input class="form-control" type="text">
+								<select class="form-control select" id="edit-barangay" type="text"></select>
 							</div>
 						</div>
 
+						
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label class="col-form-label">Street</label>
+								<input class="form-control" id="editStreet" type="text">
+							</div>
+						</div>
+
+				
+							<div class="form-group">
+								<label class="col-form-label">Equipments</label>
+								<input class="form-control" id="editEquipments" type="text">
+							</div>
+						</div>
+						<div class="col-sm-12">
 						<div class="submit-section">
 							<button class="btn btn-primary submit-btn">Save</button>
+						</div>
 						</div>
 					</div>
 				</form>
@@ -176,3 +201,121 @@
 		});
 	});
 </script>
+
+<script>
+$(document).ready(function() {
+    // Set constants
+    const pollingInterval = 500; // 500 milliseconds
+    const lastTimestampKey = "lastTimestampKey";
+    const $editBody = $("#edit_hospital");
+    const $editForm = $("#editHospitalForm");
+
+    // Step 4: Edit Hospital Button Click
+    $(document).on("click", ".edit-action", function() {
+        const hospitalId = $(this).data("hospital-id");
+        const hospitalName = $(this).closest("tr").find(".hospital-name").text();
+        const hospitalLevel = $(this).closest("tr").find(".hospital-level").text();
+        const typeInstitution = $(this).closest("tr").find(".type-of-institution").text();
+        const region = $(this).closest("tr").find(".hospital-region").val();
+        const province = $(this).closest("tr").find(".hospital-province").val();
+        const city = $(this).closest("tr").find(".hospital-city").val();
+		const barangay = $(this).closest("tr").find(".hospital_barangay").val();
+		const street = $(this).closest("tr").find(".hospital-streets").val();
+        const equipments = $(this).closest("tr").find(".hospital-equipments").val();
+
+        // Populate the edit form fields with hospital data
+        $("#editHospitalId").val(hospitalId);
+        $("#editHospitalName").val(hospitalName);
+        $("#editHospitalLevel").val(hospitalLevel);
+        $("#editTypeInstitution").val(typeInstitution);
+        $("#edit-region").val(region);
+        $("#edit-province").val(province);
+        $("#edit-city").val(city);
+		$("#edit-barangay").val(barangay);
+		$("#editStreet").val(street);
+        $("#editEquipments").val(equipments);
+
+        // Show the edit modal
+        $editBody.modal("show");
+    });
+
+    // Step 5: Edit Hospital Form Submission
+    $editForm.submit(function(event) {
+        event.preventDefault();
+
+
+// Retrieve updated hospital data from the form
+		const newHospitalId = $("#editHospitalId").val();
+        const newHospitalName = $("#editHospitalName").val();
+        const newHospitalLevel = $("#editHospitalLevel").val();
+        const newTypeInstitution = $("#editTypeInstitution").val();
+        const newRegion = $("#edit-region").val();
+        const newProvince = $("#edit-province").val();
+        const newCity = $("#edit-city").val();
+		const newBarangay = $("#edit-barangay").val();
+		const newStreet = $("#editStreet").val();
+        const newEquipments = $("#editEquipments").val();
+
+        console.log("New Hospital ID:", newHospitalId);
+        console.log("New Hospital Name:", newHospitalName);
+        console.log("New Hospital Level:", newHospitalLevel);
+        console.log("New Type of Institution:", newTypeInstitution);
+        console.log("New Region:", newRegion);
+        console.log("New Province:", newProvince);
+        console.log("New City:", newCity);
+		console.log("New Barangay:", newBarangay);
+		console.log("New Street:", newStreet);
+        console.log("New Equipments:", newEquipments);
+
+			// Example AJAX request to update hospital information
+		$.post("/includes/modals/hospital/update_hospital.php", {
+			hospital_id: newHospitalId,
+			hospital_name: newHospitalName,
+			hospital_level: newHospitalLevel,
+			type_institution: newTypeInstitution,
+			region: newRegion,
+			province: newProvince,
+			city: newCity,
+			street: newStreet,
+			barangay: newBarangay,
+			equipments: newEquipments
+		}, function (response) {
+			console.log("Server Response:", response); // Add debugging for server response
+			if (response === "success") {
+				// Close the modal and update data
+				$editBody.modal("hide").css('display', 'none');
+						// Show SweetAlert alert
+						Swal.fire({
+                        title: 'Success',
+                        text: 'Hospital information updated successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        showConfirmButton: true, // Show the confirm button
+                        confirmButtonColor: '#3085d6', // Color of the confirm button
+                        allowOutsideClick: false, // Prevent dismissing the alert by clicking outside
+                    }).then((result) => {
+                        // Redirect to the desired page when the confirm button is clicked
+                        if (result.isConfirmed) {
+                            window.location.href = "../../../hospital-information.php";
+                        }
+                    });
+                } else {
+                    console.log("Failed to update");
+                }
+
+				
+		});
+
+
+    });
+});
+
+
+</script>
+
+
+
+ <!-- Add the necessary JavaScript libraries -->
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
