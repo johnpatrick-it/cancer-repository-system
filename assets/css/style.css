@@ -518,8 +518,8 @@ table.dataTable thead > tr > td.sorting {
 }
 .btn-purple:hover,
 .btn-purple:focus {
-	background-color: #482fe9;
-	border: 1px solid #482fe9;
+	background-color: #2e6946;
+	border: 1px solid #53bd7e;
 }
 .btn-primary {
 	background-color: #204A31;
@@ -1571,7 +1571,7 @@ table.dataTable thead > tr > td.sorting {
 .page-header .breadcrumb {
     background-color: transparent;
     color: #6c757d;
-    font-size: 1rem;
+    font-size: 0.8remrem;
     font-weight: 500;
     margin-bottom: 0;
     padding: 0;
@@ -1598,7 +1598,7 @@ table.dataTable thead > tr > td.sorting {
 }
 .page-title {
     color: #1f1f1f;
-    font-size: 26px;
+    font-size: 1.4rem;
     font-weight: 500;
     margin-bottom: 5px;
 }
@@ -1784,12 +1784,12 @@ table.dataTable thead > tr > td.sorting {
 	padding-right: 15px;
 }
 .dash-widget-icon {
-	background-color: rgba(255, 155, 68, 0.2);
+	background-color: rgba(77, 255, 68, 0.2);
 	border-radius: 100%;
-	color: #ff9b44;
+	color: #2e6946;
 	display: inline-block;
 	float: left;
-	font-size: 30px;
+	font-size: 1.5rem;
 	height: 60px;
 	line-height: 60px;
 	margin-right: 10px;
@@ -1798,13 +1798,14 @@ table.dataTable thead > tr > td.sorting {
 }
 .dash-widget-info {
 	text-align: right;
+	color: #354f52;
 }
 .dash-widget-info > h3 {
-	font-size: 30px;
+	font-size: 1.8rem;
 	font-weight: 600;
 }
 .dash-widget-info > span {
-	font-size: 16px;
+	font-size: 0.8rem;
 }
 .dash-statistics .stats-info {
 	margin-bottom: 5px;

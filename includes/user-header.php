@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
-    exit; 
+    exit;
 }
 
 error_reporting(0);
@@ -12,89 +12,91 @@ include('includes/config.php');
 ?>
 
 <style>
-/* DATE AND TIME */
-.page-title-box {
-    color: #18372E;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+    /* DATE AND TIME */
+    .page-title-box {
+        color: #18372E;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.day {
-    font-size: 20px;
-    letter-spacing: 0.2rem;
-}
+    .day {
+        font-size: 20px;
+        letter-spacing: 0.2rem;
+    }
 
-.date {
-    font-size: 12px;
-}
+    .date {
+        font-size: 12px;
+    }
 
-.time {
-    font-size: 15px;
-    color: black;
-    background-color: white;
-    padding: 8px 5px;
-    border-left: 4px solid #18372E;
-}
+    .time {
+        font-size: 15px;
+        color: black;
+        background-color: white;
+        padding: 8px 5px;
+        border-left: 4px solid #18372E;
+    }
 
-/* LOGO */
-.header-left {
-    background-color: #204A3D;
-}
+    /* LOGO */
+    .header-left {
+        background-color: #204A3D;
+    }
 
-/* NOTIFICATION BELL */
-.fa-bell-o {
-    color: black;
-}
+    /* NOTIFICATION BELL */
+    .fa-bell-o {
+        color: black;
+    }
 
-/* USER PROFILE */
-.user-img {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+    /* USER PROFILE */
+    .user-img {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-.user-img img,
-.user-img span {
-    margin: 0;
-    width: 1.2rem;
-}
+    .user-img img,
+    .user-img span {
+        margin: 0;
+        width: 1.2rem;
+    }
 
-.user-container .nav-link {
-    color: white;
-    text-shadow: 1px 1px 2px black;
-    font-size: 0.8rem;
-}
+    .user-container .nav-link {
+        color: white;
+        text-shadow: 1px 1px 2px black;
+        font-size: 0.8rem;
+    }
 
-/* WEATHER ICON */
-.weather-icon {
-    width: 3.3rem;
-}
+    /* WEATHER ICON */
+    .weather-icon {
+        width: 3.3rem;
+    }
 
-/* TOGGLE ICON */
-.bar-icon span {
-    background-color: #000;
-}
+    /* TOGGLE ICON */
+    .bar-icon span {
+        background-color: #000;
+    }
 
 
-.hide-logo {
-    display: none;
-}
+    .hide-logo {
+        display: none;
+    }
 
-.header-left {
-    display: flex;
-    justify-content: center;
-    /* Horizontal alignment */
-    align-items: center;
-    /* Vertical alignment */
-}
+    .header-left {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #logo {
+        display: none;
+    }
 </style>
 
 <div class="header">
 
     <!-- LOGO -->
     <div class="header-left" id="headerLeft">
-
+        <img src="./assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo" id="logo">
     </div>
 
 
@@ -110,7 +112,7 @@ include('includes/config.php');
     <!-- DATE AND TIME -->
     <div class="page-title-box">
         <div class="d-flex flex-row">
-            <img class="weather-icon" src="../assets/img/clouds.png">
+            <img class="weather-icon" src="./assets/img/clouds.png">
         </div>
 
         <div class="d-flex flex-column">
@@ -129,14 +131,13 @@ include('includes/config.php');
     <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa fa-bars"></i></a>
 
     <ul class="nav user-menu">
-
         <!-- NOTIFICATION BELL -->
-        <li class="nav-item dropdown">
+        <!-- <li class="nav-item dropdown">
             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                 <i class="fa fa-bell" style="color: #000;"></i> <span class="badge badge-pill">#</span>
             </a>
             <div class="dropdown-menu notifications">
-                <!-- NOTIICATION SAMPLE CONTENT -->
+
                 <div class="topnav-dropdown-header">
                     <span class="notification-title">Notifications</span>
                     <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
@@ -147,29 +148,30 @@ include('includes/config.php');
                     <a href="#">View all Notifications</a>
                 </div>
             </div>
-        </li>
+        </li> -->
+
         <?php
-            $loggedInUserId = $_SESSION['repo_user_id']; // Retrieve repo_user_id from session after login
+        $loggedInUserId = $_SESSION['repo_user_id']; // Retrieve repo_user_id from session after login
 
-            $query = "SELECT repo_user_id FROM repo_user WHERE repo_user_id = '$loggedInUserId'";
-            $result = pg_query($db_connection, $query);
+        $query = "SELECT repo_user_id FROM repo_user WHERE repo_user_id = '$loggedInUserId'";
+        $result = pg_query($db_connection, $query);
 
-            if (!$result) {
-                echo "Error executing the query: " . pg_last_error($db_connection);
+        if (!$result) {
+            echo "Error executing the query: " . pg_last_error($db_connection);
+        } else {
+            // Fetch the current repo_user
+            $userData = pg_fetch_assoc($result);
+
+            // Check if data is fetched successfully
+            if ($userData) {
+                $currentUserId = $userData['repo_user_id']; // Save the repo_user_id for further use
             } else {
-                // Fetch the current repo_user
-                $userData = pg_fetch_assoc($result);
-
-                // Check if data is fetched successfully
-                if ($userData) {
-                    $currentUserId = $userData['repo_user_id']; // Save the repo_user_id for further use
-                } else {
-                    echo "No data found for the current user.";
-                }
-
-                // Free result set
-                pg_free_result($result);
+                echo "No data found for the current user.";
             }
+
+            // Free result set
+            pg_free_result($result);
+        }
         ?>
 
         <!-- USER PROFILE -->
@@ -177,7 +179,7 @@ include('includes/config.php');
             <div class="user-container" id="userDropdown">
                 <a href="#" class="nav-link" data-toggle="dropdown">
                     <span class="user-img">
-                        <img src="./profiles/myself.png ?>" alt="User Picture">
+                        <img src="./profiles/user.jpg" alt="User Picture">
                     </span>
                     <span class="user-text"></span>
                 </a>
@@ -188,13 +190,11 @@ include('includes/config.php');
                 </div>
             </div>
         </li>
-
     </ul>
 
     <!-- MOBILE MENU -->
     <div class="dropdown mobile-user-menu">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i
-                class="fa fa-ellipsis-v"></i></a>
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
         <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="profile.php">My Profile</a>
             <a class="dropdown-item" href="settings.php">Settings</a>
@@ -205,54 +205,54 @@ include('includes/config.php');
 
 
 <script>
-// DATE AND TIME
-function updateDateTime() {
-    let now = new Date();
+    // DATE AND TIME
+    function updateDateTime() {
+        let now = new Date();
 
-    // Format the day
-    let dayOptions = {
-        weekday: 'long'
-    };
-    let dayString = now.toLocaleDateString('en-US', dayOptions);
-    document.getElementById("day").textContent = dayString + ", ";
+        // Format the day
+        let dayOptions = {
+            weekday: 'long'
+        };
+        let dayString = now.toLocaleDateString('en-US', dayOptions);
+        document.getElementById("day").textContent = dayString + ", ";
 
-    // Format the date
-    let dateOptions = {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric'
-    };
-    let dateString = now.toLocaleDateString('en-US', dateOptions);
-    document.getElementById("date").textContent = dateString;
+        // Format the date
+        let dateOptions = {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        };
+        let dateString = now.toLocaleDateString('en-US', dateOptions);
+        document.getElementById("date").textContent = dateString;
 
-    // Format the time
-    let timeOptions = {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-    };
-    let timeString = now.toLocaleTimeString('en-US', timeOptions);
-    document.getElementById("time").textContent = timeString;
-}
-
-// Update the date and time every second
-setInterval(updateDateTime, 1000);
-
-updateDateTime();
-
-
-
-//Para sa redundant logo
-let logo = document.getElementById("logo");
-let toggleButton = document.getElementById("toggle_btn");
-
-// Function to handle navbar toggle button click
-toggleButton.addEventListener("click", function() {
-
-    if (logo.style.display === "none" || logo.style.display === "") {
-        logo.style.display = "block";
-    } else {
-        logo.style.display = "none";
+        // Format the time
+        let timeOptions = {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        };
+        let timeString = now.toLocaleTimeString('en-US', timeOptions);
+        document.getElementById("time").textContent = timeString;
     }
-});
+
+    // Update the date and time every second
+    setInterval(updateDateTime, 1000);
+
+    updateDateTime();
+
+
+
+    //Para sa redundant logo
+    let logo = document.getElementById("logo");
+    let toggleButton = document.getElementById("toggle_btn");
+
+    // Function to handle navbar toggle button click
+    toggleButton.addEventListener("click", function() {
+
+        if (logo.style.display === "none" || logo.style.display === "") {
+            logo.style.display = "block";
+        } else {
+            logo.style.display = "none";
+        }
+    });
 </script>

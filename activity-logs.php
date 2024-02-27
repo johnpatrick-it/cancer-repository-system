@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])){
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit;
 }
@@ -153,25 +153,25 @@ if (!$result) {
                                     <tbody>
                                         <?php
                                         //Query for logid, name and surname nung repo_user na nag registered ng patient
-                                            $query_logs = "SELECT rl.log_id, ru.user_fname, ru.user_lname, rl.log_timestamp, rl.log_action
+                                        $query_logs = "SELECT rl.log_id, ru.user_fname, ru.user_lname, rl.log_timestamp, rl.log_action
                                                             FROM repo_logs rl
                                                             JOIN repo_user ru ON rl.repo_user_id = ru.repo_user_id
                                                             ORDER BY rl.log_timestamp DESC";
-                                            $result_logs = pg_query($db_connection, $query_logs);
-                                            if ($result_logs) {
-                                                while ($row = pg_fetch_assoc($result_logs)) {
-                                                    echo "<tr>";
-                                                    echo "<td>{$row['log_id']}</td>";
-                                                    echo "<td>{$row['user_fname']}</td>";
-                                                    echo "<td>{$row['user_lname']}</td>";
-                                                    echo "<td>{$row['log_timestamp']}</td>";
-                                                    echo "<td>{$row['log_action']}</td>";
-                                                    echo "</tr>";
-                                                }
-                                            } else {
-                                                // Handle the error for the logs query
-                                                echo "Error fetching logs: " . pg_last_error($db_connection);
+                                        $result_logs = pg_query($db_connection, $query_logs);
+                                        if ($result_logs) {
+                                            while ($row = pg_fetch_assoc($result_logs)) {
+                                                echo "<tr>";
+                                                echo "<td>{$row['log_id']}</td>";
+                                                echo "<td>{$row['user_fname']}</td>";
+                                                echo "<td>{$row['user_lname']}</td>";
+                                                echo "<td>{$row['log_timestamp']}</td>";
+                                                echo "<td>{$row['log_action']}</td>";
+                                                echo "</tr>";
                                             }
+                                        } else {
+                                            // Handle the error for the logs query
+                                            echo "Error fetching logs: " . pg_last_error($db_connection);
+                                        }
                                         ?>
                                     </tbody>
                                 </table>
