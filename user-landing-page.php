@@ -4,7 +4,7 @@ session_start();
 //VERY IMPORTANT DONT ERASE
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
-    exit; 
+    exit;
 }
 error_reporting(0);
 include('includes/config.php');
@@ -160,6 +160,8 @@ $total_patients = $row_total_patients['total_patients'];
             background-color: #E5F6F1;
             color: #204A3D;
             border: 1px solid #204A3D;
+            display: flex;
+            justify-content: space-around;
         }
 
         .add-btn {
@@ -217,29 +219,27 @@ $total_patients = $row_total_patients['total_patients'];
 
                 <!-- METRICS -->
                 <div class="row">
-                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
-                            <div class="card dash-widget">
-                                <div class="card-body">
-                                    <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
-                                    <div class="dash-widget-info">
-                                        <h3>32</h3>
-                                        <span class="span-text">New Patients</span>
-                                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                        <div class="card dash-widget">
+                            <div class="card-body">
+                                <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+                                <div class="dash-widget-info">
+                                    <h3>32</h3>
+                                    <span class="span-text">New Patients</span>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
-                        <a href="manage-patient.php">
-                            <div class="card dash-widget">
-                                <div class="card-body">
-                                    <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
-                                    <div class="dash-widget-info">
-                                        <h3><?php echo $total_patients; ?></h3>
-                                        <span class="span-text">Total Patients</span>
-                                    </div>
+                        <div class="card dash-widget">
+                            <div class="card-body">
+                                <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
+                                <div class="dash-widget-info">
+                                    <h3><?php echo $total_patients; ?></h3>
+                                    <span class="span-text">Total Patients</span>
                                 </div>
                             </div>
-                        </a>
+                        </div>
                     </div>
                 </div>
 
@@ -247,7 +247,7 @@ $total_patients = $row_total_patients['total_patients'];
                 <div class="body-container">
 
                     <!-- SEARCH -->
-                    <div class="row">
+                    <div class="row mr-2">
                         <div class="col-md-3">
                             <div class="col">
                                 <h1 class="page-title">Patient Info</h1>
@@ -260,23 +260,22 @@ $total_patients = $row_total_patients['total_patients'];
 
                         <div class="col-md-6">
                             <div class="row">
-                                <div class="col-md-6 ml-auto m-right">
+                                <div class="col-md-5 ml-auto m-right">
                                     <div class="search-container ">
                                         <i class="fa fa-search"></i>
                                         <input type="text" class="form-control pl-5 search-input" placeholder="Search">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <div class="">
-                                        <button class="btn filter-btn">
-                                            <i class="fa fa-filter"></i> Filter
-                                        </button>
-                                    </div>
+                                    <button class="btn filter-btn">
+                                        <i class="fa fa-filter"></i>
+                                        <span>Filter</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-<!-- Assuming you have already established a PostgreSQL connection ($db_connection) -->
+                    <!-- Assuming you have already established a PostgreSQL connection ($db_connection) -->
 
                     <!-- TABLE -->
                     <div class="row">
@@ -303,10 +302,10 @@ $total_patients = $row_total_patients['total_patients'];
                                             echo "Failed to connect to the database.";
                                         } else {
                                             $repo_user_id = $_SESSION['repo_user_id'];
-                                        //QUERY PARA SA HOSPITAL ID THE I S-SAVE AS $HOSPITAL_ID
+                                            //QUERY PARA SA HOSPITAL ID THE I S-SAVE AS $HOSPITAL_ID
                                             $query_affiliation = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'";
                                             $result_affiliation = pg_query($db_connection, $query_affiliation);
-                                            
+
                                             if (!$result_affiliation) {
                                                 echo "Error in query_affiliation: " . pg_last_error($db_connection);
                                                 exit;
