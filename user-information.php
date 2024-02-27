@@ -188,40 +188,49 @@ include('includes/config.php');
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        //fetching data sa hospital-general-information at user-repo 
-                                        //putangina
-                                        //IDK WHEN ALL THE DATA WAS DELETED HINDI GUMAGANA YUNG ADD USER MODAL LOL ??
-                                        if (!$db_connection) {
-                                            echo "Failed to connect to the database.";
-                                        } else {
-                                            $query = "SELECT 
-                                                        ru.user_fname AS \"First Name\",
-                                                        ru.user_mname AS \"Middle Name\",
-                                                        ru.user_lname AS \"Last Name\",
-                                                        hgi.hospital_name AS \"Hospital Affiliated With\",
-                                                        ru.position AS \"Position\"
-                                                      FROM 
-                                                        repo_user ru
-                                                      JOIN 
-                                                        hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id";
-                                        
-                                            $result = pg_query($db_connection, $query);                                    
-                                                while ($row = pg_fetch_assoc($result)) {
-                                                    echo "<tr>";
-                                                    echo "<td>" . $row['First Name'] . "</td>";
-                                                    echo "<td>" . $row['Middle Name'] . "</td>";
-                                                    echo "<td>" . $row['Last Name'] . "</td>";
-                                                    echo "<td>" . $row['Hospital Affiliated With'] . "</td>";
-                                                    echo "<td>" . $row['Position'] . "</td>";
-                                                    echo "<td>";
-                                                    echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>";
-                                                    echo "<a href='#' data-toggle='modal' data-target='#delete_hospital' title='Delete' class='btn text-xs text-white btn-danger action-icon ml-2'><i class='fa fa-trash'></i></a>";
-                                                    echo "</td>";
-                                                    echo "</tr>";
-                                                }
-                                            }
-                                        ?>                                     
+                                    <?php
+                                    //fetching data sa hospital-general-information at user-repo 
+                                    //putangina
+                                    //IDK WHEN ALL THE DATA WAS DELETED HINDI GUMAGANA YUNG ADD USER MODAL LOL ??
+                                    if (!$db_connection) {
+                                        echo "Failed to connect to the database.";
+                                    } else {
+                                        $query = "SELECT 
+                                                    ru.repo_user_id,
+                                                    ru.user_fname AS \"First Name\",
+                                                    ru.user_mname AS \"Middle Name\",
+                                                    ru.user_lname AS \"Last Name\",
+                                                    hgi.hospital_name AS \"Hospital Affiliated With\",
+                                                    ru.position AS \"Position\",
+                                                    ru.email AS \"Email\",
+                                                    ru.password AS \"Password\"
+                                                FROM 
+                                                    repo_user ru
+                                                JOIN 
+                                                    hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id";
+
+                                        $result = pg_query($db_connection, $query);                                    
+                                        while ($row = pg_fetch_assoc($result)) {
+                                            echo "<tr>";
+                                            echo "<td class='first-name'>" . $row['First Name'] . "</td>";
+                                            echo "<td class='middle-name'>" . $row['Middle Name'] . "</td>";
+                                            echo "<td class='last-name'>" . $row['Last Name'] . "</td>";
+                                            echo "<td class='hospital-affiliated'>" . $row['Hospital Affiliated With'] . "</td>";
+                                            echo "<td class='user-position'>" . $row['Position'] . "</td>";
+                                            
+                                            // Populate hidden input fields for additional data
+                                            echo "<input type='hidden' class='user-email' value='" . $row['Email'] . "'>";
+                                            echo "<input type='hidden' class='user-password' value='" . $row['Password'] . "'>";
+                                            
+                                            echo "<td>";
+                                            echo "<a href='#' data-toggle='modal' data-target='#edit_user' title='Edit' class='btn text-xs text-white btn-blue edituser-action' data-repo-id='" . $row['repo_user_id'] . "'><i class='fa fa-pencil'></i></a>";
+                                            echo "<a href='#' data-toggle='modal' data-target='#delete_user' title='Delete' class='btn text-xs text-white btn-danger delete-action ml-2' data-repo-id='" . $row['repo_user_id'] . "'><i class='fa fa-trash'></i></a>";
+                                            echo "</td>";
+                                            echo "</tr>";
+                                        }
+                                    }
+                                ?>
+        
                                     </tbody>
                                 </table>
                             </div>
@@ -234,10 +243,10 @@ include('includes/config.php');
             <?php include_once 'includes/modals/hospital/add_user.php'; ?>
 
             <!-- Edit Hospital Modal -->
-            <?php include_once 'includes/modals/hospital/edit_hospital.php'; ?>
+            <?php include_once 'includes/modals/hospital/edit_user.php'; ?>
 
             <!-- Delete Hospital Modal -->
-            <?php include_once 'includes/modals/hospital/delete_hospital.php'; ?>
+            <?php include_once 'includes/modals/hospital/delete_user.php'; ?>
         </div>
     </div>
 
@@ -297,6 +306,7 @@ include('includes/config.php');
        
     });
 </script>
+
 </body>
 
 </html>
