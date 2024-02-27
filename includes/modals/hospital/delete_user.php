@@ -48,8 +48,21 @@ $(document).ready(function() {
             if(response === "success") {
                 // Hide modal
                 $deleteBody.modal("hide");
-                // Optionally, display a confirmation message
-                alert("User deleted successfully.");
+          		// Show SweetAlert alert
+						Swal.fire({
+                        title: 'Success',
+                        text: 'Deleted successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        showConfirmButton: true, // Show the confirm button
+                        confirmButtonColor: '#3085d6', // Color of the confirm button
+                        allowOutsideClick: false, // Prevent dismissing the alert by clicking outside
+                    }).then((result) => {
+                        // Redirect to the desired page when the confirm button is clicked
+                        if (result.isConfirmed) {
+                            window.location.href = "../../../user-information.php";
+                        }
+                    });
             } else {
                 // Handle specific errors
                 console.log("Failed to delete user");

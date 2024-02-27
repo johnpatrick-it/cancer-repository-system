@@ -67,20 +67,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result) {
             $result_exec = pg_execute($db_connection, "update_query", array($affiliated, $firstName, $middleName, $lastName, $position, $email, $password, $salt, $repoId));
-
-            if ($result_exec) {
-                $_SESSION['update-user'] = "User information updated successfully!";
-                header("Location: /user-information.php");
-                exit();
-            } else {
-                echo "Error executing query: " . pg_last_error($db_connection);
-            }
-        } else {
-            echo "Error preparing query: " . pg_last_error($db_connection);
-        }
+            
+                // Check if the query was successful
+    if ($result_exec) {
+        echo "success";
     } else {
-        echo "Required fields are missing.";
+        echo "error: " . pg_last_error($db_connection);
     }
+           
+        } 
+    } 
+
 }
 
 ?>

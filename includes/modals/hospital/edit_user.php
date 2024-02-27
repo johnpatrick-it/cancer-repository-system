@@ -98,8 +98,8 @@ $(document).ready(function() {
     const $editBody = $("#edit_user");
     const $editForm = $("#editUserForm");
 
- // Click handler for edit action
- $(document).on("click", ".edituser-action", function() {
+    // Click handler for edit action
+    $(document).on("click", ".edituser-action", function() {
         // Extract data from the clicked row
         const repoId = $(this).data("repo-id");
         const firstName = $(this).closest("tr").find(".first-name").text();
@@ -133,7 +133,6 @@ $(document).ready(function() {
         $editBody.modal("show");
     });
 
-
     // Edit Hospital Form Submission
     $editForm.submit(function(event) {
         event.preventDefault();
@@ -159,21 +158,36 @@ $(document).ready(function() {
 
         // AJAX request to update user information
         $.post("/includes/modals/hospital/update_user_function.php", {
-			repo_id: newrepoId,
-			first_name: newfirstName,
-			middle_name: newmiddleName,
-			last_name: newlastName,
-			affiliated: newAffiliated,
-			position: newPosition,
-			email: newEmail,
-			password: newPassword,
+            repo_id: newrepoId,
+            first_name: newfirstName,
+            middle_name: newmiddleName,
+            last_name: newlastName,
+            affiliated: newAffiliated,
+            position: newPosition,
+            email: newEmail,
+            password: newPassword,
         })
         .done(function(response) {
             console.log("Server Response:", response);
             if (response === "success") {
-                // Handle success
+                // Show SweetAlert alert for success
+                Swal.fire({
+                    title: 'Success',
+                    text: 'User information updated successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    showConfirmButton: true, // Show the confirm button
+                    confirmButtonColor: '#3085d6', // Color of the confirm button
+                    allowOutsideClick: false, // Prevent dismissing the alert by clicking outside
+                }).then((result) => {
+                    // Redirect to the desired page when the confirm button is clicked
+                    if (result.isConfirmed) {
+                        window.location.href = "../../../user-information.php";
+                    }
+                });
             } else {
                 // Handle failure
+                console.log("Failed to update user information.");
             }
         })
         .fail(function(xhr, status, error) {
@@ -181,6 +195,7 @@ $(document).ready(function() {
         });
     });
 });
+
 
 </script>
 
