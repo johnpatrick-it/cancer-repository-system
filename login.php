@@ -1,4 +1,4 @@
-<?php
+<?php   
 include "includes/config.php";
 include "functions/login-function.php";
 ?>

@@ -256,16 +256,6 @@ $(document).ready(function() {
 		const newStreet = $("#editStreet").val();
         const newEquipments = $("#editEquipments").val();
 
-        console.log("New Hospital ID:", newHospitalId);
-        console.log("New Hospital Name:", newHospitalName);
-        console.log("New Hospital Level:", newHospitalLevel);
-        console.log("New Type of Institution:", newTypeInstitution);
-        console.log("New Region:", newRegion);
-        console.log("New Province:", newProvince);
-        console.log("New City:", newCity);
-		console.log("New Barangay:", newBarangay);
-		console.log("New Street:", newStreet);
-        console.log("New Equipments:", newEquipments);
 
 			// Example AJAX request to update hospital information
 		$.post("/includes/modals/hospital/update_hospital.php", {

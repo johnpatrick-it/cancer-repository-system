@@ -8,7 +8,6 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
 
 error_reporting(0);
 include('includes/config.php');
-
 ?>
 
 <!DOCTYPE html>

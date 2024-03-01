@@ -147,14 +147,7 @@ $(document).ready(function() {
         const newEmail = $("#editEmail").val();
         const newPassword = $("#editPassword").val();
 
-        console.log("New Repo ID:", newrepoId);
-        console.log("New First Name:", newfirstName);
-        console.log("New Middle Name:", newmiddleName);
-        console.log("New Last Name:", newlastName);
-        console.log("New Hospital Affiliated With:", newAffiliated);
-        console.log("New Position:", newPosition);
-        console.log("New Email:", newEmail);
-        console.log("New Password:", newPassword);
+
 
         // AJAX request to update user information
         $.post("/includes/modals/hospital/update_user_function.php", {
