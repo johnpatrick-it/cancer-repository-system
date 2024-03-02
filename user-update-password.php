@@ -1,8 +1,7 @@
 <?php 
-
+session_start();
 include "includes/config.php";
 
-include "functions/auth-check.php";
 ?>
 <!DOCTYPE html>
       <html lang="en">

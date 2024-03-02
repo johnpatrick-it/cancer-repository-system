@@ -2,6 +2,11 @@
 session_start();
 include_once("../includes/config.php");
 
+function generateSalt($length = 16) {
+    $randomBytes = random_bytes($length);
+    return bin2hex($randomBytes);
+}
+
 function sanitizeString($input) {
     // Remove leading and trailing whitespace
     $input = trim($input);
@@ -10,8 +15,6 @@ function sanitizeString($input) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-
     // Sanitize input
     $userId = isset($_SESSION['repo_user_id']) ? $_SESSION['repo_user_id'] : '';
     // Check if it's a valid UUID format
@@ -41,21 +44,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Generate salt
+    $salt = generateSalt();
+
+    // Combine password and salt
+    $passwordToHash = $newpass . $salt;
+
     // Hash the password
-    $password = password_hash($newpass, PASSWORD_DEFAULT);
+    $password = password_hash($passwordToHash, PASSWORD_DEFAULT);
 
     // Prepare update query with parameterized queries
     $query = "UPDATE repo_user
               SET 
-                password = $1         
+                password = $1,
+                salt = $2        
               WHERE 
-                repo_user_id = $2";
+                repo_user_id = $3";
 
     $result = pg_prepare($db_connection, "update_query", $query);
 
     if ($result) {
         // Execute update query
-        $result_exec = pg_execute($db_connection, "update_query", array($password, $userId));
+        $result_exec = pg_execute($db_connection, "update_query", array($password, $salt, $userId));
         
         // Check if the query was successful
         if ($result_exec) {

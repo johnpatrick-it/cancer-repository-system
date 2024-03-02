@@ -191,7 +191,7 @@ include('includes/config.php');
         <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="profile.php">My Profile</a>
             <a class="dropdown-item" href="settings.php">Settings</a>
-            <a class="dropdown-item" href="login.php">Logout</a>
+            <a class="dropdown-item" href="logout-function.php">Logout</a>
         </div>
     </div>
 </div>
