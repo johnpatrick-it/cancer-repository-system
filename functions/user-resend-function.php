@@ -1,25 +1,24 @@
 <?php
+session_start();
 include_once("../includes/config.php");
-
 require_once "vendor/autoload.php"; // Assuming PHPMailer is installed via Composer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-function sendVerificationEmail($admin, $db_connection)
-{
-    $verificationCode = rand(10000, 99999);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Use pg_prepare to prepare the SQL statement
-    $stmtUpdateCode = pg_prepare($db_connection, 'update_code_query', 'UPDATE admin_users SET verification_code = $1 WHERE email = $2');
-    
-    // Use pg_execute to execute the prepared statement
-    pg_execute($db_connection, 'update_code_query', array($verificationCode, $admin['email']));
+    // Handle resend action
+    $email = isset($_SESSION['user_email']) ? $_SESSION['user_email'] : '';
+    $newVerificationCode = rand(10000, 99999); // Generate a new code
 
-    // Save the verification code in the session
-    $_SESSION['verification_code'] = password_hash($verificationCode, PASSWORD_DEFAULT); // Updated this line
+    $stmtUpdateCode = pg_prepare($db_connection, 'update_code_query', 'UPDATE repo_user SET verification_code = $1 WHERE email = $2');
+    pg_execute($db_connection, 'update_code_query', array($newVerificationCode, $email));
+
+    // Update the session variable with the new verification code
+    $_SESSION['verification_code'] = password_hash($newVerificationCode, PASSWORD_DEFAULT); // Updated this line
 
     // Send email with the verification code
-    $subject = ucfirst($admin['lastname']) . ', here\'s your verification code:';
+    $subject = ucfirst($_SESSION['user_name']) . ', here\'s your verification code:';
     $message = '<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -45,9 +44,9 @@ function sendVerificationEmail($admin, $db_connection)
         <div style="padding: 0 0 3% 0;">
           <hr style="background-color: #d8dada; margin: auto;">
           <div style="margin: 3%;">
-            <h1 style="font-weight: bold; margin: 3%; font-style: normal;">Hi ' . ucfirst($admin['lastname']) . ',</h1>
+          <h1 style="font-weight: bold; margin: 3%; font-style: normal;">Hi ' . ucfirst($_SESSION['user_name']) . ',</h1>
             <p style="margin: 3%; font-style: normal;">We received a reset password request on your PCC Account</p>
-            <h1 style="margin: 3%; font-style: normal;"> ' . $verificationCode . ' </h1>
+            <h1 style="margin: 3%; font-style: normal;"> ' . $newVerificationCode . ' </h1>
             <p style="margin: 3%; font-style: normal;">Enter this code to complete the reset password process.</p>
             <p style="margin: 3%; font-style: normal;">Thanks for helping us keep your account secure.</p>
             <p style="margin: 3%; font-style: normal;">The PCC Team.</p>
@@ -68,8 +67,8 @@ function sendVerificationEmail($admin, $db_connection)
       </div>
     </body>
     </html>       
-';
-        
+    ';
+
     $mail = new PHPMailer(true);
 
     $mail->isSMTP();
@@ -83,19 +82,29 @@ function sendVerificationEmail($admin, $db_connection)
     $mail->Password = "hxrywczoqmcjqdhe";
 
     $mail->setFrom("noreplyphilippinecancercenter@gmail.com", "PCC");
-    $mail->addAddress($admin['email']);
+    $mail->addAddress($_SESSION['user_email']);
 
-    $mail->isHTML(true); // Place it here
+    $mail->isHTML(true);
 
     $mail->Subject = $subject;
     $mail->Body = $message;
 
     try {
         $mail->send();
+        // Respond with a success message
+        echo json_encode(['status' => 'success']);
     } catch (Exception $e) {
-        // Handle email sending error, if needed
-        echo "Mailer Error: " . $mail->ErrorInfo;
+        // Handle email sending error
+        echo json_encode(['status' => 'error', 'message' => 'Failed to send verification code email']);
+        // You might also log the error for further analysis
+        // error_log("Email sending failed: " . $e->getMessage());
     }
+
+    // Close the connection
+    pg_close($db_connection);
+
+    // Respond with a success message
+    echo json_encode(['status' => 'success']);
+    exit();
 }
 
-?>

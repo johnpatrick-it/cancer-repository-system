@@ -5,21 +5,21 @@ require_once "vendor/autoload.php"; // Assuming PHPMailer is installed via Compo
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-function sendVerificationEmail($admin, $db_connection)
+function usersendVerificationEmail($user, $db_connection)
 {
     $verificationCode = rand(10000, 99999);
 
     // Use pg_prepare to prepare the SQL statement
-    $stmtUpdateCode = pg_prepare($db_connection, 'update_code_query', 'UPDATE admin_users SET verification_code = $1 WHERE email = $2');
+    $stmtUpdateCode = pg_prepare($db_connection, 'update_code_query', 'UPDATE repo_user SET verification_code = $1 WHERE email = $2');
     
     // Use pg_execute to execute the prepared statement
-    pg_execute($db_connection, 'update_code_query', array($verificationCode, $admin['email']));
+    pg_execute($db_connection, 'update_code_query', array($verificationCode, $user['email']));
 
     // Save the verification code in the session
     $_SESSION['verification_code'] = password_hash($verificationCode, PASSWORD_DEFAULT); // Updated this line
 
     // Send email with the verification code
-    $subject = ucfirst($admin['lastname']) . ', here\'s your verification code:';
+    $subject = ucfirst($user['lastname']) . ', here\'s your verification code:';
     $message = '<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -45,7 +45,7 @@ function sendVerificationEmail($admin, $db_connection)
         <div style="padding: 0 0 3% 0;">
           <hr style="background-color: #d8dada; margin: auto;">
           <div style="margin: 3%;">
-            <h1 style="font-weight: bold; margin: 3%; font-style: normal;">Hi ' . ucfirst($admin['lastname']) . ',</h1>
+            <h1 style="font-weight: bold; margin: 3%; font-style: normal;">Hi ' . ucfirst($user['lastname']) . ',</h1>
             <p style="margin: 3%; font-style: normal;">We received a reset password request on your PCC Account</p>
             <h1 style="margin: 3%; font-style: normal;"> ' . $verificationCode . ' </h1>
             <p style="margin: 3%; font-style: normal;">Enter this code to complete the reset password process.</p>
@@ -83,7 +83,7 @@ function sendVerificationEmail($admin, $db_connection)
     $mail->Password = "hxrywczoqmcjqdhe";
 
     $mail->setFrom("noreplyphilippinecancercenter@gmail.com", "PCC");
-    $mail->addAddress($admin['email']);
+    $mail->addAddress($user['email']);
 
     $mail->isHTML(true); // Place it here
 

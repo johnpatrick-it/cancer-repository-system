@@ -1,6 +1,7 @@
 <?php 
 
 include "includes/config.php";
+
 include "functions/auth-check.php";
 ?>
 <!DOCTYPE html>
@@ -28,7 +29,7 @@ include "functions/auth-check.php";
 
         <div class="col-md-6 side-image factor">
         <div class="input-box">
-                <form action="functions/update-password-function.php" method="post" class="factor">
+                <form action="functions/user-updatepassword-function.php" method="post" class="factor">
                 <div class="form-group" style="margin-top:10px">
 					<i class="fas fa-user icon"></i>
 					<input class="form-control" name="newpassword"  type="password" placeholder="New password">
