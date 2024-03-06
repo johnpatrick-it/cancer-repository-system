@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Admin Login Query
-    $adminQuery = "SELECT admin_id, department, password FROM public.admin_users WHERE email = $1";
+    $adminQuery = "SELECT admin_id, lastname, department, password FROM public.admin_users WHERE email = $1";
     $adminStmt = pg_prepare($db_connection, "fetch_admin_password_query", $adminQuery);
 
     if ($adminStmt) {
@@ -39,9 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     $department = $adminRow['department'];
                     $adminId = $adminRow['admin_id'];
+                    $adminName = $adminRow['lastname'];
 
                     if ($department === 'Repository') {
                         $_SESSION['admin_id'] = $adminId;
+                        $_SESSION['lastname'] = $adminName;
                         header("Location: index.php");
                         exit();
                     } else {

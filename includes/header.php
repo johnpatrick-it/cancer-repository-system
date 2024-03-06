@@ -172,8 +172,9 @@ include('includes/config.php');
                 <a href="#" class="nav-link" data-toggle="dropdown">
                     <span class="user-img">
                         <img src="./profiles/user.jpg" alt="User Picture">
+                        <?php echo $_SESSION['admin_name']?>
                     </span>
-                    <span class="user-text"></span>
+                  
                 </a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="profile.php">My Profile</a>
@@ -183,7 +184,7 @@ include('includes/config.php');
             </div>
         </li>
     </ul>
-    onclick="confirmLogout(event)"
+
     <!-- MOBILE MENU -->
     <div class="dropdown mobile-user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
