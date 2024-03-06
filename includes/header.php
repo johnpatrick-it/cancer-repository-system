@@ -178,24 +178,25 @@ include('includes/config.php');
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="profile.php">My Profile</a>
                     <a class="dropdown-item" href="settings.php">Settings</a>
-                    <a class="dropdown-item" href="logout.php">Logout</a>
+                    <a class="dropdown-item" href="functions/logout-function.php" onclick="confirmLogout(event)">Logout</a>
                 </div>
             </div>
         </li>
-
     </ul>
-
+    onclick="confirmLogout(event)"
     <!-- MOBILE MENU -->
     <div class="dropdown mobile-user-menu">
         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
         <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="profile.php">My Profile</a>
             <a class="dropdown-item" href="settings.php">Settings</a>
-            <a class="dropdown-item" href="logout-function.php">Logout</a>
+            <a class="dropdown-item" href="functions/logout-function.php"  onclick="confirmLogout(event)">Logout</a>
         </div>
     </div>
 </div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // DATE AND TIME
@@ -249,3 +250,27 @@ include('includes/config.php');
         }
     });
 </script>
+
+<script>
+
+function confirmLogout(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Are you sure you want to logout?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, logout!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "functions/logout-function.php";
+            } else {
+                console.log("Logout canceled");
+            }
+        });
+    }
+</script>
+

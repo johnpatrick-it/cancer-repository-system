@@ -110,7 +110,7 @@ include "functions/login-function.php";
                 unset($_SESSION['not-found']);
 
                 // Display the error for user not found
-                echo "displayNotFoundAlert('$error');";
+                          echo "displayNotFoundAlert('$error');";
             }
             ?>
 

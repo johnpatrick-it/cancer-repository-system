@@ -117,7 +117,7 @@
 
                 <!-- LOGOUT -->
                 <li class="out-container">
-                    <a class="out-button" href="logout.php">
+                    <a class="out-button" href="functions/logout-function.php"  onclick="confirmLogout(event)">
                         <i class="la la-power-off"></i>
                         <span>Logout</span>
                     </a>
@@ -127,6 +127,9 @@
     </div>
 </div>
 
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -139,4 +142,26 @@
             });
         });
     });
+</script>
+
+<script>
+function confirmLogout(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Are you sure you want to logout?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, logout!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "functions/logout-function.php";
+            } else {
+                console.log("Logout canceled");
+            }
+        });
+    }
 </script>
