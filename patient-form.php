@@ -1,8 +1,9 @@
-z<?php
+<?php
 
-include('../includes/config.php');
+include('./includes/config.php');
 
 session_start();
+
 
 //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
@@ -87,7 +88,7 @@ if (isset($_POST['submit'])) {
     $dateInserted = date("Y-m-d");
 
 
-    $host = "host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres user=postgres password=sbit4e-4thyear-capstone-2023";
+    $host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
 
     try {
         $dbh = new PDO("pgsql:$host");
@@ -114,7 +115,7 @@ if (isset($_POST['submit'])) {
         
             // Move the uploaded file to Supabase Storage
             $supabaseUrl = 'https://tcfwwoixwmnbwfnzchbn.supabase.co';
-            $storagePath = __DIR__ . '/../assets/csv/'. $file_name;;
+            $storagePath = __DIR__ . './assets/csv/'. $file_name;;
 
             // Upload file to Supabase Storage
             $uploadUrl = $file_name;
@@ -143,8 +144,8 @@ if (isset($_POST['submit'])) {
             address_province,
             address_city_municipality,
             hospital_id,
-            repo_user_id,
-            file
+            repo_user_id
+      --      file
         ) VALUES (
             uuid_generate_v4(), -- Generate a new UUID
             :patient_type,
@@ -163,8 +164,8 @@ if (isset($_POST['submit'])) {
             :province,
             :city,
             :hospital_id,
-            :repo_user_id,
-            :file
+            :repo_user_id
+           -- :file
         ) RETURNING patient_id;
         ";
         
@@ -186,7 +187,7 @@ if (isset($_POST['submit'])) {
         $query->bindParam(':city', $city, PDO::PARAM_STR);
         $query->bindParam(':hospital_id', $hospital_id, PDO::PARAM_INT);
         $query->bindParam(':repo_user_id', $repo_user_id, PDO::PARAM_INT);
-        $query->bindParam(':file', $uploadUrl, PDO::PARAM_STR); // Use $uploadUrl for the 'file' column
+      //  $query->bindParam(':file', $uploadUrl, PDO::PARAM_STR); // Use $uploadUrl for the 'file' column
 
 
         $query->execute();
@@ -281,29 +282,29 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/pcc-logo.svg">
+     <!-- Favicon -->
+     <link rel="shortcut icon" type="image/x-icon" href="./assets/img/pcc-logo.svg">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="./assets/css/bootstrap.min.css">
 
-    <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+<!-- Fontawesome CSS -->
+<link rel="stylesheet" href="./assets/css/font-awesome.min.css">
 
-    <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
+<!-- Lineawesome CSS -->
+<link rel="stylesheet" href="./assets/css/line-awesome.min.css">
 
-    <!-- Datatable CSS -->
-    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.min.css">
+<!-- Datatable CSS -->
+<link rel="stylesheet" href="./assets/css/dataTables.bootstrap4.min.css">
 
-    <!-- Select2 CSS -->
-    <link rel="stylesheet" href="../assets/css/select2.min.css">
+<!-- Select2 CSS -->
+<link rel="stylesheet" href="./assets/css/select2.min.css">
 
-    <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
+<!-- Datetimepicker CSS -->
+<link rel="stylesheet" href="./assets/css/bootstrap-datetimepicker.min.css">
 
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+<!-- Main CSS -->
+<link rel="stylesheet" href="./assets/css/style.css">
 
     <style>
     .page-header {
@@ -413,8 +414,8 @@ if (isset($_POST['submit'])) {
     <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-        <?php include_once("../includes/user-header.php"); ?>
-        <?php include_once("../includes/user-sidebar.php"); ?>
+        <?php include_once("./includes/user-header.php"); ?>
+        <?php include_once("./includes/user-sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="containers">
@@ -933,7 +934,7 @@ if (isset($_POST['submit'])) {
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="welcome d-flex justify-content-between align-items-center">
-                                            <h3 class="page-title">Cander Data</h3>
+                                            <h3 class="page-title">Cancer Data</h3>
 
                                         </div>
                                         <ul class="breadcrumb">
@@ -1296,7 +1297,7 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
 
-    <script src="../assets/js/script.js"></script>
+    <script src="./assets/js/script.js"></script>
     <!-- jQuery -->
     <script src="assets/js/jquery-3.2.1.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
