@@ -8,6 +8,7 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
 
 error_reporting(0);
 include('includes/config.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -48,79 +49,79 @@ include('includes/config.php');
     <link rel="stylesheet" href="./assets/css/style.css">
 
     <style>
-        body {
-            background-color: #D4DEDB;
-        }
+    body {
+        background-color: #D4DEDB;
+    }
 
-        .body-container {
-            background-color: #FAFAFA;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-        }
+    .body-container {
+        background-color: #FAFAFA;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
 
-        table {
-            text-align: center;
-            border: 1px solid #285D4D;
-        }
+    table {
+        text-align: center;
+        border: 1px solid #285D4D;
+    }
 
-        .page-title {
-            font-size: 1.3rem;
-            color: #204A3D;
-            font-weight: 900;
-        }
+    .page-title {
+        font-size: 1.3rem;
+        color: #204A3D;
+        font-weight: 900;
+    }
 
-        .btn-blue {
-            background-color: #0D6EFD;
-        }
+    .btn-blue {
+        background-color: #0D6EFD;
+    }
 
-        .search-container {
-            position: relative;
-        }
+    .search-container {
+        position: relative;
+    }
 
-        .search-input {
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            border: 1px solid #9E9E9E;
-            margin-bottom: 20px;
-        }
+    .search-input {
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        border: 1px solid #9E9E9E;
+        margin-bottom: 20px;
+    }
 
-        .search-input:focus {
-            outline: none;
-        }
+    .search-input:focus {
+        outline: none;
+    }
 
-        .search-container i {
-            position: absolute;
-            left: 15px;
-            top: 45%;
-            transform: translateY(-50%);
-            color: #888;
-        }
+    .search-container i {
+        position: absolute;
+        left: 15px;
+        top: 45%;
+        transform: translateY(-50%);
+        color: #888;
+    }
 
-        .filter-btn {
-            padding: 8px 20px;
-            background-color: #E5F6F1;
-            color: #204A3D;
-            border: 1px solid #204A3D;
-        }
+    .filter-btn {
+        padding: 8px 20px;
+        background-color: #E5F6F1;
+        color: #204A3D;
+        border: 1px solid #204A3D;
+    }
 
-        .add-btn {
-            border-radius: 5px;
-            padding: 8px 2rem;
-        }
+    .add-btn {
+        border-radius: 5px;
+        padding: 8px 2rem;
+    }
 
-        .m-right {
-            margin-right: -0.8rem;
-        }
+    .m-right {
+        margin-right: -0.8rem;
+    }
     </style>
 </head>
 
 <body>
     <div class="main-wrapper">
 
-        <?php include_once("./includes/user-header.php"); ?>
-        <?php include_once("./includes/user-sidebar.php"); ?>
+        <?php include("./includes/user-header.php"); ?>
+        <?php include("./includes/user-sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="content container-fluid">
@@ -150,7 +151,8 @@ include('includes/config.php');
                                 <div class="col-md-6 ml-auto m-right">
                                     <div class="search-container ">
                                         <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control pl-5 search-input" placeholder="Search">
+                                        <input type="text" id="searchInput" class="form-control pl-5 search-input"
+                                            placeholder="Search">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -181,24 +183,36 @@ include('includes/config.php');
                                     </thead>
                                     <tbody>
                                         <?php
-                                        // Assuming you have a database connection ($db_connection)
+                                        //FUNCTION NG CODE NA TO IS:
+                                        //KUKUHAIN NYA KUNG ANONG HOSPITAL NI CURRENT REPO_USER LOGIN SESSION
+                                        //THEN I S-SAVE YUNG HOSPITAL-ID
+                                        //THEN I QUERY KUNG ANONG PATIENT IS YUNG EQUAL DOON SA HOSPITAL-ID NA YON AT AYON YUNG I D-DISPLAY SA TABLE
+                                        if (!$db_connection) {
+                                            echo "Failed to connect to the database.";
+                                        } else {
+                                            $repo_user_id = $_SESSION['repo_user_id'];
+                                            //QUERY PARA SA HOSPITAL ID THE I S-SAVE AS $HOSPITAL_ID
+                                            $query_affiliation = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'";
+                                            $result_affiliation = pg_query($db_connection, $query_affiliation);
 
-                                        // Get the hospital_id associated with the current repo_user
-                                        $repo_user_id = $_SESSION['repo_user_id'];
-                                        $query_hospital_id = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'";
-                                        $result_hospital_id = pg_query($db_connection, $query_hospital_id);
+                                            if (!$result_affiliation) {
+                                                echo "Error in query_affiliation: " . pg_last_error($db_connection);
+                                                exit;
+                                            }
 
-                                        if ($result_hospital_id && $row_hospital_id = pg_fetch_assoc($result_hospital_id)) {
-                                            $hospital_id = $row_hospital_id['hospital_id'];
+                                            $row_affiliation = pg_fetch_assoc($result_affiliation);
 
-                                            // Add your SQL query to fetch patient data with joins and a filter for hospital_id
+                                            $hospital_id = $row_affiliation['hospital_id'];
+
+                                            // PUTANG INANG SQL JOIN TO PUTANG INA MO
                                             $query = "SELECT
                                                         pgi.patient_last_name AS name,
                                                         pgi.patient_first_name AS surname,
                                                         hgi.hospital_name AS hospital,
                                                         pci.primary_site AS type_of_cancer,
                                                         pci.cancer_stage,
-                                                        pci.patient_status AS status
+                                                        pci.patient_status AS status,
+                                                        pgi.patient_id 
                                                     FROM
                                                         patient_general_info pgi
                                                     JOIN
@@ -207,39 +221,36 @@ include('includes/config.php');
                                                         patient_cancer_info pci ON pgi.patient_id = pci.patient_id
                                                     WHERE
                                                         pgi.hospital_id = '$hospital_id'";
-
+                                                        
                                             $result = pg_query($db_connection, $query);
 
-                                            // Check if the query was successful
-                                            if ($result) {
-                                                // Loop through each row in the result set
-                                                while ($row = pg_fetch_assoc($result)) {
-                                                    echo "<tr>";
-                                                    echo "<td>" . $row['name'] . "</td>";
-                                                    echo "<td>" . $row['surname'] . "</td>";
-                                                    echo "<td>" . $row['hospital'] . "</td>";
-                                                    echo "<td>" . $row['type_of_cancer'] . "</td>";
-                                                    echo "<td>" . $row['cancer_stage'] . "</td>";
-                                                    echo "<td>" . $row['status'] . "</td>";
-                                                    echo "<td>
-                                                            <a href='./edit-patient.php?id=" . $row['patient_id'] . "' title='Edit' id='action-btn' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
-                                                            <a href='#' title='Delete' id='action-btn' class='btn text-xs text-white btn-danger action-icon'><i class='fa fa-trash-o'></i></a>
-                                                        </td>";
-                                                    echo "</tr>";
-                                                }
-
-                                                // Free result set
-                                                pg_free_result($result);
-                                            } else {
-                                                // Handle the case where the query fails
+                                            if (!$result) {
                                                 echo "Error in query: " . pg_last_error($db_connection);
+                                                exit;
                                             }
-                                        } else {
-                                            // Handle the case where fetching hospital_id fails
-                                            echo "Error fetching hospital_id: " . pg_last_error($db_connection);
+                                            //TABLE DISPLAY
+                                            while ($row = pg_fetch_assoc($result)) {
+                                                echo "<tr data-type='{$row['type_of_cancer']}' data-lastname='{$row['surname']}' data-firstname='{$row['name']}' data-hospital='{$row['hospital']}' data-cancer='{$row['type_of_cancer']}' data-stage='{$row['cancer_stage']}' data-status='{$row['status']}'>";
+                                                echo "<td>" . $row['name'] . "</td>";
+                                                echo "<td>" . $row['surname'] . "</td>";
+                                                echo "<td>" . $row['hospital'] . "</td>";
+                                                echo "<td>" . $row['type_of_cancer'] . "</td>";
+                                                echo "<td>" . $row['cancer_stage'] . "</td>";
+                                                echo "<td>" . $row['status'] . "</td>";
+                                                echo "<td>
+                                                <a href='patient-form-edit.php?edit={$row['patient_id']}' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
+                                            </td>";
+                                            
+
+
+                                                echo "</tr>";
+                                            }
+                                            
+                                            
+
+                                            echo "</tbody>";
                                         }
 
-                                        // Close the database connection
                                         pg_close($db_connection);
                                         ?>
                                     </tbody>
@@ -252,6 +263,38 @@ include('includes/config.php');
 
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('#searchInput').keyup(function() {
+            var searchText = $(this).val().toLowerCase();
+
+            $('tbody tr').each(function() {
+                var name = $(this).data('firstname').toLowerCase();
+                var surname = $(this).data('lastname').toLowerCase();
+                var hospital = $(this).data('hospital').toLowerCase();
+                var typeOfCancer = $(this).data('cancer').toLowerCase();
+                var cancerStage = $(this).data('stage').toLowerCase();
+                var status = $(this).data('status').toLowerCase();
+
+                if (
+                    name.includes(searchText) ||
+                    surname.includes(searchText) ||
+                    hospital.includes(searchText) ||
+                    typeOfCancer.includes(searchText) ||
+                    cancerStage.includes(searchText) ||
+                    status.includes(searchText)
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+    </script>
+
 
 
     <!-- jQuery -->

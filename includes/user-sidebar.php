@@ -67,7 +67,7 @@
 
                 <!-- Patient Registry -->
                 <li>
-                    <a href="./patientform/patient-form.php">
+                    <a href="./patient-form.php">
                         <i class="la la-user-plus"></i>
                         <span>Patient Registry</span>
                     </a>
