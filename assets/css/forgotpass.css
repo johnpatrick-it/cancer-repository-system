@@ -1,0 +1,206 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+  }
+  
+  .left-side {
+    height: 100vh;
+    flex: 1;
+    background: #F9F4F4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; /* Stack children vertically */
+  }
+  
+  .align-1 {
+    padding-top: 70px;
+    display: flex;
+    text-align: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 42px;
+    margin-top: 20px;
+  }
+  
+  .align-2 {
+    text-align: center;
+    font-family: sans-serif;
+    padding-left: 1px;
+    font-size: 14px;
+    font-weight: 100;
+    margin-top: 4px;
+    margin-bottom: 50px;
+  }
+  
+  .form-control {
+    margin-bottom: 1px;
+    width: calc(100% - 40px);
+    border: none;
+    border-bottom: 1px solid #ccc;
+    border-radius: 0;
+    outline: none;
+    background: none;
+    padding-left: 30px;
+    transition: border-bottom 0.3s ease;
+    font-size: 16px;
+}
+
+.form-control:focus {
+    border-bottom: 2px solid #204A31;
+}
+
+.form-control::placeholder {
+    color: #999;
+}
+
+.icon {
+    position: absolute;
+    padding-top: 19px;
+    font-size: 20px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+  
+  .card__form button {
+    margin-left: 14px;
+    margin-top: 45px;
+    margin-bottom: 20px;
+    border: 0;
+    background: #001a09;
+    color: #ffffff;
+    width: 300px;
+    padding: 1em;
+    border-radius: 22px;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  
+  .sign-up:hover {
+    opacity: 0.8;
+  }
+  
+  .resend-design {
+    margin-bottom: 90px;
+    margin-left: 42px;
+  }
+  
+  #resendBtn {
+    border: none;
+    cursor: pointer;
+    background: none;
+    color: black; /* Change the color as needed */
+    text-decoration: none; /* Remove underline */
+    outline: none; /* Remove the outline on click */
+    transition: color 0.3s; /* Smooth transition for the color change */
+  }
+  
+  #resendBtn:hover {
+    color: #204A31E5; /* Change the color on hover as needed */
+  }
+  .backsgnin {
+    text-align: center;
+    margin-top: 5px;
+    
+  }
+  
+  .backsgnin a {
+    color: rgba(0, 0, 0, 0.6);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    padding-right: 55px;
+
+  }
+  
+  .backsgnin i {
+    font-size: 11px;
+  }
+  
+  .backsgnin :hover {
+    color: #204A31E5
+  }
+  
+  /* Default style for the input */
+  .col-md-6.side-image.factor .input-field input[type="text"] {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    font-weight: bolder;
+    text-align: center;
+    margin-right: 16px;
+    border: 2px solid rgba(0, 0, 0, 0.2); /* Default border color */
+    border-radius: 2px;
+    transition: border-color 0.3s ease;
+    outline: none; /* Remove default focus outline */
+    padding: 2px;
+  }
+  
+  /* Style for the input when it's focused */
+  .col-md-6.side-image.factor .input-field input[type="text"]:focus {
+    border-color: #000 !important; /* Border color when focused */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Style for the input when it's not empty */
+  .col-md-6.side-image.factor .input-field input[type="text"]:valid {
+    border-color: #000; /* Black color when not empty */
+  }
+  
+  /* Style for the input when it's empty or invalid */
+  .col-md-6.side-image.factor .input-field input[type="text"]:invalid {
+    border-color: rgba(0, 0, 0, 0.2); /* Default border color when empty or invalid */
+  }
+  
+  .right-side {
+    height: 100vh;
+    flex: 1;
+    background: #ffffff; /* White background for the right side */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Hide overflow to prevent the logo from overflowing */
+  }
+  
+  .right-side img {
+    margin-top: 30px;
+    max-width: 500px; /* Ensure the image doesn't exceed the container width */
+    max-height: 100%; /* Ensure the image doesn't exceed the container height */
+    display: block;
+    background: #ffffff; /* Set the background to white */
+  }
+  
+  .upper-side {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px; /* Adjust padding as needed */
+  }
+  
+  .upper-side img {
+    padding-top: 30px;
+    padding-right: 60px;
+    max-width: 70px;
+    max-height: 100%;
+    display: block;
+  }
+  
+  
+  
+  /* Hide the right side on mobile devices */
+  @media (max-width: 768px) {
+    .right-side {
+      display: none;
+    }
+  
+    .left-side {
+      flex: 2;
+    }
+  
+    /* Adjust styles for smaller screens if needed */
+  }
+  
