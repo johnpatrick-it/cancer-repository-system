@@ -201,44 +201,35 @@ include('includes/config.php');
                                     </thead>
                                     <tbody>
                                         <?php
-                                        //FUNCTION NG CODE NA TO IS:
-                                        //KUKUHAIN NYA KUNG ANONG HOSPITAL NI CURRENT REPO_USER LOGIN SESSION
-                                        //THEN I S-SAVE YUNG HOSPITAL-ID
-                                        //THEN I QUERY KUNG ANONG PATIENT IS YUNG EQUAL DOON SA HOSPITAL-ID NA YON AT AYON YUNG I D-DISPLAY SA TABLE
-                                        if (!$db_connection) {
-                                            echo "Failed to connect to the database.";
-                                        } else {
-                                    
-                                            // PUTANG INANG SQL JOIN TO PUTANG INA MO
-                                            $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information";
-                                            $result = pg_query($db_connection, $query);
-            
-                                            //TABLE DISPLAY
-                                            while ($row = pg_fetch_assoc($result)) {
-                                                echo "<tr data-name='{$row['hospital_name']}' data-level='{$row['hospital_level']}' data-institution='{$row['type_of_institution']}' data-barangay='{$row['hospital_barangay']}' data-street='{$row['hospital_street']}'>";
-                                                echo "<td class='hospital-name'>" . $row['hospital_name'] . "</td>";
-                                                echo "<td class='hospital-level'>" . $row['hospital_level'] . "</td>";
-                                                echo "<td class='type-of-institution'>" . $row['type_of_institution'] . "</td>";
-                                                echo "<td class='hospital-barangay'>" . $row['hospital_barangay'] . "</td>";
-                                                echo "<td class='hospital-street'>" . $row['hospital_street'] . "</td>";
-                                            
-                                                // Populate hidden input fields for additional data
-                                                echo "<input type='hidden' class='hospital-region' value='" . $row['hospital_region'] . "'>";
-                                                echo "<input type='hidden' class='hospital-province' value='" . $row['hospital_province'] . "'>";
-                                                echo "<input type='hidden' class='hospital-city' value='" . $row['hospital_city'] . "'>";
-                                                echo "<input type='hidden' class='hospital-streets' value='" . $row['hospital_street'] . "'>";
-                                                echo "<input type='hidden' class='hospital-equipments' value='" . $row['hospital_equipments'] . "'>";
-                                            
-                                                echo "<td>";
-                                                echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . $row['hospital_id'] . "'><i class='fa fa-pencil'></i></a>";
-                                                echo "</td>";
-                                                echo "</tr>";
+                                            if (!$db_connection) {
+                                                echo "Failed to connect to the database.";
+                                            } else {
+                                                $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information";
+                                                $result = pg_query($db_connection, $query);
+                                                while ($row = pg_fetch_assoc($result)) {
+                                                    echo "<tr>";
+                                                    echo "<td class='hospital-name'>" . $row['hospital_name'] . "</td>";
+                                                    echo "<td class='hospital-level'>" . $row['hospital_level'] . "</td>";
+                                                    echo "<td class='type-of-institution'>" . $row['type_of_institution'] . "</td>";
+                                                    echo "<td class='hospital-barangay'>" . $row['hospital_barangay'] . "</td>";
+                                                    echo "<td class='hospital-street'>" . $row['hospital_street'] . "</td>";
+                                                
+                                                    // Populate hidden input fields for additional data
+                                                    echo "<input type='hidden' class='hospital-region' value='" . $row['hospital_region'] . "'>";
+                                                    echo "<input type='hidden' class='hospital-province' value='" . $row['hospital_province'] . "'>";
+                                                    echo "<input type='hidden' class='hospital-city' value='" . $row['hospital_city'] . "'>";
+                                                    echo "<input type='hidden' class='hospital-streets' value='" . $row['hospital_street'] . "'>";
+                                                    echo "<input type='hidden' class='hospital-equipments' value='" . $row['hospital_equipments'] . "'>";
+                                                
+                                                    echo "<td>";
+                                                    echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . $row['hospital_id'] . "'><i class='fa fa-pencil'></i></a>";
+                                                    echo "</td>";
+                                                    echo "</tr>";
+                                                }
+                                                
                                             }
-                                            
-                                        }
-                                        pg_close($db_connection);
-                                    ?>
-                                            
+                                            pg_close($db_connection);
+                                        ?>                                       
                                     </tbody>
                                 </table>
                             </div>

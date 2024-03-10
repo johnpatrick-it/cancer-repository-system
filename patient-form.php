@@ -3,7 +3,6 @@
 include('./includes/config.php');
 
 session_start();
-error_reporting(0);
 
 //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
@@ -306,28 +305,28 @@ if (isset($_POST['submit'])) {
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/pcc-logo.svg">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="./assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="./assets/css/select2.min.css">
+    <link rel="stylesheet" href="../assets/css/select2.min.css">
 
     <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
     <style>
     .page-header {
