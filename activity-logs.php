@@ -57,50 +57,50 @@ if (!$result) {
     <link rel="stylesheet" href="assets/css/style.css">
 
     <style>
-        body {
-            background-color: #D4DEDB;
-        }
+    body {
+        background-color: #D4DEDB;
+    }
 
-        .body-container {
-            background-color: #FAFAFA;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-        }
+    .body-container {
+        background-color: #FAFAFA;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
 
-        table {
-            text-align: center;
-            border: 1px solid #285D4D;
-        }
+    table {
+        text-align: center;
+        border: 1px solid #285D4D;
+    }
 
-        .page-title {
-            font-size: 1.3rem;
-            color: #204A3D;
-        }
+    .page-title {
+        font-size: 1.3rem;
+        color: #204A3D;
+    }
 
-        .search-container {
-            position: relative;
-        }
+    .search-container {
+        position: relative;
+    }
 
-        .search-input {
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            border: 1px solid #9E9E9E;
-            margin-bottom: 20px;
-        }
+    .search-input {
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        border: 1px solid #9E9E9E;
+        margin-bottom: 20px;
+    }
 
-        .search-input:focus {
-            outline: none;
-        }
+    .search-input:focus {
+        outline: none;
+    }
 
-        .search-container i {
-            position: absolute;
-            right: 15px;
-            top: 45%;
-            transform: translateY(-50%);
-            color: #888;
-        }
+    .search-container i {
+        position: absolute;
+        right: 15px;
+        top: 45%;
+        transform: translateY(-50%);
+        color: #888;
+    }
     </style>
 </head>
 
@@ -131,7 +131,8 @@ if (!$result) {
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control search-input" placeholder="Search Employee">
+                                <input type="text" class="form-control search-input" id="searchInput"
+                                    placeholder="Search Employee">
                             </div>
                         </div>
                     </div>
@@ -152,29 +153,32 @@ if (!$result) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        //Query for logid, name and surname nung repo_user na nag registered ng patient
-                                        $query_logs = "SELECT rl.log_id, ru.user_fname, ru.user_lname, rl.log_timestamp, rl.log_action
-                                                            FROM repo_logs rl
-                                                            JOIN repo_user ru ON rl.repo_user_id = ru.repo_user_id
-                                                            ORDER BY rl.log_timestamp DESC";
-                                        $result_logs = pg_query($db_connection, $query_logs);
-                                        if ($result_logs) {
-                                            while ($row = pg_fetch_assoc($result_logs)) {
-                                                echo "<tr>";
-                                                echo "<td>{$row['log_id']}</td>";
-                                                echo "<td>{$row['user_fname']}</td>";
-                                                echo "<td>{$row['user_lname']}</td>";
-                                                echo "<td>{$row['log_timestamp']}</td>";
-                                                echo "<td>{$row['log_action']}</td>";
-                                                echo "</tr>";
-                                            }
-                                        } else {
-                                            // Handle the error for the logs query
-                                            echo "Error fetching logs: " . pg_last_error($db_connection);
-                                        }
-                                        ?>
+        // Query for logid, name, and surname of the repo_user who registered the patient
+        $query_logs = "SELECT rl.log_id, ru.user_fname, ru.user_lname, rl.log_timestamp, rl.log_action
+                        FROM repo_logs rl
+                        JOIN repo_user ru ON rl.repo_user_id = ru.repo_user_id
+                        ORDER BY rl.log_timestamp DESC";
+
+        $result_logs = pg_query($db_connection, $query_logs);
+
+        if ($result_logs) {
+            while ($row = pg_fetch_assoc($result_logs)) {
+                echo "<tr>";
+                echo "<td>{$row['log_id']}</td>";
+                echo "<td>{$row['user_fname']}</td>";
+                echo "<td>{$row['user_lname']}</td>";
+                echo "<td>{$row['log_timestamp']}</td>";
+                echo "<td>{$row['log_action']}</td>";
+                echo "</tr>";
+            }
+        } else {
+            
+            echo "<tr><td colspan='5'>Error fetching logs: " . pg_last_error($db_connection) . "</td></tr>";
+        }
+        ?>
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
@@ -185,6 +189,35 @@ if (!$result) {
 
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('#searchInput').keyup(function() {
+            var searchText = $(this).val().toString().toLowerCase();
+
+            $('tbody tr').each(function() {
+                var logId = $(this).find('td:eq(0)').text().toLowerCase();
+                var name = $(this).find('td:eq(1)').text().toLowerCase();
+                var surname = $(this).find('td:eq(2)').text().toLowerCase();
+                var date = $(this).find('td:eq(3)').text().toLowerCase();
+                var description = $(this).find('td:eq(4)').text().toLowerCase();
+
+                if (
+                    logId.includes(searchText) ||
+                    name.includes(searchText) ||
+                    surname.includes(searchText) ||
+                    date.includes(searchText) ||
+                    description.includes(searchText)
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+    </script>
 
 
     <!-- jQuery -->

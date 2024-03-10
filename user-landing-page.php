@@ -6,8 +6,20 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit;
 }
-error_reporting(0);
+
 include('includes/config.php');
+
+
+$host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
+
+try {
+    $dbh = new PDO("pgsql:" . $host);
+    
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
+
+
 
 $repo_user_id = $_SESSION['repo_user_id'];
 
@@ -42,6 +54,8 @@ if (empty($hospital_id)) {
     exit;
 }
 
+
+
 $query_total_patients = "SELECT COUNT(*) AS total_patients FROM patient_general_info WHERE hospital_id = '$hospital_id'::uuid";
 $result_total_patients = pg_query($db_connection, $query_total_patients);
 
@@ -54,6 +68,7 @@ if (!$result_total_patients) {
 $row_total_patients = pg_fetch_assoc($result_total_patients);
 $total_patients = $row_total_patients['total_patients'];
 ?>
+
 
 
 
@@ -95,100 +110,100 @@ $total_patients = $row_total_patients['total_patients'];
     <link rel="stylesheet" href="./assets/css/style.css">
 
     <style>
-        .page-header {
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            color: #fff;
-        }
+    .page-header {
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        color: #fff;
+    }
 
-        .page-header .breadcrumb-item.active,
-        .page-header .welcome h3 {
-            color: #204A3D;
-            font-size: 2rem;
-            font-weight: 700;
-        }
+    .page-header .breadcrumb-item.active,
+    .page-header .welcome h3 {
+        color: #204A3D;
+        font-size: 2rem;
+        font-weight: 700;
+    }
 
-        .body-container {
-            background-color: #FAFAFA;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-        }
+    .body-container {
+        background-color: #FAFAFA;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
 
-        table {
-            text-align: center;
-            border: 1px solid #285D4D;
-        }
+    table {
+        text-align: center;
+        border: 1px solid #285D4D;
+    }
 
-        .page-title {
-            font-size: 1.3rem;
-            color: #204A3D;
-            font-weight: 900;
-        }
+    .page-title {
+        font-size: 1.3rem;
+        color: #204A3D;
+        font-weight: 900;
+    }
 
-        .btn-blue {
-            background-color: #0D6EFD;
-        }
+    .btn-blue {
+        background-color: #0D6EFD;
+    }
 
-        .search-container {
-            position: relative;
-        }
+    .search-container {
+        position: relative;
+    }
 
-        .search-input {
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            border: 1px solid #9E9E9E;
-            margin-bottom: 20px;
-        }
+    .search-input {
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        border: 1px solid #9E9E9E;
+        margin-bottom: 20px;
+    }
 
-        .search-input:focus {
-            outline: none;
-        }
+    .search-input:focus {
+        outline: none;
+    }
 
-        .search-container i {
-            position: absolute;
-            left: 15px;
-            top: 45%;
-            transform: translateY(-50%);
-            color: #888;
-        }
+    .search-container i {
+        position: absolute;
+        left: 15px;
+        top: 45%;
+        transform: translateY(-50%);
+        color: #888;
+    }
 
-        .filter-btn {
-            padding: 8px 20px;
-            background-color: #E5F6F1;
-            color: #204A3D;
-            border: 1px solid #204A3D;
-            display: flex;
-            justify-content: space-around;
-        }
+    .filter-btn {
+        padding: 8px 20px;
+        background-color: #E5F6F1;
+        color: #204A3D;
+        border: 1px solid #204A3D;
+        display: flex;
+        justify-content: space-around;
+    }
 
-        .add-btn {
-            border-radius: 5px;
-            padding: 8px 2rem;
-        }
+    .add-btn {
+        border-radius: 5px;
+        padding: 8px 2rem;
+    }
 
-        .m-right {
-            margin-right: -0.8rem;
-        }
+    .m-right {
+        margin-right: -0.8rem;
+    }
 
-        .card-body {
-            height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 0.5rem;
-        }
+    .card-body {
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0.5rem;
+    }
 
-        .card-body h3 {
-            font-weight: 700;
-        }
+    .card-body h3 {
+        font-weight: 700;
+    }
 
-        .card-body .span-text {
-            font-size: 1.2rem;
-            font-weight: 900;
-        }
+    .card-body .span-text {
+        font-size: 1.2rem;
+        font-weight: 900;
+    }
     </style>
 </head>
 
@@ -196,8 +211,8 @@ $total_patients = $row_total_patients['total_patients'];
     <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-        <?php include_once("includes/user-header.php"); ?>
-        <?php include_once("includes/user-sidebar.php"); ?>
+        <?php include("includes/user-header.php"); ?>
+        <?php include("includes/user-sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="content container-fluid">
@@ -224,7 +239,21 @@ $total_patients = $row_total_patients['total_patients'];
                             <div class="card-body">
                                 <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
                                 <div class="dash-widget-info">
-                                    <h3>32</h3>
+                                    <?php
+                                        $sql = "SELECT COUNT(patient_id) AS new_patient
+                                        FROM patient_cancer_info
+                                        WHERE CAST(time_stamp AS DATE) BETWEEN CURRENT_DATE - INTERVAL '3 days' AND CURRENT_DATE";
+                            
+                                        $query = $dbh->prepare($sql);
+                                        $query->execute();
+                                        $result = $query->fetch(PDO::FETCH_ASSOC);
+                                    
+                                        // Ensure the key exists in the result array before accessing it
+                                        $new_patient = isset($result['new_patient']) ? $result['new_patient'] : 0;
+                                 
+                                        ?>
+                                    <h3><?php echo $new_patient; ?></h3>
+
                                     <span class="span-text">New Patients</span>
                                 </div>
                             </div>
@@ -263,7 +292,8 @@ $total_patients = $row_total_patients['total_patients'];
                                 <div class="col-md-5 ml-auto m-right">
                                     <div class="search-container ">
                                         <i class="fa fa-search"></i>
-                                        <input type="text" class="form-control pl-5 search-input" placeholder="Search">
+                                        <input type="text" class="form-control pl-5 search-input" id="searchInput"
+                                            placeholder="Search">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -341,7 +371,7 @@ $total_patients = $row_total_patients['total_patients'];
                                             }
                                             //TABLE DISPLAY
                                             while ($row = pg_fetch_assoc($result)) {
-                                                echo "<tr>";
+                                                echo "<tr data-type='{$row['type_of_patient']}' data-lastname='{$row['patient_last_name']}' data-firstname='{$row['patient_first_name']}' data-gender='{$row['sex']}' data-stage='{$row['cancer_stage']}' data-status='{$row['patient_status']}'>";
                                                 echo "<td>" . $row['type_of_patient'] . "</td>";
                                                 echo "<td>" . $row['patient_last_name'] . "</td>";
                                                 echo "<td>" . $row['patient_first_name'] . "</td>";
@@ -350,6 +380,7 @@ $total_patients = $row_total_patients['total_patients'];
                                                 echo "<td>" . $row['patient_status'] . "</td>";
                                                 echo "</tr>";
                                             }
+                                            
 
                                             echo "</tbody>";
                                         }
@@ -366,6 +397,37 @@ $total_patients = $row_total_patients['total_patients'];
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('#searchInput').keyup(function() {
+            var searchText = $(this).val().toLowerCase();
+
+            $('tbody tr').each(function() {
+                var type = $(this).data('type').toLowerCase();
+                var lastname = $(this).data('lastname').toLowerCase();
+                var firstname = $(this).data('firstname').toLowerCase();
+                var gender = $(this).data('gender').toLowerCase();
+                var stage = $(this).data('stage').toLowerCase();
+                var status = $(this).data('status').toLowerCase();
+
+                if (
+                    type.includes(searchText) ||
+                    lastname.includes(searchText) ||
+                    firstname.includes(searchText) ||
+                    gender.includes(searchText) ||
+                    stage.includes(searchText) ||
+                    status.includes(searchText)
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+    </script>
 
 
     <!-- jQuery -->

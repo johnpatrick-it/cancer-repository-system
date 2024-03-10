@@ -142,9 +142,10 @@ include('includes/config.php');
                     <!-- SEARCH -->
                     <div class="row">
                         <div class="col-md-3">
-                            <div class="search-container">
+                            <div class="search-container"> 
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control pl-5 search-input" placeholder="Search">
+                                <input type="text" id="searchInput" class="form-control pl-5 search-input"
+                                            placeholder="Search">
                             </div>
                         </div>
 
@@ -165,9 +166,19 @@ include('includes/config.php');
                                     </button>
                                 </div>
                                 <div class="col-auto">
-                                    <button class="btn export-btn">
-                                        <i class="fa fa-download"></i> Export
-                                    </button>
+                                <div class="dropdown">
+                            <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
+                                data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-download"></i> Export</button>
+                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">Export as PDF</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">Export as Excel</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#" onclick="exportTable('csv')">Export as CSV</a>
+                                </li>
+                            </ul>
+                        </div>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -177,48 +188,57 @@ include('includes/config.php');
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                            <table class="table table-striped custom-table datatable">
+                            <table class="table table-striped custom-table datatable" id="imformationTable">
                                     <thead>
                                         <tr>
-                                            <th>Hospital Name</th>
+                                        <th>Hospital Name</th>
                                             <th>Hospital Level</th>
                                             <th>Type of Instituion</th>
                                             <th>Hospital Location UACS CODE</th>
                                             <th>Hospital Street</th> 
-                                            <th>Action</th>
+                                       
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                            if (!$db_connection) {
-                                                echo "Failed to connect to the database.";
-                                            } else {
-                                                $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information";
-                                                $result = pg_query($db_connection, $query);
-                                                while ($row = pg_fetch_assoc($result)) {
-                                                    echo "<tr>";
-                                                    echo "<td class='hospital-name'>" . $row['hospital_name'] . "</td>";
-                                                    echo "<td class='hospital-level'>" . $row['hospital_level'] . "</td>";
-                                                    echo "<td class='type-of-institution'>" . $row['type_of_institution'] . "</td>";
-                                                    echo "<td class='hospital-barangay'>" . $row['hospital_barangay'] . "</td>";
-                                                    echo "<td class='hospital-street'>" . $row['hospital_street'] . "</td>";
-                                                
-                                                    // Populate hidden input fields for additional data
-                                                    echo "<input type='hidden' class='hospital-region' value='" . $row['hospital_region'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-province' value='" . $row['hospital_province'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-city' value='" . $row['hospital_city'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-streets' value='" . $row['hospital_street'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-equipments' value='" . $row['hospital_equipments'] . "'>";
-                                                
-                                                    echo "<td>";
-                                                    echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . $row['hospital_id'] . "'><i class='fa fa-pencil'></i></a>";
-                                                    echo "</td>";
-                                                    echo "</tr>";
-                                                }
-                                                
+                                        //FUNCTION NG CODE NA TO IS:
+                                        //KUKUHAIN NYA KUNG ANONG HOSPITAL NI CURRENT REPO_USER LOGIN SESSION
+                                        //THEN I S-SAVE YUNG HOSPITAL-ID
+                                        //THEN I QUERY KUNG ANONG PATIENT IS YUNG EQUAL DOON SA HOSPITAL-ID NA YON AT AYON YUNG I D-DISPLAY SA TABLE
+                                        if (!$db_connection) {
+                                            echo "Failed to connect to the database.";
+                                        } else {
+                                    
+                                            // PUTANG INANG SQL JOIN TO PUTANG INA MO
+                                            $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information";
+                                            $result = pg_query($db_connection, $query);
+            
+                                            //TABLE DISPLAY
+                                            while ($row = pg_fetch_assoc($result)) {
+                                                echo "<tr data-name='{$row['hospital_name']}' data-level='{$row['hospital_level']}' data-institution='{$row['type_of_institution']}' data-barangay='{$row['hospital_barangay']}' data-street='{$row['hospital_street']}'>";
+                                                echo "<td class='hospital-name'>" . $row['hospital_name'] . "</td>";
+                                                echo "<td class='hospital-level'>" . $row['hospital_level'] . "</td>";
+                                                echo "<td class='type-of-institution'>" . $row['type_of_institution'] . "</td>";
+                                                echo "<td class='hospital-barangay'>" . $row['hospital_barangay'] . "</td>";
+                                                echo "<td class='hospital-street'>" . $row['hospital_street'] . "</td>";
+                                            
+                                                // Populate hidden input fields for additional data
+                                                echo "<input type='hidden' class='hospital-region' value='" . $row['hospital_region'] . "'>";
+                                                echo "<input type='hidden' class='hospital-province' value='" . $row['hospital_province'] . "'>";
+                                                echo "<input type='hidden' class='hospital-city' value='" . $row['hospital_city'] . "'>";
+                                                echo "<input type='hidden' class='hospital-streets' value='" . $row['hospital_street'] . "'>";
+                                                echo "<input type='hidden' class='hospital-equipments' value='" . $row['hospital_equipments'] . "'>";
+                                            
+                                                echo "<td>";
+                                                echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . $row['hospital_id'] . "'><i class='fa fa-pencil'></i></a>";
+                                                echo "</td>";
+                                                echo "</tr>";
                                             }
-                                            pg_close($db_connection);
-                                        ?>                                       
+                                            
+                                        }
+                                        pg_close($db_connection);
+                                    ?>
+                                            
                                     </tbody>
                                 </table>
                             </div>
@@ -237,32 +257,71 @@ include('includes/config.php');
             <?php include_once 'includes/modals/hospital/delete_hospital.php'; ?>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-    <!-- Include SweetAlert library -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>                                            
+<script>
+$(document).ready(function() {
+    $('#searchInput').keyup(function() {
+        var searchText = $(this).val().toString().toLowerCase();
+
+        $('tbody tr').each(function() {
+            var name = $(this).data('name').toString().toLowerCase();
+            var level = $(this).data('level').toString().toLowerCase();
+            var institution = $(this).data('institution').toString().toLowerCase();
+            var barangay = $(this).data('barangay').toString().toLowerCase();
+            var street = $(this).data('street').toString().toLowerCase();
+        
+
+            if (
+                name.includes(searchText) ||
+                level.includes(searchText) ||
+                institution.includes(searchText) ||
+                barangay.includes(searchText) ||
+                street.includes(searchText)
+           
+            ) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/tableexport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+
     <!-- jQuery -->
-    <script src=" assets/js/jquery-3.2.1.min.js"></script>
+    <script src="./assets/js/jquery-3.2.1.min.js"></script>
+    <script src="./assets/js/print.js"></script>
 
     <!-- Bootstrap Core JS -->
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/popper.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
 
     <!-- Slimscroll JS -->
-    <script src="assets/js/jquery.slimscroll.min.js"></script>
+    <script src="./assets/js/jquery.slimscroll.min.js"></script>
 
     <!-- Select2 JS -->
-    <script src="assets/js/select2.min.js"></script>
+    <script src="./assets/js/select2.min.js"></script>
 
     <!-- Datetimepicker JS -->
-    <script src="assets/js/moment.min.js"></script>
-    <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="./assets/js/moment.min.js"></script>
+    <script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
 
     <!-- Datatable JS -->
-    <script src="assets/js/jquery.dataTables.min.js"></script>
-    <script src="assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="./assets/js/jquery.dataTables.min.js"></script>
+    <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="assets/js/app.js"></script>
+    <script src="./assets/js/app.js"></script>
 
     <script>
     function addHospital(success) {

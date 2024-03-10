@@ -172,7 +172,7 @@ include('includes/config.php');
                 <a href="#" class="nav-link" data-toggle="dropdown">
                     <span class="user-img">
                         <img src="./profiles/user.jpg" alt="User Picture">
-                        <?php echo $_SESSION['admin_name']?>
+                   <?php echo $_SESSION['lastname']?>
                     </span>
                   
                 </a>

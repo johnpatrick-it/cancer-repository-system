@@ -51,71 +51,71 @@ include('includes/config.php');
     <link rel="stylesheet" href="assets/css/style.css">
 
     <style>
-        body {
-            background-color: #D4DEDB;
-        }
+    body {
+        background-color: #D4DEDB;
+    }
 
-        .body-container {
-            background-color: #FAFAFA;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-        }
+    .body-container {
+        background-color: #FAFAFA;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
 
-        table {
-            text-align: center;
-            border: 1px solid #285D4D;
-        }
+    table {
+        text-align: center;
+        border: 1px solid #285D4D;
+    }
 
-        .page-title {
-            font-size: 1.3rem;
-            color: #204A3D;
-        }
+    .page-title {
+        font-size: 1.3rem;
+        color: #204A3D;
+    }
 
-        .btn-blue {
-            background-color: #0D6EFD;
-        }
+    .btn-blue {
+        background-color: #0D6EFD;
+    }
 
-        .search-container {
-            position: relative;
-        }
+    .search-container {
+        position: relative;
+    }
 
-        .search-input {
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            border: 1px solid #9E9E9E;
-            margin-bottom: 20px;
-        }
+    .search-input {
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        border: 1px solid #9E9E9E;
+        margin-bottom: 20px;
+    }
 
-        .search-input:focus {
-            outline: none;
-        }
+    .search-input:focus {
+        outline: none;
+    }
 
-        .search-container i {
-            position: absolute;
-            left: 15px;
-            top: 45%;
-            transform: translateY(-50%);
-            color: #888;
-        }
+    .search-container i {
+        position: absolute;
+        left: 15px;
+        top: 45%;
+        transform: translateY(-50%);
+        color: #888;
+    }
 
-        .filter-btn,
-        .export-btn {
-            padding: 8px 20px;
-            background-color: #E5F6F1;
-            color: #204A3D;
-            border: 1px solid #204A3D;
-        }
+    .filter-btn,
+    .export-btn {
+        padding: 8px 20px;
+        background-color: #E5F6F1;
+        color: #204A3D;
+        border: 1px solid #204A3D;
+    }
 
-        .add-btn {
-            border-radius: 5px;
-            padding: 8px 2rem;
-        }
+    .add-btn {
+        border-radius: 5px;
+        padding: 8px 2rem;
+    }
 
-        .m-right {
-            margin-right: -0.8rem;
-        }
+    .m-right {
+        margin-right: -0.8rem;
+    }
     </style>
 </head>
 
@@ -143,7 +143,8 @@ include('includes/config.php');
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control pl-5 search-input" placeholder="Search">
+                                <input type="text" class="form-control pl-5 search-input" id="searchInput"
+                                    placeholder="Search">
                             </div>
                         </div>
 
@@ -183,62 +184,60 @@ include('includes/config.php');
                                             <th>Middle Name</th>
                                             <th>Last Name</th>
                                             <th>Hospital Affiliated With</th>
-                                            <th>Position</th> 
+                                            <th>Position</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-                                    //fetching data sa hospital-general-information at user-repo 
-                                    //putangina
-                                    //IDK WHEN ALL THE DATA WAS DELETED HINDI GUMAGANA YUNG ADD USER MODAL LOL ??
-                                    if (!$db_connection) {
-                                        echo "Failed to connect to the database.";
-                                    } else {
-                                        $query = "SELECT 
-                                                    ru.repo_user_id,
-                                                    ru.user_fname AS \"First Name\",
-                                                    ru.user_mname AS \"Middle Name\",
-                                                    ru.user_lname AS \"Last Name\",
-                                                    hgi.hospital_name AS \"Hospital Affiliated With\",
-                                                    ru.position AS \"Position\",
-                                                    ru.email AS \"Email\",
-                                                    ru.password AS \"Password\"
-                                                FROM 
-                                                    repo_user ru
-                                                JOIN 
-                                                    hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id";
+                                        <?php
+       
+        if (!$db_connection) {
+            echo "Failed to connect to the database.";
+        } else {
+            $query = "SELECT 
+                        ru.repo_user_id,
+                        ru.user_fname AS \"First Name\",
+                        ru.user_mname AS \"Middle Name\",
+                        ru.user_lname AS \"Last Name\",
+                        hgi.hospital_name AS \"Hospital Affiliated With\",
+                        ru.position AS \"Position\",
+                        ru.email AS \"Email\",
+                        ru.password AS \"Password\"
+                    FROM 
+                        repo_user ru
+                    JOIN 
+                        hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id";
 
-                                        $result = pg_query($db_connection, $query);                                    
-                                        while ($row = pg_fetch_assoc($result)) {
-                                            echo "<tr>";
-                                            echo "<td class='first-name'>" . $row['First Name'] . "</td>";
-                                            echo "<td class='middle-name'>" . $row['Middle Name'] . "</td>";
-                                            echo "<td class='last-name'>" . $row['Last Name'] . "</td>";
-                                            echo "<td class='hospital-affiliated'>" . $row['Hospital Affiliated With'] . "</td>";
-                                            echo "<td class='user-position'>" . $row['Position'] . "</td>";
-                                            
-                                            // Populate hidden input fields for additional data
-                                            echo "<input type='hidden' class='user-email' value='" . $row['Email'] . "'>";
-                                            echo "<input type='hidden' class='user-password' value='" . $row['Password'] . "'>";
-                                            
-                                            echo "<td>";
-                                            echo "<a href='#' data-toggle='modal' data-target='#edit_user' title='Edit' class='btn text-xs text-white btn-blue edituser-action' data-repo-id='" . $row['repo_user_id'] . "'><i class='fa fa-pencil'></i></a>";
-                                            echo "<a href='#' data-toggle='modal' data-target='#delete_user' title='Delete' class='btn text-xs text-white btn-danger delete-action ml-2' data-repo-id='" . $row['repo_user_id'] . "'><i class='fa fa-trash'></i></a>";
-                                            echo "</td>";
-                                            echo "</tr>";
-                                        }
-                                    }
-                                ?>
-        
+            $result = pg_query($db_connection, $query);                                    
+            while ($row = pg_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td class='first-name'>" . $row['First Name'] . "</td>";
+                echo "<td class='middle-name'>" . $row['Middle Name'] . "</td>";
+                echo "<td class='last-name'>" . $row['Last Name'] . "</td>";
+                echo "<td class='hospital-affiliated'>" . $row['Hospital Affiliated With'] . "</td>";
+                echo "<td class='user-position'>" . $row['Position'] . "</td>";
+                
+                // Hidden input fields for additional data within the table row
+                echo "<input type='hidden' class='user-email' value='" . $row['Email'] . "'>";
+                echo "<input type='hidden' class='user-password' value='" . $row['Password'] . "'>";
+                
+                echo "<td>";
+                echo "<a href='#' data-toggle='modal' data-target='#edit_user' title='Edit' class='btn text-xs text-white btn-blue edituser-action' data-repo-id='" . $row['repo_user_id'] . "'><i class='fa fa-pencil'></i></a>";
+                echo "<a href='#' data-toggle='modal' data-target='#delete_user' title='Delete' class='btn text-xs text-white btn-danger delete-action ml-2' data-repo-id='" . $row['repo_user_id'] . "'><i class='fa fa-trash'></i></a>";
+                echo "</td>";
+                echo "</tr>";
+            }
+        }
+        ?>
                                     </tbody>
                                 </table>
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-           
+
             <!-- Add User Modal -->
             <?php include_once 'includes/modals/hospital/add_user.php'; ?>
 
@@ -249,6 +248,35 @@ include('includes/config.php');
             <?php include_once 'includes/modals/hospital/delete_user.php'; ?>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#searchInput').keyup(function() {
+            var searchText = $(this).val().toString().toLowerCase();
+
+            $('tbody tr').each(function() {
+                var firstName = $(this).find('.first-name').text().toLowerCase();
+                var middleName = $(this).find('.middle-name').text().toLowerCase();
+                var lastName = $(this).find('.last-name').text().toLowerCase();
+                var hospitalAffiliated = $(this).find('.hospital-affiliated').text()
+                    .toLowerCase();
+                var userPosition = $(this).find('.user-position').text().toLowerCase();
+
+                if (
+                    firstName.includes(searchText) ||
+                    middleName.includes(searchText) ||
+                    lastName.includes(searchText) ||
+                    hospitalAffiliated.includes(searchText) ||
+                    userPosition.includes(searchText)
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+    </script>
 
 
     <!-- jQuery -->
@@ -276,11 +304,9 @@ include('includes/config.php');
     <script src="assets/js/app.js"></script>
 
     <!-- Include SweetAlert library -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>   
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
 
     <script>
-
-
     function addUser(success) {
         swal.fire({
             title: 'Success!',
@@ -289,8 +315,8 @@ include('includes/config.php');
             confirmButtonText: 'OK'
         });
     }
-    
-    document.addEventListener('DOMContentLoaded', function () {
+
+    document.addEventListener('DOMContentLoaded', function() {
 
         <?php
         if (isset($_SESSION['add-user'])) {
@@ -303,9 +329,9 @@ include('includes/config.php');
         }
         ?>
 
-       
+
     });
-</script>
+    </script>
 
 </body>
 

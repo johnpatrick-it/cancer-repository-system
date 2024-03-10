@@ -1,8 +1,9 @@
-z<?php
+<?php
 
-include('../includes/config.php');
+include('./includes/config.php');
 
 session_start();
+error_reporting(0);
 
 //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
@@ -20,12 +21,13 @@ if (isset($_POST['submit'])) {
     $surname = $_POST['surname'];
     $given_name = $_POST['given_name'];
     $middle_name = $_POST['middle_name'];
+    $suffix_name = $_POST['suffix_name'];
     $patient_type = $_POST['patient_type'];
     $gender = $_POST['gender'];
     $civil_status = $_POST['civil_status'];
     $dob = $_POST['dob'];
-    $nationality = $_POST['nationality'];
     $birth_place = $_POST['birth_place'];
+    $nationality = $_POST['nationality'];
     $occupation = $_POST['occupation'];
     $educational_attainment = $_POST['educational_attainment'];
     $race = $_POST['race'];
@@ -33,6 +35,8 @@ if (isset($_POST['submit'])) {
     $barangay = $_POST['barangay'];
     $province = $_POST['province'];
     $city = $_POST['city'];
+    $contact_number = $_POST['contact_number'];
+   
 
     // Get hospital_id based on repo_user_id
     $repo_user_id = $_SESSION['repo_user_id'];
@@ -87,7 +91,7 @@ if (isset($_POST['submit'])) {
     $dateInserted = date("Y-m-d");
 
 
-    $host = "host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres user=postgres password=sbit4e-4thyear-capstone-2023";
+    $host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
 
     try {
         $dbh = new PDO("pgsql:$host");
@@ -114,7 +118,7 @@ if (isset($_POST['submit'])) {
         
             // Move the uploaded file to Supabase Storage
             $supabaseUrl = 'https://tcfwwoixwmnbwfnzchbn.supabase.co';
-            $storagePath = __DIR__ . '/../assets/csv/'. $file_name;;
+            $storagePath = __DIR__ . './assets/csv/'. $file_name;;
 
             // Upload file to Supabase Storage
             $uploadUrl = $file_name;
@@ -131,9 +135,11 @@ if (isset($_POST['submit'])) {
             patient_last_name,
             patient_first_name,
             patient_middle_name,
+            patient_suffix_name,
             sex,
             civil_status,
             birthday,
+            place_of_birth,
             nationality,
             occupation,
             educational_attainment,
@@ -142,18 +148,21 @@ if (isset($_POST['submit'])) {
             address_barangay,
             address_province,
             address_city_municipality,
+            contact_number,
             hospital_id,
-            repo_user_id,
-            file
+            repo_user_id
+      --      file
         ) VALUES (
             uuid_generate_v4(), -- Generate a new UUID
             :patient_type,
             :surname,
             :given_name,
             :middle_name,
+            :suffix_name,
             :gender,
             :civil_status,
             :dob,
+            :birth_place,
             :nationality,
             :occupation,
             :educational_attainment,
@@ -162,9 +171,10 @@ if (isset($_POST['submit'])) {
             :barangay,
             :province,
             :city,
+            :contact_number,
             :hospital_id,
-            :repo_user_id,
-            :file
+            :repo_user_id
+           -- :file
         ) RETURNING patient_id;
         ";
         
@@ -173,9 +183,11 @@ if (isset($_POST['submit'])) {
         $query->bindParam(':surname', $surname, PDO::PARAM_STR);
         $query->bindParam(':given_name', $given_name, PDO::PARAM_STR);
         $query->bindParam(':middle_name', $middle_name, PDO::PARAM_STR);
+        $query->bindParam(':suffix_name', $suffix_name, PDO::PARAM_STR);
         $query->bindParam(':gender', $gender, PDO::PARAM_STR);
         $query->bindParam(':civil_status', $civil_status, PDO::PARAM_STR);
         $query->bindParam(':dob', $dob, PDO::PARAM_STR);
+        $query->bindParam(':birth_place', $birth_place, PDO::PARAM_STR);
         $query->bindParam(':nationality', $nationality, PDO::PARAM_STR);
         $query->bindParam(':occupation', $occupation, PDO::PARAM_STR);
         $query->bindParam(':educational_attainment', $educational_attainment, PDO::PARAM_STR);
@@ -184,9 +196,10 @@ if (isset($_POST['submit'])) {
         $query->bindParam(':barangay', $barangay, PDO::PARAM_STR);
         $query->bindParam(':province', $province, PDO::PARAM_STR); 
         $query->bindParam(':city', $city, PDO::PARAM_STR);
+        $query->bindParam(':contact_number', $contact_number, PDO::PARAM_INT);
         $query->bindParam(':hospital_id', $hospital_id, PDO::PARAM_INT);
         $query->bindParam(':repo_user_id', $repo_user_id, PDO::PARAM_INT);
-        $query->bindParam(':file', $uploadUrl, PDO::PARAM_STR); // Use $uploadUrl for the 'file' column
+      //  $query->bindParam(':file', $uploadUrl, PDO::PARAM_STR); // Use $uploadUrl for the 'file' column
 
 
         $query->execute();
@@ -257,6 +270,17 @@ if (isset($_POST['submit'])) {
 
         $query3->execute();
 
+        $sql5 = "INSERT INTO repo_logs (repo_user_id, patient_id, log_timestamp, log_action) VALUES (:repo_user_id, :generatedPatientID, :dateInserted, 'Patient Registered')";
+        $query4 = $dbh->prepare($sql5);
+        
+        // Bind parameters
+        $query4->bindParam(':repo_user_id', $repo_user_id, PDO::PARAM_INT);
+        $query4->bindParam(':generatedPatientID', $generatedPatientID, PDO::PARAM_INT);
+        $query4->bindParam(':dateInserted', $dateInserted, PDO::PARAM_STR);
+        
+        // Execute the query
+        $query4->execute();
+        
         echo "Data inserted successfully";
 
     } catch (PDOException $e) {
@@ -282,28 +306,28 @@ if (isset($_POST['submit'])) {
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="./assets/img/pcc-logo.svg">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./assets/css/font-awesome.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="./assets/css/line-awesome.min.css">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="./assets/css/dataTables.bootstrap4.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="../assets/css/select2.min.css">
+    <link rel="stylesheet" href="./assets/css/select2.min.css">
 
     <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="./assets/css/bootstrap-datetimepicker.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 
     <style>
     .page-header {
@@ -413,8 +437,8 @@ if (isset($_POST['submit'])) {
     <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-        <?php include_once("../includes/user-header.php"); ?>
-        <?php include_once("../includes/user-sidebar.php"); ?>
+        <?php include_once("./includes/user-header.php"); ?>
+        <?php include_once("./includes/user-sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="containers">
@@ -468,7 +492,7 @@ if (isset($_POST['submit'])) {
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Suffix</label>
-                                                    <input name="suffix" type="text" class="form-control"
+                                                    <input name="suffix_name" type="text" class="form-control"
                                                         autocomplete="off">
                                                 </div>
                                             </div>
@@ -933,7 +957,7 @@ if (isset($_POST['submit'])) {
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="welcome d-flex justify-content-between align-items-center">
-                                            <h3 class="page-title">Cander Data</h3>
+                                            <h3 class="page-title">Cancer Data</h3>
 
                                         </div>
                                         <ul class="breadcrumb">
@@ -1296,7 +1320,7 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
 
-    <script src="../assets/js/script.js"></script>
+    <script src="./assets/js/script.js"></script>
     <!-- jQuery -->
     <script src="assets/js/jquery-3.2.1.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
