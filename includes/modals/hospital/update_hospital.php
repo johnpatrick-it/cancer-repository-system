@@ -1,11 +1,8 @@
-<<<<<<< HEAD
 <!-- Add the necessary JavaScript libraries -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
 
-=======
->>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
 <?php  
 include_once("../../../includes/config.php");
 
@@ -69,8 +66,4 @@ if ($db_connection) {
 } else {
     echo "Database connection not established.";
 }
-<<<<<<< HEAD
 ?>
-=======
-?>
->>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615

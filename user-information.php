@@ -165,7 +165,6 @@ include('includes/config.php');
                                     </button>
                                 </div>
                                 <div class="col-auto">
-<<<<<<< HEAD
                                     <div class="dropdown">
                                         <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
                                             data-bs-toggle="dropdown" aria-expanded="false"> <i
@@ -182,11 +181,6 @@ include('includes/config.php');
                                             </li>
                                         </ul>
                                     </div>
-=======
-                                    <button class="btn export-btn">
-                                        <i class="fa fa-download"></i> Export
-                                    </button>
->>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
                                 </div>
                             </div>
                         </div>
@@ -196,11 +190,7 @@ include('includes/config.php');
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-<<<<<<< HEAD
                                 <table class="table table-striped custom-table datatable" id="imformationTable">
-=======
-                                <table class="table table-striped custom-table datatable">
->>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
                                     <thead>
                                         <tr>
                                             <th>First Name</th>
@@ -300,7 +290,6 @@ include('includes/config.php');
         });
     });
     </script>
-<<<<<<< HEAD
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
@@ -309,17 +298,11 @@ include('includes/config.php');
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
-=======
->>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
 
 
     <!-- jQuery -->
     <script src=" assets/js/jquery-3.2.1.min.js"></script>
-<<<<<<< HEAD
     <script src="./assets/js/print.js"></script>
-=======
-
->>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
     <!-- Bootstrap Core JS -->
     <script src="assets/js/popper.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>

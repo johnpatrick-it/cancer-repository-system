@@ -29,10 +29,6 @@ if (isset($_POST['submit'])) {
     $surname = $_POST['surname'];
     $given_name = $_POST['given_name'];
     $middle_name = $_POST['middle_name'];
-<<<<<<< HEAD
-    $suffix_name = $_POST['suffix_name'];
-=======
->>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
     $patient_type = $_POST['patient_type'];
     $gender = $_POST['gender'];
     $civil_status = $_POST['civil_status'];
@@ -514,11 +510,7 @@ $query3->execute();
                                                 <div class="form-group">
                                                     <label class="custom-label">Suffix</label>
                                                     <input name="suffix" type="text" class="form-control"
-<<<<<<< HEAD
-                                                        autocomplete="off" value="<?php echo $row['suffix_name']; ?>">
-=======
                                                         autocomplete="off">
->>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
 
                                                 </div>
                                             </div>
