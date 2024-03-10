@@ -47,6 +47,7 @@ include('includes/config.php');
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
+<<<<<<< HEAD
 
     <!-- Sweetalert CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@latest/dist/sweetalert2.min.css">
@@ -117,6 +118,78 @@ include('includes/config.php');
     .m-right {
         margin-right: -0.8rem;
     }
+=======
+    
+    <!-- Sweetalert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@latest/dist/sweetalert2.min.css">
+   
+    <style>
+        body {
+            background-color: #D4DEDB;
+        }
+
+        .body-container {
+            background-color: #FAFAFA;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            text-align: center;
+            border: 1px solid #285D4D;
+        }
+
+        .page-title {
+            font-size: 1.3rem;
+            color: #204A3D;
+        }
+
+        .btn-blue {
+            background-color: #0D6EFD;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            border: 1px solid #9E9E9E;
+            margin-bottom: 20px;
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 45%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .filter-btn,
+        .export-btn {
+            padding: 8px 20px;
+            background-color: #E5F6F1;
+            color: #204A3D;
+            border: 1px solid #204A3D;
+        }
+
+        .add-btn {
+            border-radius: 5px;
+            padding: 8px 2rem;
+        }
+
+        .m-right {
+            margin-right: -0.8rem;
+        }
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
     </style>
 </head>
 
@@ -142,10 +215,17 @@ include('includes/config.php');
                     <!-- SEARCH -->
                     <div class="row">
                         <div class="col-md-3">
+<<<<<<< HEAD
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
                                 <input type="text" id="searchInput" class="form-control pl-5 search-input"
                                     placeholder="Search">
+=======
+                            <div class="search-container"> 
+                                <i class="fa fa-search"></i>
+                                <input type="text" id="searchInput" class="form-control pl-5 search-input"
+                                            placeholder="Search">
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
                             </div>
                         </div>
 
@@ -166,6 +246,7 @@ include('includes/config.php');
                                     </button>
                                 </div>
                                 <div class="col-auto">
+<<<<<<< HEAD
                                     <div class="dropdown">
                                         <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
                                             data-bs-toggle="dropdown" aria-expanded="false"> <i
@@ -183,6 +264,21 @@ include('includes/config.php');
                                         </ul>
                                     </div>
 
+=======
+                                <div class="dropdown">
+                            <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
+                                data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-download"></i> Export</button>
+                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">Export as PDF</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">Export as Excel</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#" onclick="exportTable('csv')">Export as CSV</a>
+                                </li>
+                            </ul>
+                        </div>
+                                    
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
                                 </div>
                             </div>
                         </div>
@@ -192,6 +288,7 @@ include('includes/config.php');
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
+<<<<<<< HEAD
                                 <table class="table table-striped custom-table datatable" id="imformationTable">
                                     <thead>
                                         <tr>
@@ -201,6 +298,17 @@ include('includes/config.php');
                                             <th>Hospital Location UACS CODE</th>
                                             <th>Hospital Street</th>
 
+=======
+                            <table class="table table-striped custom-table datatable" id="imformationTable">
+                                    <thead>
+                                        <tr>
+                                        <th>Hospital Name</th>
+                                            <th>Hospital Level</th>
+                                            <th>Type of Instituion</th>
+                                            <th>Hospital Location UACS CODE</th>
+                                            <th>Hospital Street</th> 
+                                       
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -208,6 +316,7 @@ include('includes/config.php');
                                             if (!$db_connection) {
                                                 echo "Failed to connect to the database.";
                                             } else {
+<<<<<<< HEAD
                                                 $query = "SELECT hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street FROM hospital_general_information";
                                                 $result = pg_query($db_connection, $query);
                                                 while ($row = pg_fetch_assoc($result)) {
@@ -217,6 +326,17 @@ include('includes/config.php');
                                                     echo "<td>" . $row['type_of_institution'] . "</td>";
                                                     echo "<td>" . $row['hospital_barangay'] . "</td>";
                                                     echo "<td>" . $row['hospital_street'] . "</td>";
+=======
+                                                $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information";
+                                                $result = pg_query($db_connection, $query);
+                                                while ($row = pg_fetch_assoc($result)) {
+                                                    echo "<tr>";
+                                                    echo "<td class='hospital-name'>" . $row['hospital_name'] . "</td>";
+                                                    echo "<td class='hospital-level'>" . $row['hospital_level'] . "</td>";
+                                                    echo "<td class='type-of-institution'>" . $row['type_of_institution'] . "</td>";
+                                                    echo "<td class='hospital-barangay'>" . $row['hospital_barangay'] . "</td>";
+                                                    echo "<td class='hospital-street'>" . $row['hospital_street'] . "</td>";
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
                                                 
                                                     // Populate hidden input fields for additional data
                                                     echo "<input type='hidden' class='hospital-region' value='" . $row['hospital_region'] . "'>";
@@ -233,7 +353,11 @@ include('includes/config.php');
                                                 
                                             }
                                             pg_close($db_connection);
+<<<<<<< HEAD
                                         ?>
+=======
+                                        ?>                                       
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
                                     </tbody>
                                 </table>
                             </div>
@@ -241,7 +365,11 @@ include('includes/config.php');
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
 
+=======
+           
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
             <!-- Add Hospital  Modal -->
             <?php include_once 'includes/modals/hospital/add_hospital.php'; ?>
 
@@ -250,12 +378,16 @@ include('includes/config.php');
 
             <!-- Delete Hospital Modal -->
             <?php include_once 'includes/modals/hospital/delete_hospital.php'; ?>
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<<<<<<< HEAD
     <script>
     $(document).ready(function() {
         $('#searchInput').keyup(function() {
@@ -287,6 +419,39 @@ include('includes/config.php');
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+=======
+<script>
+$(document).ready(function() {
+    $('#searchInput').keyup(function() {
+        var searchText = $(this).val().toString().toLowerCase();
+
+        $('tbody tr').each(function() {
+            var name = $(this).data('name').toString().toLowerCase();
+            var level = $(this).data('level').toString().toLowerCase();
+            var institution = $(this).data('institution').toString().toLowerCase();
+            var barangay = $(this).data('barangay').toString().toLowerCase();
+            var street = $(this).data('street').toString().toLowerCase();
+        
+
+            if (
+                name.includes(searchText) ||
+                level.includes(searchText) ||
+                institution.includes(searchText) ||
+                barangay.includes(searchText) ||
+                street.includes(searchText)
+           
+            ) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/tableexport.min.js"></script>
@@ -330,8 +495,13 @@ include('includes/config.php');
         });
     }
 
+<<<<<<< HEAD
 
     document.addEventListener('DOMContentLoaded', function() {
+=======
+    
+    document.addEventListener('DOMContentLoaded', function () {
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
         <?php
         if (isset($_SESSION['add-hospital'])) {
             $success = $_SESSION['add-hospital'];
@@ -343,9 +513,15 @@ include('includes/config.php');
         }
         ?>
 
+<<<<<<< HEAD
 
     });
     </script>
+=======
+       
+    });
+</script>
+>>>>>>> b108fa4dc5d6b3645dcc7584571c79bf87a22615
 
 </body>
 
