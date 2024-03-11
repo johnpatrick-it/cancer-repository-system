@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $hospitalEquipments));
 
             if ($result_exec) {
+                $_SESSION['add-hospital'] = "New hospital added successfully!";
                 header("Location: /hospital-information.php");
                 exit();
             } else {

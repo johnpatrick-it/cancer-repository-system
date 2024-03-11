@@ -41,7 +41,7 @@
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
                 <li class="profile-block">
-                    <a href="#">
+                    <a href="./user-landing-page.php">
                         <span class="user-img d-inline-block position-relative">
                             <img src="./profiles/pcc-logo.png" alt="User Picture"
                                 class="rounded-circle img-thumbnail neon-border">
@@ -57,35 +57,91 @@
                             Dashboard</span> </a></li>
 
                 <!-- CANCER STATISTICS -->
-                <li><a href="#"><i class="la la-bar-chart"></i><span>Cancer Statistics</span></a></li>
+                <li>
+                    <a href="#">
+                        <i class="la la-bar-chart"></i>
+                        <span>Cancer Statistics</span>
+                    </a>
+                </li>
 
                 <!-- HOSPITAL INFORMATION -->
                 <li><a href="./hospital-information.php"><i class="la la-medkit"></i><span>Hospital
                             Information</span></a></li>
 
                 <!-- USER INFORMATION -->
-                <li><a href="./user-information.php"><i class="la la-user"></i><span>User Information</span></a></li>
+                <li>
+                    <a href="./user-information.php">
+                        <i class="la la-user"></i>
+                        <span>User Information</span></a>
+                </li>
 
                 <!-- HOSPITAL MAPPING -->
                 <li><a href="./mapping.php"><i class="la la-map"></i><span>Hospital Mapping</span></a></li>
 
-                <!-- EQUIPMENT -->
-                <li><a href="./equipment-category.php"><i class="la la-map"></i><span>Equipment Category</span></a></li>
-
                 <!-- ACTIVITY LOGS -->
-                <li><a href="./activity-logs.php"><i class="la la-history"></i><span>Activity Logs</span></a></li>
+                <li>
+                    <a href="./activity-logs.php">
+                        <i class="la la-history"></i>
+                        <span>Activity Logs</span>
+                    </a>
+                </li>
 
                 <!-- SETTINGS -->
-                <li><a href="#"><i class="la la-file-text"></i><span>Settings</span></a></li>
+                <li>
+                    <a href="#">
+                        <i class="la la-file-text"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
 
-                <br>
-                <br>
-                <br>
                 <!-- LOGOUT -->
                 <li class="out-container">
-                    <a class="out-button" href="logout.php"><i class="la la-power-off"></i><span>Logout</span></a>
+                    <a class="out-button" href="functions/logout-function.php" onclick="confirmLogout(event)">
+                        <i class="la la-power-off"></i>
+                        <span>Logout</span>
+                    </a>
                 </li>
             </ul>
         </div>
     </div>
 </div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var sidebarMenuItems = document.querySelectorAll('.sidebar-menu a');
+
+    sidebarMenuItems.forEach(function(item) {
+        item.addEventListener('click', function() {
+            var userRoleText = document.querySelector('.user-role');
+            userRoleText.style.display = (userRoleText.style.display === 'none' || userRoleText
+                .style.display === '') ? 'block' : 'none';
+        });
+    });
+});
+</script>
+
+<script>
+function confirmLogout(event) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: 'Are you sure you want to logout?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, logout!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "functions/logout-function.php";
+        } else {
+            console.log("Logout canceled");
+        }
+    });
+}
+</script>

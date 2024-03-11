@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header("Location: login.php");
-    exit; 
+    exit;
 }
 error_reporting(0);
 include('includes/config.php');
@@ -77,27 +77,20 @@ include('includes/config.php');
 
     .hide-logo {
         display: none;
-    }   
+    }
 
     .header-left {
         display: flex;
-        justify-content: center; /* Horizontal alignment */
-        align-items: center; /* Vertical alignment */
+        justify-content: center;
+        align-items: center;
     }
-    
-
-
 </style>
 
-    <div class="header">
-
+<div class="header">
     <!-- LOGO -->
-        <div class="header-left" id="headerLeft">
-            <a href="./index.php" class="logo">
-                <img src="./assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo" id="logo">
-            </a>
-        </div>
-
+    <div class="header-left" id="headerLeft">
+        <img src="./assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo" id="logo">
+    </div>
 
     <!-- SIDEBAR TOGGLE -->
     <a id="toggle_btn" href="javascript:void(0);">
@@ -132,12 +125,12 @@ include('includes/config.php');
     <ul class="nav user-menu">
 
         <!-- NOTIFICATION BELL -->
-        <li class="nav-item dropdown">
+        <!-- <li class="nav-item dropdown">
             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                 <i class="fa fa-bell" style="color: #000;"></i> <span class="badge badge-pill">#</span>
             </a>
             <div class="dropdown-menu notifications">
-                <!-- NOTIICATION SAMPLE CONTENT -->
+
                 <div class="topnav-dropdown-header">
                     <span class="notification-title">Notifications</span>
                     <a href="javascript:void(0)" class="clear-noti"> Clear All </a>
@@ -148,47 +141,48 @@ include('includes/config.php');
                     <a href="#">View all Notifications</a>
                 </div>
             </div>
-        </li>
+        </li> -->
+
         <?php
-            $loggedInAdminId = $_SESSION['admin_id']; // Retrieving admin_id pag ka login sa session
+        $loggedInAdminId = $_SESSION['admin_id']; // Retrieving admin_id pag ka login sa session
 
-            $query = "SELECT admin_id FROM admin_users WHERE admin_id = '$loggedInAdminId'";
-            $result = pg_query($db_connection, $query);
+        $query = "SELECT admin_id FROM admin_users WHERE admin_id = '$loggedInAdminId'";
+        $result = pg_query($db_connection, $query);
 
-            if (!$result) {
-                echo "Error executing the query: " . pg_last_error($db_connection);
+        if (!$result) {
+            echo "Error executing the query: " . pg_last_error($db_connection);
+        } else {
+            // Fetching yung current admin_user
+            $userData = pg_fetch_assoc($result);
+
+            // Checking kung successfull na fetch yung data
+            if ($userData) {
+                $currentUserId = $userData['admin_id']; // Save the admin_id for further use
             } else {
-                // Fetching yung current admin_user
-                $userData = pg_fetch_assoc($result);
-
-                // Checking kung successfull na fetch yung data
-                if ($userData) {
-                    $currentUserId = $userData['admin_id']; // Save the admin_id for further use
-                } else {
-                    echo "No data found for the current user.";
-                }
-
-                // Free result set
-                pg_free_result($result);
+                echo "No data found for the current user.";
             }
+
+            // Free result set
+            pg_free_result($result);
+        }
         ?>
         <!-- USER PROFILE -->
         <li class="nav-item dropdown has-arrow main-drop">
             <div class="user-container" id="userDropdown">
                 <a href="#" class="nav-link" data-toggle="dropdown">
                     <span class="user-img">
-                        <img src="./profiles/myself.png ?>" alt="User Picture">
+                        <img src="./profiles/user.jpg" alt="User Picture">
+                   <?php echo $_SESSION['lastname']?>
                     </span>
-                    <span class="user-text"></span>
+                  
                 </a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="profile.php">My Profile</a>
                     <a class="dropdown-item" href="settings.php">Settings</a>
-                    <a class="dropdown-item" href="logout.php">Logout</a>
+                    <a class="dropdown-item" href="functions/logout-function.php" onclick="confirmLogout(event)">Logout</a>
                 </div>
             </div>
         </li>
-
     </ul>
 
     <!-- MOBILE MENU -->
@@ -197,11 +191,13 @@ include('includes/config.php');
         <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="profile.php">My Profile</a>
             <a class="dropdown-item" href="settings.php">Settings</a>
-            <a class="dropdown-item" href="login.php">Logout</a>
+            <a class="dropdown-item" href="functions/logout-function.php"  onclick="confirmLogout(event)">Logout</a>
         </div>
     </div>
 </div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // DATE AND TIME
@@ -241,19 +237,41 @@ include('includes/config.php');
 
 
 
-//Para sa redundant logo
-let logo = document.getElementById("logo");
-let toggleButton = document.getElementById("toggle_btn");
+    //Para sa redundant logo
+    let logo = document.getElementById("logo");
+    let toggleButton = document.getElementById("toggle_btn");
 
-// Function to handle navbar toggle button click
-toggleButton.addEventListener("click", function() {
+    // Function to handle navbar toggle button click
+    toggleButton.addEventListener("click", function() {
 
-    if (logo.style.display === "none" || logo.style.display === "") {
-        logo.style.display = "block"; 
-    } else {
-        logo.style.display = "none"; 
-    }
-});
-
-
+        if (logo.style.display === "none" || logo.style.display === "") {
+            logo.style.display = "block";
+        } else {
+            logo.style.display = "none";
+        }
+    });
 </script>
+
+<script>
+
+function confirmLogout(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Are you sure you want to logout?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, logout!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "functions/logout-function.php";
+            } else {
+                console.log("Logout canceled");
+            }
+        });
+    }
+</script>
+

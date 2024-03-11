@@ -6,7 +6,6 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
-
 error_reporting(0);
 include('includes/config.php');
 
@@ -49,71 +48,71 @@ include('includes/config.php');
     <link rel="stylesheet" href="./assets/css/style.css">
 
     <style>
-        body {
-            background-color: #D4DEDB;
-        }
+    body {
+        background-color: #D4DEDB;
+    }
 
-        .body-container {
-            background-color: #FAFAFA;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-        }
+    .body-container {
+        background-color: #FAFAFA;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
 
-        table {
-            text-align: center;
-            border: 1px solid #285D4D;
-        }
+    table {
+        text-align: center;
+        border: 1px solid #285D4D;
+    }
 
-        .page-title {
-            font-size: 1.3rem;
-            color: #204A3D;
-        }
+    .page-title {
+        font-size: 1.3rem;
+        color: #204A3D;
+    }
 
-        .btn-blue {
-            background-color: #0D6EFD;
-        }
+    .btn-blue {
+        background-color: #0D6EFD;
+    }
 
-        .search-container {
-            position: relative;
-        }
+    .search-container {
+        position: relative;
+    }
 
-        .search-input {
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            border: 1px solid #9E9E9E;
-            margin-bottom: 20px;
-        }
+    .search-input {
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        border: 1px solid #9E9E9E;
+        margin-bottom: 20px;
+    }
 
-        .search-input:focus {
-            outline: none;
-        }
+    .search-input:focus {
+        outline: none;
+    }
 
-        .search-container i {
-            position: absolute;
-            left: 15px;
-            top: 45%;
-            transform: translateY(-50%);
-            color: #888;
-        }
+    .search-container i {
+        position: absolute;
+        left: 15px;
+        top: 45%;
+        transform: translateY(-50%);
+        color: #888;
+    }
 
-        .print-btn,
-        .export-btn {
-            padding: 8px 20px;
-            background-color: #E5F6F1;
-            color: #204A3D;
-            border: 1px solid #204A3D;
-        }
+    .print-btn,
+    .export-btn {
+        padding: 8px 20px;
+        background-color: #E5F6F1;
+        color: #204A3D;
+        border: 1px solid #204A3D;
+    }
 
-        .add-btn {
-            border-radius: 5px;
-            padding: 8px 2rem;
-        }
+    .add-btn {
+        border-radius: 5px;
+        padding: 8px 2rem;
+    }
 
-        .m-right {
-            margin-right: -0.8rem;
-        }
+    .m-right {
+        margin-right: -0.8rem;
+    }
     </style>
 </head>
 
@@ -141,7 +140,8 @@ include('includes/config.php');
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control pl-5 search-input" placeholder="Search">
+                                <input type="text" class="form-control pl-5 search-input" id="searchInput"
+                                    placeholder="Search">
                             </div>
                         </div>
 
@@ -184,16 +184,18 @@ include('includes/config.php');
                                         //THE ONLY LOGS THAT WILL APPEAR IS IF SAME NG REPO_USER_ID YUNG SUBMITTER
                                         //TYAKA NAKA SESSION NA REPO_USER
                                         $current_repo_user_id = $_SESSION['repo_user_id'];
+                                
+                                 
                                         //PUTANG INANG JOIN QUERY
                                         $query = "SELECT
-                                                    rl.log_id,
-                                                    rl.patient_id,
-                                                    rl.log_timestamp AS date,
-                                                    rl.log_action AS description
-                                                FROM
-                                                    repo_logs rl
-                                                WHERE
-                                                    rl.repo_user_id = '$current_repo_user_id'";
+                                        log_id,
+                                        patient_id,
+                                        log_timestamp AS date,
+                                        log_action AS description
+                                      FROM
+                                        repo_logs
+                                      WHERE
+                                        repo_user_id = '$current_repo_user_id'";
 
                                         $result = pg_query($db_connection, $query);
                                         if ($result) {
@@ -221,6 +223,33 @@ include('includes/config.php');
 
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('#searchInput').keyup(function() {
+            var searchText = $(this).val().toLowerCase();
+
+            $('tbody tr').each(function() {
+                var logId = $(this).find('td:eq(0)').text().toLowerCase();
+                var patientId = $(this).find('td:eq(1)').text().toLowerCase();
+                var date = $(this).find('td:eq(2)').text().toLowerCase();
+                var description = $(this).find('td:eq(3)').text().toLowerCase();
+
+                if (
+                    logId.includes(searchText) ||
+                    patientId.includes(searchText) ||
+                    date.includes(searchText) ||
+                    description.includes(searchText)
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+    </script>
 
 
     <!-- jQuery -->

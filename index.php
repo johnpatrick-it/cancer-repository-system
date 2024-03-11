@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header("Location: login.php");
-    exit; 
+    exit;
 }
 error_reporting(0);
 include('includes/config.php');
@@ -76,12 +76,6 @@ pg_close($db_connection);
             color: #F0F0F0;
         }
 
-        h2 {
-            font-size: 1rem;
-            border-bottom: 2px solid #ccc;
-            padding: 0.5rem;
-        }
-
         thead,
         tbody {
             background-color: #d9d9d9;
@@ -90,55 +84,47 @@ pg_close($db_connection);
             text-align: center;
         }
 
-        /* CALENDAR CHART */
-        #calendar {
-            max-width: 600px;
-            margin: 0 auto;
-            border-collapse: collapse;
+        /* Style for chart button container */
+        .chartButtonContainer {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
-        #calendar th,
-        #calendar td {
-            width: 14.28%;
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        #calendar th {
-            background-color: #f2f2f2;
-        }
-
-        .event {
-            background-color: #4CAF50;
+        .chartButton {
+            padding: 8px 15px;
+            margin: 0 5px;
+            border-radius: 3px;
+            background-color: #204A31;
+            border: 1px solid #183825;
             color: #fff;
-            padding: 2px;
-            border-radius: 4px;
-            display: block;
-            margin-top: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        #month-year {
-            text-align: center;
-            margin-bottom: 10px;
+        .chartButton:hover {
+            background-color: #2e6946;
+            border: 1px solid #53bd7e;
+        }
+
+        #chartContainer {
+            height: 400px;
+            width: 100%;
+            border: 1px solid #556b2f;
+            border-radius: 5px;
         }
     </style>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">
-
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-
     <!-- Fontawesome CSS -->
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-
     <!-- Lineawesome CSS -->
     <link rel="stylesheet" href="assets/css/line-awesome.min.css">
-
     <!-- Chart CSS -->
     <link rel="stylesheet" href="assets/plugins/morris/morris.css">
-
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -146,15 +132,10 @@ pg_close($db_connection);
 <body>
     <!-- Main Wrapper -->
     <div class="main-wrapper">
-
         <!-- Header -->
         <?php include_once("includes/header.php"); ?>
-        <!-- End Header -->
-
         <!-- Sidebar -->
         <?php include_once("includes/sidebar.php"); ?>
-        <!-- End Sidebar -->
-
 
         <div class="page-wrapper">
             <div class="content container-fluid">
@@ -178,7 +159,7 @@ pg_close($db_connection);
                         <a href="user-information.php">
                             <div class="card dash-widget">
                                 <div class="card-body">
-                                    <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
+                                    <span class="dash-widget-icon"><i class="fa fa-user-md"></i></span>
                                     <div class="dash-widget-info">
                                         <h3><?php echo $totalRepoUsers; ?></h3>
                                         <span>Total Users</span>
@@ -191,7 +172,7 @@ pg_close($db_connection);
                         <a href="hospital-information.php">
                             <div class="card dash-widget">
                                 <div class="card-body">
-                                    <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+                                    <span class="dash-widget-icon"><i class="fa fa-hospital-o"></i></span>
                                     <div class="dash-widget-info">
                                         <h3><?php echo $totalHospitals; ?></h3>
                                         <span>Total Hospitals</span>
@@ -201,36 +182,35 @@ pg_close($db_connection);
                         </a>
                     </div>
                     <?php
-                        // Add your SQL query to count the total number of patients
-                        $sql = "SELECT COUNT(*) as total_patients FROM patient_general_info";
+                    // Add your SQL query to count the total number of patients
+                    $sql = "SELECT COUNT(*) as total_patients FROM patient_general_info";
+                    $result = pg_query($db_connection, $sql);
 
-                        $result = pg_query($db_connection, $sql);
+                    // Check if the query was successful
+                    if ($result) {
+                        // Fetch the count from the result
+                        $row = pg_fetch_assoc($result);
+                        $totalPatients = $row["total_patients"];
 
-                        // Check if the query was successful
-                        if ($result) {
-                            // Fetch the count from the result
-                            $row = pg_fetch_assoc($result);
-                            $totalPatients = $row["total_patients"];
-
-                            // Free result set
-                            pg_free_result($result);
-                        } else {
-                            // Handle the case where the query fails
-                            echo "Error in query: " . pg_last_error($db_connection);
-                            $totalPatients = 0; // Set a default value
-                        }
-                        ?>
+                        // Free result set
+                        pg_free_result($result);
+                    } else {
+                        // Handle the case where the query fails
+                        echo "Error in query: " . pg_last_error($db_connection);
+                        $totalPatients = 0; // Set a default value
+                    }
+                    ?>
                     <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                         <div class="card dash-widget">
                             <a href="activity-logs.php">
                                 <div class="card-body">
-                                    <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+                                    <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
                                     <div class="dash-widget-info">
                                         <h3><?php echo $totalPatients ?></h3>
                                         <span>Total Patient</span>
                                     </div>
                                 </div>
-                            </a>    
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -244,8 +224,7 @@ pg_close($db_connection);
                         </div>
                     </div>
                     <!-- CHART TABLE -->
-                        <div id="chartContainer" style="height: 400px; width: 100%;"></div>
-                        <!-- CHART TABLE END-->
+                    <div id="chartContainer" style="height: 400px; width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -254,26 +233,20 @@ pg_close($db_connection);
 
     <!-- jQuery -->
     <script src="assets/js/jquery-3.2.1.min.js"></script>
-
     <!-- Bootstrap Core JS -->
     <script src="assets/js/popper.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
-
     <!-- Slimscroll JS -->
     <script src="assets/js/jquery.slimscroll.min.js"></script>
-
     <!-- Chart JS -->
     <script src="assets/plugins/morris/morris.min.js"></script>
     <script src="assets/plugins/raphael/raphael.min.js"></script>
     <script src="assets/js/chart.js"></script>
-
-
     <!-- Custom JS -->
     <script src="assets/js/app.js"></script>
     <script src="assets/js/piechart.js"></script>
     <script src="assets/js/barchart.js"></script>
     <script src="assets/js/chart-switcher.js"></script>
-
 </body>
 
 </html>
