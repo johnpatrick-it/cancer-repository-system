@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
@@ -96,7 +95,7 @@ include('includes/config.php');
 
     <!-- LOGO -->
     <div class="header-left" id="headerLeft">
-        <img src="./assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo" id="logo">
+        <img src="./profiles/pcc-logo1.png" width="40" height="40" alt="PCC Logo" id="logo">
     </div>
 
 
@@ -180,13 +179,13 @@ include('includes/config.php');
                 <a href="#" class="nav-link" data-toggle="dropdown">
                     <span class="user-img">
                         <img src="./profiles/user.jpg" alt="User Picture">
+                     <?php echo $_SESSION['user_lname']?>
                     </span>
                     <span class="user-text"></span>
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="profile.php">My Profile</a>
-                    <a class="dropdown-item" href="settings.php">Settings</a>
-                    <a class="dropdown-item" href="logout.php">Logout</a>
+                    <a class="dropdown-item" href="user-profile.php">My Profile</a>
+                    <a class="dropdown-item" href="functions/user-logout-function.php" onclick="confirmLogout(event)">Logout</a>
                 </div>
             </div>
         </li>
@@ -198,11 +197,12 @@ include('includes/config.php');
         <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="../profile.php">My Profile</a>
             <a class="dropdown-item" href="settings.php">Settings</a>
-            <a class="dropdown-item" href="login.php">Logout</a>
+            <a class="dropdown-item" href="functions/user-logout-function.php" onclick="confirmLogout(event)">Logout</a>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     // DATE AND TIME
@@ -256,3 +256,27 @@ include('includes/config.php');
         }
     });
 </script>
+    
+<script>
+    function confirmLogout(event) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: 'Are you sure you want to logout?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, logout!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "functions/user-logout-function.php";
+            } else {
+                console.log("Logout canceled");
+            }
+        });
+    }
+</script>
+
+

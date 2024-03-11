@@ -10,7 +10,7 @@ include "functions/login-function.php";
         <title>Forgot password</title>
         <!-- Include SweetAlert library -->
         <!-- Favicon -->
-	    <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">
+	    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
         <link rel="stylesheet" href="assets/css/forgotpass.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
   

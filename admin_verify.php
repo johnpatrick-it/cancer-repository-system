@@ -7,7 +7,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $_SESSION['admin_name']?>, Verify your account</title>
-	    <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">
+	    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
         <link rel="stylesheet" href="assets/css/authentication.css"> 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@latest/dist/sweetalert2.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />

@@ -4,7 +4,7 @@ session_start();
 //VERY IMPORTANT DONT ERASE
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header("Location: login.php");
-    exit; 
+    exit;   
 }
 error_reporting(0);
 include('includes/config.php');
@@ -24,7 +24,7 @@ include('includes/config.php');
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -143,7 +143,8 @@ include('includes/config.php');
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control pl-5 search-input" placeholder="Search">
+                                <input type="text" class="form-control pl-5 search-input" id="searchInput"
+                                    placeholder="Search">
                             </div>
                         </div>
 
@@ -202,39 +203,45 @@ include('includes/config.php');
                                     </thead>
                                     <tbody>
                                         <?php
-                                        //fetching data sa hospital-general-information at user-repo 
-                                        //putangina
-                                        //IDK WHEN ALL THE DATA WAS DELETED HINDI GUMAGANA YUNG ADD USER MODAL LOL ??
-                                        if (!$db_connection) {
-                                            echo "Failed to connect to the database.";
-                                        } else {
-                                            $query = "SELECT 
-                                                        ru.user_fname AS \"First Name\",
-                                                        ru.user_mname AS \"Middle Name\",
-                                                        ru.user_lname AS \"Last Name\",
-                                                        hgi.hospital_name AS \"Hospital Affiliated With\",
-                                                        ru.position AS \"Position\"
-                                                      FROM 
-                                                        repo_user ru
-                                                      JOIN 
-                                                        hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id";
-                                        
-                                            $result = pg_query($db_connection, $query);                                    
-                                                while ($row = pg_fetch_assoc($result)) {
-                                                    echo "<tr>";
-                                                    echo "<td>" . $row['First Name'] . "</td>";
-                                                    echo "<td>" . $row['Middle Name'] . "</td>";
-                                                    echo "<td>" . $row['Last Name'] . "</td>";
-                                                    echo "<td>" . $row['Hospital Affiliated With'] . "</td>";
-                                                    echo "<td>" . $row['Position'] . "</td>";
-                                                    echo "<td>";
-                                                    echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>";
-                                                    echo "<a href='#' data-toggle='modal' data-target='#delete_hospital' title='Delete' class='btn text-xs text-white btn-danger action-icon ml-2'><i class='fa fa-trash'></i></a>";
-                                                    echo "</td>";
-                                                    echo "</tr>";
-                                                }
-                                            }
-                                        ?>
+       
+        if (!$db_connection) {
+            echo "Failed to connect to the database.";
+        } else {
+            $query = "SELECT 
+                        ru.repo_user_id,
+                        ru.user_fname AS \"First Name\",
+                        ru.user_mname AS \"Middle Name\",
+                        ru.user_lname AS \"Last Name\",
+                        hgi.hospital_name AS \"Hospital Affiliated With\",
+                        ru.position AS \"Position\",
+                        ru.email AS \"Email\",
+                        ru.password AS \"Password\"
+                    FROM 
+                        repo_user ru
+                    JOIN 
+                        hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id";
+
+            $result = pg_query($db_connection, $query);                                    
+            while ($row = pg_fetch_assoc($result)) {
+                echo "<tr>";
+                echo "<td class='first-name'>" . $row['First Name'] . "</td>";
+                echo "<td class='middle-name'>" . $row['Middle Name'] . "</td>";
+                echo "<td class='last-name'>" . $row['Last Name'] . "</td>";
+                echo "<td class='hospital-affiliated'>" . $row['Hospital Affiliated With'] . "</td>";
+                echo "<td class='user-position'>" . $row['Position'] . "</td>";
+                
+                // Hidden input fields for additional data within the table row
+                echo "<input type='hidden' class='user-email' value='" . $row['Email'] . "'>";
+                echo "<input type='hidden' class='user-password' value='" . $row['Password'] . "'>";
+                
+                echo "<td>";
+                echo "<a href='#' data-toggle='modal' data-target='#edit_user' title='Edit' class='btn text-xs text-white btn-blue edituser-action' data-repo-id='" . $row['repo_user_id'] . "'><i class='fa fa-pencil'></i></a>";
+                echo "<a href='#' data-toggle='modal' data-target='#delete_user' title='Delete' class='btn text-xs text-white btn-danger delete-action ml-2' data-repo-id='" . $row['repo_user_id'] . "'><i class='fa fa-trash'></i></a>";
+                echo "</td>";
+                echo "</tr>";
+            }
+        }
+        ?>
                                     </tbody>
                                 </table>
 
@@ -254,10 +261,47 @@ include('includes/config.php');
             <?php include_once 'includes/modals/hospital/delete_user.php'; ?>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#searchInput').keyup(function() {
+            var searchText = $(this).val().toString().toLowerCase();
+
+            $('tbody tr').each(function() {
+                var firstName = $(this).find('.first-name').text().toLowerCase();
+                var middleName = $(this).find('.middle-name').text().toLowerCase();
+                var lastName = $(this).find('.last-name').text().toLowerCase();
+                var hospitalAffiliated = $(this).find('.hospital-affiliated').text()
+                    .toLowerCase();
+                var userPosition = $(this).find('.user-position').text().toLowerCase();
+
+                if (
+                    firstName.includes(searchText) ||
+                    middleName.includes(searchText) ||
+                    lastName.includes(searchText) ||
+                    hospitalAffiliated.includes(searchText) ||
+                    userPosition.includes(searchText)
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/tableexport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 
+    
     <!-- jQuery -->
-    <script src=" assets/js/jquery-3.2.1.min.js"></script>
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
 
     <!-- Bootstrap Core JS -->
     <script src="assets/js/popper.min.js"></script>
@@ -266,19 +310,28 @@ include('includes/config.php');
     <!-- Slimscroll JS -->
     <script src="assets/js/jquery.slimscroll.min.js"></script>
 
+    <!-- Chart JS -->
+    <script src="assets/js/chart.js"></script>
+
     <!-- Select2 JS -->
-    <script src="assets/js/select2.min.js"></script>
+    <script src="./assets/js/select2.min.js"></script>
 
     <!-- Datetimepicker JS -->
-    <script src="assets/js/moment.min.js"></script>
-    <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="./assets/js/moment.min.js"></script>
+    <script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
 
     <!-- Datatable JS -->
-    <script src="assets/js/jquery.dataTables.min.js"></script>
-    <script src="assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="./assets/js/jquery.dataTables.min.js"></script>
+    <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="assets/js/app.js"></script>
+    <script src="./assets/js/app.js"></script>
+
+
+
+
+
+
 
     <!-- Include SweetAlert library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>

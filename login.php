@@ -11,7 +11,7 @@ include "functions/login-function.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <title>PCC CANCER REPOSITORY</title>
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <!-- Main CSS -->
@@ -27,7 +27,7 @@ include "functions/login-function.php";
         <!-- LEFT SIDE CONTAINER -->
         <div class="left-side slanted-divider">
             <div class="account-logo">
-                <a href="index.php"><img src="assets/img/pcc-logo.png" alt="Company Logo"></a>
+                <a href="index.php"><img src="./profiles/pcc-3.png" alt="Company Logo"></a>
             </div>
         </div>
 

@@ -89,7 +89,7 @@ include('includes/config.php');
 <div class="header">
     <!-- LOGO -->
     <div class="header-left" id="headerLeft">
-        <img src="./assets/img/pcc-logo.png" width="40" height="40" alt="PCC Logo" id="logo">
+        <img src="./profiles/pcc-logo1.png" width="40" height="40" alt="PCC Logo" id="logo">
     </div>
 
     <!-- SIDEBAR TOGGLE -->

@@ -313,7 +313,7 @@ $query3->execute();
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css">

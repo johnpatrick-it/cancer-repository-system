@@ -39,6 +39,7 @@ if (!$result_affiliation) {
 
 $row_affiliation = pg_fetch_assoc($result_affiliation);
 $hospital_name = $row_affiliation['hospital_name'];
+$_SESSION['hospital_name'] = $hospital_name;
 
 
 //Querying yung total count ng patient para i display sa Metrics
@@ -86,7 +87,7 @@ $total_patients = $row_total_patients['total_patients'];
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css">

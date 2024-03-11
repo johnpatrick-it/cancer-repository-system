@@ -10,6 +10,8 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
+// Access the hospital name from the session variable
+$hospital_name = $_SESSION['hospital_name'];
 
 ?>
 
@@ -306,7 +308,7 @@ if (isset($_POST['submit'])) {
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
@@ -437,8 +439,9 @@ if (isset($_POST['submit'])) {
     <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-        <?php include_once("./includes/user-header.php"); ?>
-        <?php include_once("./includes/user-sidebar.php"); ?>
+    <?php include("includes/user-header.php"); ?>
+        <?php include("includes/user-sidebar.php"); ?>
+
 
         <div class="page-wrapper">
             <div class="containers">
@@ -1349,6 +1352,9 @@ if (isset($_POST['submit'])) {
 
 
 
+
+    <!-- jQuery -->
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
 
     <!-- Bootstrap Core JS -->
     <script src="assets/js/popper.min.js"></script>

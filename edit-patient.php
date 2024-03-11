@@ -73,7 +73,7 @@
     </style>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 

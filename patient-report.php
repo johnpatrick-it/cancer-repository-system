@@ -1,11 +1,17 @@
 <?php
 session_start();
 
+// Access the hospital name from the session variable
+$hospital_name = $_SESSION['hospital_name'];
 //VERY IMPORTANT
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
+
+// Access the hospital name from the session variable
+$hospital_name = $_SESSION['hospital_name'];
+
 error_reporting(0);
 include('includes/config.php');
 
@@ -24,7 +30,7 @@ include('includes/config.php');
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="./assets/css/bootstrap.min.css">

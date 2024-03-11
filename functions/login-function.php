@@ -71,7 +71,7 @@ function userLogin($email, $password) {
 
 
     // User Login Query
-    $userQuery = "SELECT repo_user_id, password, salt FROM public.repo_user WHERE email = $1";
+    $userQuery = "SELECT repo_user_id, user_lname, password, salt FROM public.repo_user WHERE email = $1";
     $userStmt = pg_prepare($db_connection, "fetch_user_password_query", $userQuery);
 
     if ($userStmt) {
@@ -86,7 +86,9 @@ function userLogin($email, $password) {
                 if (isset($salt)) {
                     if (password_verify($password . $salt, $hashedUserPassword)) {
                         $userId = $userRow['repo_user_id'];
+                        $userName = $userRow['user_lname'];
                         $_SESSION['repo_user_id'] = $userId;
+                        $_SESSION['user_lname'] = $userName;
                         header("Location: user-landing-page.php");
                         exit();
                     } else {
