@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header("Location: login.php");
@@ -169,7 +169,7 @@ include('includes/config.php');
         <!-- USER PROFILE -->
         <li class="nav-item dropdown has-arrow main-drop">
             <div class="user-container" id="userDropdown">
-                <a href="#" class="nav-link" data-toggle="dropdown">
+                <a href="" class="nav-link" data-toggle="dropdown">
                     <span class="user-img">
                         <img src="./profiles/user.jpg" alt="User Picture">
                    <?php echo $_SESSION['lastname']?>
@@ -178,7 +178,7 @@ include('includes/config.php');
                 </a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="profile.php">My Profile</a>
-                    <a class="dropdown-item" href="settings.php">Settings</a>
+      
                     <a class="dropdown-item" href="functions/logout-function.php" onclick="confirmLogout(event)">Logout</a>
                 </div>
             </div>

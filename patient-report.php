@@ -162,11 +162,7 @@ include('includes/config.php');
                                         <i class="fa fa-download"></i> Export
                                     </button>
                                 </div>
-                                <div class="col-auto">
-                                    <button class="btn print-btn">
-                                        <i class="fa fa-print"></i> Print
-                                    </button>
-                                </div>
+                               
                             </div>
                         </div>
                     </div>

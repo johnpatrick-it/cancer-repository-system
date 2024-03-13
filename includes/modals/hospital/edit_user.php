@@ -38,20 +38,21 @@
 								<label class="col-form-label">Hospital Affiliated With</label>
 								<select class="form-control select" id="editAffiliated" required>
 								<option value="">Select Hospital</option>
-								<?php 
-								include('includes/config.php');
+                                <?php 
+                                include('includes/config.php');
 
-								$query = "SELECT hospital_id, hospital_name FROM hospital_general_information";
-								$result = pg_query($db_connection, $query);
+                                $query = "SELECT DISTINCT hospital_id, hospital_name FROM hospital_general_information";
+                                $result = pg_query($db_connection, $query);
 
-								if ($result && pg_num_rows($result) > 0) {
-									while ($row = pg_fetch_assoc($result)) {
-										echo "<option value='" . $row['hospital_id'] . "'>" . $row['hospital_name'] . "</option>";
-									}
-								} else {
-									echo "<option value=''>No hospitals found</option>";
-								}
-							?>
+                                if ($result && pg_num_rows($result) > 0) {
+                                    while ($row = pg_fetch_assoc($result)) {
+                                        echo "<option value='" . $row['hospital_id'] . "'>" . $row['hospital_name'] . "</option>";
+                                    }
+                                } else {
+                                    echo "<option value=''>No hospitals found</option>";
+                                }
+                            ?>
+
 							</select>
 							</div>
 						</div>

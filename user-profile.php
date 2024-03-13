@@ -6,13 +6,17 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
+
+
+// Access the hospital name from the session variable
+$hospital_name = $_SESSION['hospital_name'];
+
 error_reporting(0);
 include('includes/config.php');
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -39,6 +43,17 @@ include('includes/config.php');
         .page-header .close {
             color: #204A3D;
         }
+
+        
+        @media only screen and (max-width: 768px) {
+  
+  .img-border {
+  display:flex;
+  justify-content:center;
+  height:130px;
+  width:130px;
+}
+}
 
         thead,
         tbody {
@@ -79,15 +94,33 @@ include('includes/config.php');
         }
         .img-align {            
             display:flex;
-            justify-content: flex-start;
-            align-items: flex-start;
+            justify-content: center;
+            align-items: center;
             margin:0 80px;
         }
 
         .img-border {
+            display:flex;
+            justify-content:center;
             height:130px;
             width:130px;
         }
+
+        .user-name {
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            font-size:1.4rem;
+        }
+        @media only screen and (max-width: 768px) {
+  
+            .img-border {
+            display:flex;
+            justify-content:center;
+            height:130px;
+            width:130px;
+        }
+}
     </style>
 
     <!-- Favicon -->
@@ -129,7 +162,7 @@ include('includes/config.php');
                 <img class="img-border" src="./profiles/pcc-logo1.png" alt="">
                 </div>
                 
-
+                <span class="user-name"><?php echo $_SESSION['user_lname'] . "," . " " . $_SESSION['user_fname']?></span>
                  <!-- WELCOME MESSAGE -->
                  <div class="page-header">
                                         
@@ -142,26 +175,27 @@ include('includes/config.php');
                             </div>
                            
                         </div>
-                    </div>
+                    </div>  
             
                                 <div class="row justify-content-center" style="margin-top:20px;">
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
                                         <label class="custom-label">Given name</label>
-                                        <input name="surname" type="text" class="form-control" required="true" autocomplete="off">
+                                        <input name="surname" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['user_fname']?>">
+
                                     </div>
                                 </div>
 
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
                                         <label class="custom-label">Surname name</label>
-                                        <input name="given_name" type="text" class="form-control" required="true" autocomplete="off">
+                                        <input name="given_name" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['user_lname']?>">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
                                         <label class="custom-label">Middle Name</label>
-                                        <input name="middle_name" type="text" class="form-control" required="true" autocomplete="off">
+                                        <input name="middle_name" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['user_mname']?>">
                                     </div>
                                 </div>
                                 </div>
@@ -170,7 +204,7 @@ include('includes/config.php');
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
                                         <label class="custom-label">Email address</label>
-                                        <input name="surname" type="text" class="form-control" required="true" autocomplete="off">
+                                        <input name="surname" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['email']?>"> 
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-12">
@@ -182,7 +216,7 @@ include('includes/config.php');
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
                                         <label class="custom-label">User Id</label>
-                                        <input name="middle_name" type="text" class="form-control" required="true" autocomplete="off">
+                                        <input name="middle_name" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['repo_user_id']?>">
                                     </div>
                                 </div>
                             </div>

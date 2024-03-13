@@ -159,13 +159,7 @@ include('includes/config.php');
                                             placeholder="Search">
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <div class="">
-                                        <button class="btn filter-btn">
-                                            <i class="fa fa-filter"></i> Filter
-                                        </button>
-                                    </div>
-                                </div>
+                               
                             </div>
                         </div>
                     </div>

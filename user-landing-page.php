@@ -297,12 +297,7 @@ $total_patients = $row_total_patients['total_patients'];
                                             placeholder="Search">
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <button class="btn filter-btn">
-                                        <i class="fa fa-filter"></i>
-                                        <span>Filter</span>
-                                    </button>
-                                </div>
+                    
                             </div>
                         </div>
                     </div>

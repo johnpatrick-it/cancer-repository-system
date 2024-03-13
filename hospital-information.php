@@ -48,9 +48,6 @@ include('includes/config.php');
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 
-    <!-- Sweetalert CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@latest/dist/sweetalert2.min.css">
-
     <style>
     body {
         background-color: #D4DEDB;
@@ -144,7 +141,7 @@ include('includes/config.php');
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" id="searchInput" class="form-control pl-5 search-input"
+                                <input type="text" class="form-control pl-5 search-input" id="searchInput"
                                     placeholder="Search">
                             </div>
                         </div>
@@ -160,11 +157,7 @@ include('includes/config.php');
                                         <i class="fa fa-medkit"></i> Add Hospital
                                     </a>
                                 </div>
-                                <div class="col-auto">
-                                    <button class="btn filter-btn  m-right">
-                                        <i class="fa fa-filter"></i> Filter
-                                    </button>
-                                </div>
+
                                 <div class="col-auto">
                                     <div class="dropdown">
                                         <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
@@ -182,7 +175,6 @@ include('includes/config.php');
                                             </li>
                                         </ul>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -200,40 +192,54 @@ include('includes/config.php');
                                             <th>Type of Instituion</th>
                                             <th>Hospital Location UACS CODE</th>
                                             <th>Hospital Street</th>
-
+                                            <th>Logo</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                            if (!$db_connection) {
-                                                echo "Failed to connect to the database.";
-                                            } else {
-                                                $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information";
-                                                $result = pg_query($db_connection, $query);
-                                                while ($row = pg_fetch_assoc($result)) {
-                                                    echo "<tr>";
-                                                    echo "<td class='hospital-name'>" . $row['hospital_name'] . "</td>";
-                                                    echo "<td class='hospital-level'>" . $row['hospital_level'] . "</td>";
-                                                    echo "<td class='type-of-institution'>" . $row['type_of_institution'] . "</td>";
-                                                    echo "<td class='hospital-barangay'>" . $row['hospital_barangay'] . "</td>";
-                                                    echo "<td class='hospital-street'>" . $row['hospital_street'] . "</td>";
-                                                
-                                                    // Populate hidden input fields for additional data
-                                                    echo "<input type='hidden' class='hospital-region' value='" . $row['hospital_region'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-province' value='" . $row['hospital_province'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-city' value='" . $row['hospital_city'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-streets' value='" . $row['hospital_street'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-equipments' value='" . $row['hospital_equipments'] . "'>";
-                                                
-                                                    echo "<td>";
-                                                    echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . $row['hospital_id'] . "'><i class='fa fa-pencil'></i></a>";
-                                                    echo "</td>";
-                                                    echo "</tr>";
+                                           if (!$db_connection) {
+                                               echo "Failed to connect to the database.";
+                                           } else {
+                                            $query = "SELECT DISTINCT ON (hospital_name) 
+                  hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street,location 
+          FROM hospital_general_information";
+
+                                               $result = pg_query($db_connection, $query);
+                                                   while ($row = pg_fetch_assoc($result)) {
+                                                    echo "<tr data-name='{$row['hospital_name']}' data-level='{$row['hospital_level']}' data-institution='{$row['type_of_institution']}' data-barangay='{$row['hospital_barangay']}' data-street='{$row['hospital_street']}'>";
+                                                    echo "<td>" . $row['hospital_name'] . "</td>";
+                                                    echo "<td>" . $row['hospital_level'] . "</td>";
+                                                    echo "<td>" . $row['type_of_institution'] . "</td>";
+                                                    echo "<td>" . $row['hospital_barangay'] . "</td>";
+                                                    echo "<td>" . $row['hospital_street'] . "</td>";
+                                                    ?>
+                                                    <td>
+                                                    <?php
+                                                // Assuming $result->location contains the image filename
+                                                $imageFilename = htmlentities($row->location);
+                                                $imagePath = "uploads/$imageFilename"; // Adjust the folder name if needed
+                                            
+                                                // Checking if the file exists before displaying it
+                                                if (file_exists($imagePath)) {
+                                                    echo "<img src=\"$imagePath\" alt=\"Image\" style=\"border-radius: 50%; width: 30px; height: 30px; border: 1px solid black;\">";
+                                                } else {
+                                                    echo "Image not found";
                                                 }
-                                                
-                                            }
-                                            pg_close($db_connection);
-                                        ?>
+                                                ?>
+                                                </td>
+                                                <?php
+                                                       echo "<td>";
+                                                       echo "<a href='hospital-information-edit.php?edit={$row['hospital_name']}' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>";
+                                                       echo "</td>";
+                                                       echo "</tr>";
+                                                   }
+                                                   echo "</tbody>";
+                                                }
+                                       
+                                               pg_close($db_connection);
+                                           
+                                       ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -248,12 +254,10 @@ include('includes/config.php');
             <!-- Edit Hospital Modal -->
             <?php include_once 'includes/modals/hospital/edit_hospital.php'; ?>
 
-            <!-- Delete Hospital Modal -->
-            <?php include_once 'includes/modals/hospital/delete_hospital.php'; ?>
-
-
+       
         </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
@@ -294,59 +298,29 @@ include('includes/config.php');
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
-
     <!-- jQuery -->
-    <script src="./assets/js/jquery-3.2.1.min.js"></script>
-    <script src="./assets/js/print.js"></script>
+    <script src=" assets/js/jquery-3.2.1.min.js"></script>
 
     <!-- Bootstrap Core JS -->
-    <script src="./assets/js/popper.min.js"></script>
-    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
 
     <!-- Slimscroll JS -->
-    <script src="./assets/js/jquery.slimscroll.min.js"></script>
+    <script src="assets/js/jquery.slimscroll.min.js"></script>
 
     <!-- Select2 JS -->
-    <script src="./assets/js/select2.min.js"></script>
+    <script src="assets/js/select2.min.js"></script>
 
     <!-- Datetimepicker JS -->
-    <script src="./assets/js/moment.min.js"></script>
-    <script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
 
     <!-- Datatable JS -->
-    <script src="./assets/js/jquery.dataTables.min.js"></script>
-    <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/js/jquery.dataTables.min.js"></script>
+    <script src="assets/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="./assets/js/app.js"></script>
-
-    <script>
-    function addHospital(success) {
-        Swal.fire({
-            title: 'Success!',
-            text: success,
-            icon: 'success',
-            confirmButtonText: 'OK'
-        });
-    }
-
-
-    document.addEventListener('DOMContentLoaded', function() {
-        <?php
-        if (isset($_SESSION['add-hospital'])) {
-            $success = $_SESSION['add-hospital'];
-            // Clear the session variable
-            unset($_SESSION['add-hospital']);
-
-            // Call the function to display success message
-            echo "addHospital('$success');";
-        }
-        ?>
-
-
-    });
-    </script>
-
+    <script src="assets/js/app.js"></script>
 </body>
 
 </html>

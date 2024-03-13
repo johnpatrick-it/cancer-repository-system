@@ -49,7 +49,10 @@ if (isset($_POST['add'])) {
     $count = $check_stmt->rowCount();
 
     if ($count > 0) {
-        echo "<script>alert('Category Already exists');</script>";
+         // add error swal alert
+            $_SESSION['already-exist'] = "Equipment Already Exist";
+            header("location: equipment-category.php");
+            exit;
     } else {
         // If the category doesn't exist, proceed with the insertion
 
@@ -67,10 +70,15 @@ if (isset($_POST['add'])) {
         
 
         if ($insert_stmt->execute()) {
-            echo "<script>alert('Category Added Successfully');</script>";
-            echo "<script type='text/javascript'> document.location = 'equipment-category.php'; </script>";
+        // add success swal alert
+        $_SESSION['success'] = "Equipment added Successfully";
+        header("location: equipment-category.php");
+        exit;
         } else {
-            echo "<script>alert('Error adding category');</script>";
+            // add error swal alert
+            $_SESSION['already-exist'] = "Equipment Already Exist";
+            header("location: equipment-category.php");
+            exit;
         }
     }
 }
@@ -91,7 +99,7 @@ if (isset($_POST['add'])) {
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/pcc-logo.svg">
+    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
@@ -219,7 +227,7 @@ if (isset($_POST['add'])) {
                     <div class="page-header">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="page-title">User Information</h3>
+                                <h3 class="page-title">Equipment Category</h3>
                             </div>
                         </div>
                     </div>
@@ -369,7 +377,7 @@ if (isset($_POST['add'])) {
                                                 ?></td>
 
                                                 <td>
-                                                    <a href='#' data-toggle='modal' data-target='#edit_hospital'
+                                                    <a href='#' data-toggle='modal' data-target='#edit_equipment'
                                                         title='Edit'
                                                         class='btn text-xs text-white btn-blue action-icon'><i
                                                             class='fa fa-pencil'></i></a>
@@ -396,12 +404,60 @@ if (isset($_POST['add'])) {
             <?php include_once 'includes/modals/hospital/add_user.php'; ?>
 
             <!-- Edit Hospital Modal -->
-            <?php include_once 'includes/modals/hospital/edit_hospital.php'; ?>
+            <?php include_once 'includes/modals/hospital/edit_equipment.php'; ?>
 
-            <!-- Delete Hospital Modal -->
-            <?php include_once 'includes/modals/hospital/delete_hospital.php'; ?>
+  
         </div>
     </div>
+
+   
+
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+    <script>
+        function successEquipment(Success) {
+            Swal.fire({
+                title: 'Success!',
+                text: 'Equipment Added Successfully',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function AlreadyExist(Error) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Equipment Already Exist',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            <?php
+            if (isset($_SESSION['success'])) {
+                $Success = $_SESSION['success'];
+                // Clear the session error variable
+                unset($_SESSION['success']);
+
+                // Display the error for incorrect password
+                echo "successEquipment('$Success');";
+            }
+            ?>
+
+            <?php
+            if (isset($_SESSION['already-exist'])) {
+                $Error = $_SESSION['already-exist'];
+                // Clear the session error variable
+                unset($_SESSION['already-exist']);
+
+                // Display the error for incorrect password
+                echo "AlreadyExist('$Error');";
+            }
+            ?>
+        });
+    </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
