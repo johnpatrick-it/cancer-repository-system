@@ -12,7 +12,7 @@
 							<a href="#" id="deleteUserData" class="btn btn-primary continue-btn">Delete</a>
 						</div>
 						<div class="col-6">
-							<a href="javascript:void(0);" data-dismiss="modal"  class="btn btn-primary cancel-btn">Cancel</a>
+							<a href="#" class="btn btn-primary cancel-btn" data-dismiss="modal">Cancel</a>
 						</div>
 					</div>
 				</div>
@@ -32,48 +32,51 @@ $(document).ready(function() {
     $(document).on("click", ".delete-action", function() {
         const repoId = $(this).data("repo-id");
         $deleteBtn.data("repoId", repoId);
-        $deleteBody.modal("show"); 
+        $deleteBody.modal("show");
+    });
+
+    $(".cancel-btn").click(function(event) {
+        event.preventDefault();
+        $deleteBody.modal("hide");
+        $("body").removeClass("modal-open");
+        $(".modal-backdrop").remove();
     });
 
     $deleteBtn.click(function(event) {
         event.preventDefault();
         const repoId = $(this).data("repoId");
 
-        // Send delete request to the server
+
         $.post("/includes/modals/hospital/delete_user_function.php", {
-            repo_id: repoId
-        }, function(response) {
-            if(response === "success") {
-                // Hide modal
-                $deleteBody.modal("hide");
-          		// Show SweetAlert alert
-						Swal.fire({
+                repo_id: repoId
+            }, function(response) {
+                if (response === "success") {
+                    $deleteBody.modal("hide");
+                    Swal.fire({
                         title: 'Success',
                         text: 'Deleted successfully!',
                         icon: 'success',
                         confirmButtonText: 'OK',
-                        showConfirmButton: true, // Show the confirm button
-                        confirmButtonColor: '#3085d6', // Color of the confirm button
-                        allowOutsideClick: false, // Prevent dismissing the alert by clicking outside
+                        showConfirmButton: true,
+                        confirmButtonColor: '#3085d6',
+                        allowOutsideClick: false,
                     }).then((result) => {
-                        // Redirect to the desired page when the confirm button is clicked
+
                         if (result.isConfirmed) {
                             window.location.href = "../../../user-information.php";
                         }
                     });
-            } else {
-                // Handle specific errors
-                console.log("Failed to delete user");
-                console.log("Error response from server:", response);
-            }
-        })
-        .fail(function(xhr, status, error) {
-            // Log AJAX request failure
-            console.error("AJAX Error:", error);
-        });
+                } else {
+
+                    console.log("Failed to delete user");
+                    console.log("Error response from server:", response);
+                }
+            })
+            .fail(function(xhr, status, error) {
+                console.error("AJAX Error:", error);
+            });
     });
 });
-
 </script>
 
 <!-- Add the necessary JavaScript libraries -->

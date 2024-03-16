@@ -12,8 +12,7 @@ if (!$db_connection) {
     die("Connection failed: " . pg_last_error());
 }
 
-// Query to count the number of hospitals in the table
-$sql = "SELECT COUNT(*) as total_hospitals FROM hospital_general_information";
+$sql = "SELECT COUNT(DISTINCT hospital_uuid) AS total_hospitals FROM hospital_general_information";
 
 $result = pg_query($db_connection, $sql);
 
@@ -63,17 +62,18 @@ pg_close($db_connection);
 
     <style>
         .page-header {
-            background-color: #204A3D;
+            background-color: #fff; 
             padding: 20px;
             margin-bottom: 20px;
             border-radius: 5px;
-            color: #fff;
+            color: #204A3D;
         }
 
         .page-header .breadcrumb-item.active,
         .page-header .welcome h3,
         .page-header .close {
-            color: #F0F0F0;
+            color: #204A3D;
+            
         }
 
         thead,
@@ -113,6 +113,21 @@ pg_close($db_connection);
             border: 1px solid #556b2f;
             border-radius: 5px;
         }
+
+        .cancerDataDashboard {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .cancerDataDashboard {
+        flex-direction: column; /* Change flex direction for smaller screens */
+    }
+}
+
     </style>
 
     <!-- Favicon -->
@@ -144,7 +159,7 @@ pg_close($db_connection);
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="welcome d-flex justify-content-between align-items-center">
-                                <h3 class="page-title">CANCER REPOSITORY DASHBOARD</h3>
+                                <h3 class="page-title">Overall Information Statistic</h3>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item active"></li>
@@ -216,37 +231,14 @@ pg_close($db_connection);
                 </div>
 
                 <div class="row">
-                    <div class="wrap">
-                        <div class="chartButtonContainer">
-                            <!-- Nasa ASSETS JS yung chart file-->
-                            <button id="pieChartBtn" class="chartButton" id="specificId">Pie Chart</button>
-                            <button id="barChartBtn" class="chartButton" id="specificId">Line Chart</button>
-                        </div>
+                    <div class="cancerDataDashboard">
+                            <div class='tableauPlaceholder' id='viz1710520666332' style='position: relative'><noscript><a href='#'><img alt='Malupet na dashboard ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;re&#47;repo-dashBoard&#47;Malupetnadashboard&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='repo-dashBoard&#47;Malupetnadashboard' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;re&#47;repo-dashBoard&#47;Malupetnadashboard&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>  
+                            <script type='text/javascript'>  var divElement = document.getElementById('viz1710520666332');  var vizElement = divElement.getElementsByTagName('object')[0];  if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='777px';}  var scriptElement = document.createElement('script'); scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js'; vizElement.parentNode.insertBefore(scriptElement, vizElement);  </script>
                     </div>
-                    <!-- CHART TABLE -->
-                    <div id="chartContainer" style="height: 400px; width: 100%;"></div>
                 </div>
-            </div>
-        </div>
-    </div>
+  
 
 
-    <!-- jQuery -->
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
-    <!-- Bootstrap Core JS -->
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <!-- Slimscroll JS -->
-    <script src="assets/js/jquery.slimscroll.min.js"></script>
-    <!-- Chart JS -->
-    <script src="assets/plugins/morris/morris.min.js"></script>
-    <script src="assets/plugins/raphael/raphael.min.js"></script>
-    <script src="assets/js/chart.js"></script>
-    <!-- Custom JS -->
-    <script src="assets/js/app.js"></script>
-    <script src="assets/js/piechart.js"></script>
-    <script src="assets/js/barchart.js"></script>
-    <script src="assets/js/chart-switcher.js"></script>
 </body>
 
 </html>

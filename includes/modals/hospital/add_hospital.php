@@ -9,6 +9,9 @@ if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     exit; 
 }
 
+
+
+
 $AdminID = $_SESSION['admin_id'] ?? '';
 
 $host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
@@ -20,21 +23,24 @@ try {
     echo "Connection failed: " . $e->getMessage();
 }
 
-
 if (isset($_POST['submit'])) {
     $hospitalName = isset($_POST['hospital_name']) ? $_POST['hospital_name'] : '';
     $hospitalEquipment = isset($_POST['hospital_equipment']) ? $_POST['hospital_equipment'] : [];
 
-	$hospitalLevel = $_POST['level'];
+    $hospitalLevel = $_POST['level'];
     $institution = $_POST['institution'];
     $region = $_POST['region'];
     $province = $_POST['province'];
     $city = $_POST['city'];
     $barangay = $_POST['barangay'];
     $street = $_POST['street'];
+  
 
-	$admin_user_id = $AdminID;
+    $admin_user_id = $AdminID;
 
+
+    $hospital_uuid = $dbh->query("SELECT uuid_generate_v4()")->fetchColumn();
+    
     if (isset($_FILES['image'])) {
         $image = $_FILES['image']['name'];
         move_uploaded_file($_FILES['image']['tmp_name'], './uploads/'.$image);
@@ -44,44 +50,51 @@ if (isset($_POST['submit'])) {
         echo "No file uploaded or the 'image' key is not set in the \$_FILES array.";
     }
 
-    // Ensure $hospitalEquipment is an array
+  
+    $equipmentIdStmt = $dbh->prepare("SELECT equipment_id FROM repo_equipment_category WHERE equipment_name = :equipment_name");
+
+    
     if (!is_array($hospitalEquipment)) {
         $hospitalEquipment = [$hospitalEquipment];
     }
 
     foreach ($hospitalEquipment as $equipment) {
-		$sql = "INSERT INTO hospital_general_information 
-				(admin_id, hospital_equipments, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, location)
-				VALUES
-				(:admin_id, :equipment_name, :hospital_name, :hospital_level, :type_of_institution, :hospital_region, :hospital_province, :hospital_city, :hospital_barangay, :hospital_street, :location)";
-	
-		$stmt = $dbh->prepare($sql);
-		$stmt->bindParam(':admin_id', $admin_user_id, PDO::PARAM_INT);
-		$stmt->bindParam(':equipment_name', $equipment, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_name', $hospitalName, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_level', $hospitalLevel, PDO::PARAM_STR);
-		$stmt->bindParam(':type_of_institution', $institution, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_region', $region, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_province', $province, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_city', $city, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_barangay', $barangay, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_street', $street, PDO::PARAM_STR);
-        $stmt->bindParam(':location', $location); // Add this line
-	
-		if ($stmt->execute()) {
-			echo '<script>';
-			echo 'Swal.fire("Data inserted successfully!");';
-			echo 'window.location.href = "hospital-information.php"';
-			echo '</script>';
-		} else {
-			echo "Error inserting data: " . $stmt->errorInfo()[2] . "\n";
-		}
-	}
+      
+        $equipmentIdStmt->execute(array(':equipment_name' => $equipment));
+        $equipmentId = $equipmentIdStmt->fetchColumn();
 
-		
-		
+        $sql = "INSERT INTO hospital_general_information 
+                (admin_id, hospital_equipments, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, location, hospital_uuid, equipment_id)
+                VALUES
+                (:admin_id, :equipment_name, :hospital_name, :hospital_level, :type_of_institution, :hospital_region, :hospital_province, :hospital_city, :hospital_barangay, :hospital_street, :location, :hospital_uuid, :equipment_id)";
+        
+        $stmt = $dbh->prepare($sql);
+
+        $stmt->bindParam(':admin_id', $admin_user_id, PDO::PARAM_INT);
+        $stmt->bindParam(':equipment_name', $equipment, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_name', $hospitalName, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_level', $hospitalLevel, PDO::PARAM_STR);
+        $stmt->bindParam(':type_of_institution', $institution, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_region', $region, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_province', $province, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_city', $city, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_barangay', $barangay, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_street', $street, PDO::PARAM_STR);
+        $stmt->bindParam(':location', $location);
+        $stmt->bindParam(':hospital_uuid', $hospital_uuid, PDO::PARAM_STR);
+        $stmt->bindParam(':equipment_id', $equipmentId, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            echo '<script>';
+            echo 'Swal.fire("Data inserted successfully!");';
+            echo 'window.location.href = "hospital-information.php"';
+            echo '</script>';
+        } else {
+            echo "Error inserting data: " . $stmt->errorInfo()[2] . "\n";
+        }
     }
 
+}
 
 
 
@@ -163,8 +176,7 @@ h2 {
                         </div>
                         <div class="form-group col-md-3">
                             <label for="street">Hospital Logo</label>
-                            <input name="image" type="file" class="form-control" required="true"
-                                                        autocomplete="off">
+                            <input name="image" type="file" class="form-control" required="true" autocomplete="off">
                         </div>
                     </div>
 

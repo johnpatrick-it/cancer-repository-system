@@ -159,7 +159,7 @@ include('includes/config.php');
                     </div>
                 </div>
                 <div class="img-align">
-                <img class="img-border" src="./profiles/pcc-logo1.png" alt="">
+                <img class="img-border" src="profiles/user.jpg" style="border-radius: 50%; width: 10%; height: 10%; border: 1px solid black;" alt="">
                 </div>
                 
                 <span class="user-name"><?php echo $_SESSION['user_lname'] . "," . " " . $_SESSION['user_fname']?></span>
@@ -172,30 +172,29 @@ include('includes/config.php');
                         <div class="col-sm-12">
                             <div class="welcome d-flex justify-content-between align-items-center">
                                 <h3 class="page-title-1">Personal Information</h3>
-                            </div>
-                           
+                            </div>                          
                         </div>
                     </div>  
             
                                 <div class="row justify-content-center" style="margin-top:20px;">
                                 <div class="col-md-3 col-sm-12">
+                                <form action="includes/modals/hospital/edit_profile.php" method="POST">
                                     <div class="form-group">
-                                        <label class="custom-label">Given name</label>
-                                        <input name="surname" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['user_fname']?>">
-
+                                    <label class="custom-label">Given Name</label>
+                                    <input name="fname" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $_SESSION['user_fname'] ?>">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label class="custom-label">Surname name</label>
-                                        <input name="given_name" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['user_lname']?>">
+                                    <label class="custom-label">Middle Name</label>
+                                    <input name="mname" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $_SESSION['user_mname'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label class="custom-label">Middle Name</label>
-                                        <input name="middle_name" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['user_mname']?>">
+                                    <label class="custom-label">Last Name</label>
+                                    <input name="lname" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $_SESSION['user_lname'] ?>">
                                     </div>
                                 </div>
                                 </div>
@@ -203,27 +202,64 @@ include('includes/config.php');
                                 <div class="row justify-content-center" style="margin-top:40px;">
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label class="custom-label">Email address</label>
-                                        <input name="surname" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['email']?>"> 
+                                    <label class="custom-label">Email address</label>
+                                    <input name="email" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $_SESSION['email'] ?>"> 
                                     </div>
                                 </div>
+                    
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label class="custom-label">Contact no.</label>
-                                        <input name="given_name" type="text" class="form-control" required="true" autocomplete="off">
+                                    <label class="custom-label">User Id</label>
+                                    <input name="repo_user_id" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $_SESSION['repo_user_id']?>">
+
                                     </div>
                                 </div>
+
+
                                 <div class="col-md-3 col-sm-12">
                                     <div class="form-group">
-                                        <label class="custom-label">User Id</label>
-                                        <input name="middle_name" type="text" class="form-control" required="true" autocomplete="off" value=" <?php echo $_SESSION['repo_user_id']?>">
+                                        <label class="custom-label">Password</label>
+                                        <input name="password" type="password" class="form-control" required="true" autocomplete="off" <?php echo $_SESSION['password']?>> 
                                     </div>
                                 </div>
                             </div>
+
+                            <div style="display:flex;justify-content:center;align-items:center;margin-top:10px;">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                              
+                                    </form>
+                                    
                             </section>
                             
                
+    
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+    <script>
+        function changeProfileInfo(success) {
+            Swal.fire({
+                title: 'Success!',
+                text: success,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        }
 
+        document.addEventListener('DOMContentLoaded', function() {
+            <?php
+            if (isset($_SESSION['profile-change'])) {
+                $success = $_SESSION['profile-change'];
+                // Clear the session error variable
+                unset($_SESSION['profile-change']);
+
+                // Display the error for incorrect password
+                echo "changeProfileInfo('$success');";
+            }
+            ?>
+
+        });
+    </script>
 
     <!-- jQuery -->
     <script src="assets/js/jquery-3.2.1.min.js"></script>

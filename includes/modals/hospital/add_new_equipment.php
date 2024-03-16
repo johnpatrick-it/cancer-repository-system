@@ -23,6 +23,22 @@ try {
     echo "Connection failed: " . $e->getMessage();
 }
 
+$sql_uuid = "SELECT hospital_uuid, location FROM hospital_general_information WHERE hospital_name = :hospital_name";
+$stmt = $dbh->prepare($sql_uuid);
+$stmt->bindParam(':hospital_name', $hospital_name, PDO::PARAM_STR);
+$stmt->execute();
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($result) {
+    $hospital_uuid = $result['hospital_uuid'];
+    $location = $result['location'];
+} else {
+    // Handle the case where no matching record is found
+    echo "Hospital name not found: $hospital_name";
+    exit;
+}
+
+
 
 if (isset($_POST['submit'])) {
 
@@ -38,16 +54,21 @@ if (isset($_POST['submit'])) {
     
 	$admin_user_id = $AdminID;
 
-    // Ensure $hospitalEquipment is an array
+
+    $equipmentIdStmt = $dbh->prepare("SELECT equipment_id FROM repo_equipment_category WHERE equipment_name = :equipment_name");
     if (!is_array($hospitalEquipment)) {
         $hospitalEquipment = [$hospitalEquipment];
     }
 
     foreach ($hospitalEquipment as $equipment) {
+      
+        $equipmentIdStmt->execute(array(':equipment_name' => $equipment));
+        $equipmentId = $equipmentIdStmt->fetchColumn();
+   
 		$sql = "INSERT INTO hospital_general_information 
-				(admin_id, hospital_equipments, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street)
+				(admin_id, hospital_equipments, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street,location,hospital_uuid,equipment_id)
 				VALUES
-				(:admin_id, :equipment_name, :hospital_name, :hospital_level, :type_of_institution, :hospital_region, :hospital_province, :hospital_city, :hospital_barangay, :hospital_street)";
+				(:admin_id, :equipment_name, :hospital_name, :hospital_level, :type_of_institution, :hospital_region, :hospital_province, :hospital_city, :hospital_barangay, :hospital_street, :location,:hospital_uuid, :equipment_id)";
 	
 		$stmt = $dbh->prepare($sql);
 		$stmt->bindParam(':admin_id', $admin_user_id, PDO::PARAM_INT);
@@ -60,6 +81,10 @@ if (isset($_POST['submit'])) {
 		$stmt->bindParam(':hospital_city', $city, PDO::PARAM_STR);
 		$stmt->bindParam(':hospital_barangay', $barangay, PDO::PARAM_STR);
 		$stmt->bindParam(':hospital_street', $street, PDO::PARAM_STR);
+        $stmt->bindParam(':location', $location, PDO::PARAM_STR);
+		$stmt->bindParam(':hospital_uuid', $hospital_uuid, PDO::PARAM_STR);
+        $stmt->bindParam(':equipment_id', $equipmentId, PDO::PARAM_INT);
+	
 	
 		if ($stmt->execute()) {
 			echo '<script>';

@@ -4,20 +4,18 @@ session_start();
 
 include('./includes/config.php');
 
-
 function sanitizeInput($input) {
     // Use htmlspecialchars to prevent XSS attacks
     return htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
 }
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
- 
-       // Sanitize user input
-       $email = sanitizeInput($_POST['email']);
-       $password = sanitizeInput($_POST['password']);
 
-    
-      // Check for empty fields
-      if (empty($email) || empty($password)) {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize user input
+    $email = sanitizeInput($_POST['email']);
+    $password = sanitizeInput($_POST['password']);
+
+    // Check for empty fields
+    if (empty($email) || empty($password)) {
         $_SESSION['emptyfields'] = "Please fill out all the fields";
         header("location: login.php");
         exit;
@@ -45,9 +43,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $_SESSION['admin_id'] = $adminId;
                         $_SESSION['lastname'] = $adminName;
                         header("Location: index.php");
-                        exit();
+                        exit;
                     } else {
                         echo "You are not authorized to access this page.";
+                        exit;
                     }
                 } else {
                     // Proceed to user login if not admin
@@ -59,16 +58,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             echo "Admin login query execution failed.";
+            exit;
         }
     } else {
         echo "Admin statement preparation failed.";
+        exit;
     }
 }
 
 function userLogin($email, $password) {
     global $db_connection;
-
-
 
     // User Login Query
     $userQuery = "SELECT repo_user_id, user_fname, user_mname, user_lname, email, password, salt FROM public.repo_user WHERE email = $1";
@@ -80,49 +79,59 @@ function userLogin($email, $password) {
         if ($userResult) {
             $userRow = pg_fetch_assoc($userResult);
             if ($userRow) {
-                $hashedUserPassword = $userRow['password'];
-                $salt = $userRow['salt'];
+                $storedPassword = $userRow['password'];
+                $storedSalt = $userRow['salt'];
 
-                if (isset($salt)) {
-                    if (password_verify($password . $salt, $hashedUserPassword)) {
-                        $userId = $userRow['repo_user_id'];
-                        $userfname = $userRow['user_fname'];
-                        $usermname = $userRow['user_mname'];
-                        $userlname = $userRow['user_lname'];
-                        $useremail = $userRow['email'];
+                if (!empty($storedSalt)) {
+                    // User hashed the password
+                    if (password_verify($password . $storedSalt, $storedPassword)) {
+                        // Password is correct
+                        $_SESSION['repo_user_id'] = $userRow['repo_user_id'];
+                        $_SESSION['user_fname'] = $userRow['user_fname'];
+                        $_SESSION['user_mname'] = $userRow['user_mname'];
+                        $_SESSION['user_lname'] = $userRow['user_lname'];
+                        $_SESSION['email'] = $userRow['email'];
 
-                       
-                        $_SESSION['repo_user_id'] = $userId;
-                        $_SESSION['user_fname'] = $userfname;
-                        $_SESSION['user_mname'] = $usermname;
-                        $_SESSION['user_lname'] = $userlname;
-                        $_SESSION['email'] = $useremail;
-                 
                         header("Location: user-landing-page.php");
-                        exit();
+                        exit;
                     } else {
-                           // Invalid email or password
-                $_SESSION['not-found'] = "User not found";
-                header("location: login.php");
-                exit;
+                        // Invalid password
+                        $_SESSION['wrong-credentials'] = "Incorrect password";
+                        header("location: login.php");
+                        exit;
                     }
                 } else {
-                   // Invalid email or password
-                $_SESSION['not-found'] = "User not found";
-                header("location: login.php");
-                exit;
+                    // User did not hash the password, assuming it's plaintext
+                    if ($password === $storedPassword) {
+                        // Password is correct
+                        $_SESSION['repo_user_id'] = $userRow['repo_user_id'];
+                        $_SESSION['user_fname'] = $userRow['user_fname'];
+                        $_SESSION['user_mname'] = $userRow['user_mname'];
+                        $_SESSION['user_lname'] = $userRow['user_lname'];
+                        $_SESSION['email'] = $userRow['email'];
+
+                        header("Location: user-landing-page.php");
+                        exit;
+                    } else {
+                        // Invalid password
+                        $_SESSION['wrong-credentials'] = "Incorrect password";
+                        header("location: login.php");
+                        exit;
+                    }
                 }
             } else {
-                // Invalid email or password
-                $_SESSION['wrong-credentials'] = "Incorrect password";
+                // User not found
+                $_SESSION['not-found'] = "User not found";
                 header("location: login.php");
                 exit;
             }
         } else {
             echo "User login query execution failed.";
+            exit;
         }
     } else {
         echo "User statement preparation failed.";
+        exit;
     }
 }
 ?>

@@ -41,7 +41,7 @@
                                 <?php 
                                 include('includes/config.php');
 
-                                $query = "SELECT DISTINCT hospital_id, hospital_name FROM hospital_general_information";
+                            	$query = "SELECT DISTINCT ON (hospital_name) hospital_name, hospital_id FROM hospital_general_information";
                                 $result = pg_query($db_connection, $query);
 
                                 if ($result && pg_num_rows($result) > 0) {
@@ -132,8 +132,16 @@ $(document).ready(function() {
 
         // Show the edit modal
         $editBody.modal("show");
+        
     });
 
+    $editBody.find('.close').click(function(event) {
+        event.preventDefault();
+        $editBody.modal("hide"); 
+        $("body").removeClass("modal-open"); 
+        $(".modal-backdrop").remove();
+    });
+    
     // Edit Hospital Form Submission
     $editForm.submit(function(event) {
         event.preventDefault();

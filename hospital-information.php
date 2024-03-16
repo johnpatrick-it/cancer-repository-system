@@ -213,22 +213,7 @@ include('includes/config.php');
                                                     echo "<td>" . $row['type_of_institution'] . "</td>";
                                                     echo "<td>" . $row['hospital_barangay'] . "</td>";
                                                     echo "<td>" . $row['hospital_street'] . "</td>";
-                                                    ?>
-                                                    <td>
-                                                    <?php
-                                                // Assuming $result->location contains the image filename
-                                                $imageFilename = htmlentities($row->location);
-                                                $imagePath = "uploads/$imageFilename"; // Adjust the folder name if needed
-                                            
-                                                // Checking if the file exists before displaying it
-                                                if (file_exists($imagePath)) {
-                                                    echo "<img src=\"$imagePath\" alt=\"Image\" style=\"border-radius: 50%; width: 30px; height: 30px; border: 1px solid black;\">";
-                                                } else {
-                                                    echo "Image not found";
-                                                }
-                                                ?>
-                                                </td>
-                                                <?php
+                                                    echo "<td><img src='uploads/{$row['location']}' alt='Hospital Image' style='border-radius: 50%; width: 30px; height: 30px; border: 1px solid black;'></td>";
                                                        echo "<td>";
                                                        echo "<a href='hospital-information-edit.php?edit={$row['hospital_name']}' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>";
                                                        echo "</td>";
@@ -254,7 +239,7 @@ include('includes/config.php');
             <!-- Edit Hospital Modal -->
             <?php include_once 'includes/modals/hospital/edit_hospital.php'; ?>
 
-       
+
         </div>
     </div>
 

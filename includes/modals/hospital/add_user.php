@@ -55,7 +55,7 @@ h2 {
                             <select name="user-hospital" class="form-control" required>
                                 <option value="">Select Hospital</option>
                                 <?php
-                                $query = "SELECT hospital_id, hospital_name FROM hospital_general_information";
+                            	$query = "SELECT DISTINCT ON (hospital_name) hospital_name, hospital_id FROM hospital_general_information";
                                 $result = pg_query($db_connection, $query);
 
                                 if ($result && pg_num_rows($result) > 0) {

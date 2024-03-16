@@ -1,3 +1,30 @@
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
+// Redirect to the login page
+header("Location: login.php");
+exit;
+}
+error_reporting(0);
+$AdminID = $_SESSION['admin_id'] ?? '';
+
+$hospital_id = $_SESSION['hospital_id'] ?? '';
+
+
+$host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
+
+
+try {
+$dbh = new PDO("pgsql:" . $host);
+
+} catch (PDOException $e) {
+echo "Connection failed: " . $e->getMessage();
+}
+?>
+
 <div id="edit_hospital" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -10,7 +37,19 @@
             <div class="modal-body">
                 <form id="editHospitalForm" method="post">
                     <div class="row">
-
+                        <?php
+                    $query = $dbh->query("SELECT DISTINCT ON (hospital_name) 
+                 hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street, hospital_region,hospital_province,hospital_city
+         FROM hospital_general_information WHERE hospital_name = '$hospital_name'");
+                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                    $hospital_region = $row['hospital_region'];
+                    $institution = $row['type_of_institution'];
+                    $hospital_province = $row['hospital_province'];
+                    $hospital_city = $row['hospital_city'];
+                    $hospital_barangay = $row['hospital_barangay'];
+                    $hospital_level = $row['hospital_level'];
+                 }
+                 ?>
                         <!-- Hidden input field to store the Hospital ID -->
                         <input type="hidden" id="editHospitalId">
                         <div class="col-sm-6">
@@ -24,7 +63,7 @@
                             <div class="form-group">
                                 <label class="col-form-label">Hospital Level</label>
                                 <select class="form-control select" id="editHospitalLevel" required>
-                                    <option disabled selected>Select Level</option>
+                                    <option disabled selected><?php echo $hospital_level; ?></option>
                                     <option>Level 1 General Hospital</option>
                                     <option>Level 2 General Hospital</option>
                                     <option>Level 3 General Hospital</option>
@@ -36,7 +75,7 @@
                             <div class="form-group">
                                 <label class="col-form-label">Type of Institution</span></label>
                                 <select class="form-control select" id="editTypeInstitution" required>
-                                    <option disabled selected>Select institution</option>
+                                    <option disabled selected><?php echo $institution; ?></option>
                                     <option>Government</option>
                                     <option>Private</option>
                                 </select>
@@ -47,25 +86,33 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="edit-region">Region</label>
-                                <select class="form-control select" id="edit-region" type="text"></select>
+                                <select class="form-control select" id="edit-region" type="text">
+                                    <option disabled selected><?php echo $hospital_region; ?></option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="edit-province">Province</label>
-                                <select class="form-control select" id="edit-province" type="text"></select>
+                                <select class="form-control select" id="edit-province" type="text">
+                                    <option disabled selected><?php echo $hospital_province; ?></option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="edit-city">City/Municipality</label>
-                                <select class="form-control select" id="edit-city" type="text"></select>
+                                <select class="form-control select" id="edit-city" type="text">
+                                    <option disabled selected><?php echo $hospital_city; ?></option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="edit-barangay">Barangay</label>
-                                <select class="form-control select" id="edit-barangay" type="text"></select>
+                                <select class="form-control select" id="edit-barangay" type="text">
+                                    <option disabled selected><?php echo $hospital_barangay; ?></option>
+                                </select>
                             </div>
                         </div>
 
@@ -119,8 +166,7 @@
 $(document).ready(function() {
     // Load Region
     let regionDropdown = $('#edit-region');
-    regionDropdown.empty();
-    regionDropdown.append('<option selected="true" disabled>Choose Region</option>');
+
     regionDropdown.prop('selectedIndex', 0);
     const regionUrl = 'ph-json/region.json';
 
@@ -242,7 +288,7 @@ $(document).ready(function() {
         const region = $(this).closest("tr").find(".hospital-region").val();
         const province = $(this).closest("tr").find(".hospital-province").val();
         const city = $(this).closest("tr").find(".hospital-city").val();
-        const barangay = $(this).closest("tr").find(".hospital_barangay").val();
+        const barangay = $(this).closest("tr").find(".hospital-barangay").val();
         const street = $(this).closest("tr").find(".hospital-streets").val();
         const equipments = $(this).closest("tr").find(".hospital-equipments").val();
 
@@ -261,6 +307,15 @@ $(document).ready(function() {
         // Show the edit modal
         $editBody.modal("show");
     });
+
+
+    $editBody.find('.close').click(function(event) {
+        event.preventDefault();
+        $editBody.modal("hide");
+        $("body").removeClass("modal-open");
+        $(".modal-backdrop").remove();
+    });
+
 
     // Step 5: Edit Hospital Form Submission
     $editForm.submit(function(event) {

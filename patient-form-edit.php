@@ -20,281 +20,10 @@ try {
 }
 
 ?>
-<?php $get_id = $_GET['edit']; ?>
-<?php
+<?php $get_id = $_GET['edit']; 
+$_SESSION['edit_id'] = $_GET['edit'];?>
 
 
-if (isset($_POST['submit'])) {
-    // Retrieve form data
-    $surname = $_POST['surname'];
-    $given_name = $_POST['given_name'];
-    $middle_name = $_POST['middle_name'];
-    $patient_type = $_POST['patient_type'];
-    $gender = $_POST['gender'];
-    $civil_status = $_POST['civil_status'];
-    $dob = $_POST['dob'];
-    $nationality = $_POST['nationality'];
-    $birth_place = $_POST['birth_place'];
-    $occupation = $_POST['occupation'];
-    $educational_attainment = $_POST['educational_attainment'];
-    $race = $_POST['race'];
-    $address = $_POST['address'];
-    $barangay = $_POST['barangay'];
-    $province = $_POST['province'];
-    $city = $_POST['city'];
-
-    // Get hospital_id based on repo_user_id
-    $repo_user_id = $_SESSION['repo_user_id'];
- 
-
-     // Second form 2222222222222222222222222222222222222222222222222222222222222
-
-     $smoking = isset($_POST['smoking']) ? $_POST['smoking'] : '';
-     $years_smoking = $_POST['years_smoking'];
-     $physical_activity = isset($_POST['physical_activity']) ? $_POST['physical_activity'] : '';
-     $diet = isset($_POST['diet']) ? $_POST['diet'] : [];
-     $dietJson = json_encode($diet);
-     $drinking_alcohol = isset($_POST['drinking_alcohol']) ? $_POST['drinking_alcohol'] : '';
-     $years_drinking = $_POST['years_drinking'];
-     $no_sexual = $_POST['no_sexual'];
-     $use_contraceptives = isset($_POST['use_contraceptives']) ? $_POST['use_contraceptives'] : '';
-     $early_age_sexual = isset($_POST['early_age_sexual']) ? $_POST['early_age_sexual'] : '';
-     $chemical_exposure = isset($_POST['chemical_exposure']) ? $_POST['chemical_exposure'] : '';
-     $family_history = isset($_POST['family_history']) ? $_POST['family_history'] : '';
-     $hepatitis = isset($_POST['hepatitis']) ? $_POST['hepatitis'] : '';
-     $height = $_POST['height'];
-     $weight = $_POST['weight'];
-     $bmi  = $_POST['bmi'];
-     $papilloma = isset($_POST['papilloma']) ? $_POST['papilloma'] : '';
-     $helicobacter = isset($_POST['helicobacter']) ? $_POST['helicobacter'] : '';
-
-    // third form 333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
-
-    $doc = $_POST['doc'];
-    $dod = $_POST['dod'];
-    $non_microscopic = $_POST['non_microscopic'];
-    $microscopic = $_POST['microscopic'];
-    $multiple_primaries = isset($_POST['multiple_primaries']) ? $_POST['multiple_primaries'] : '';
-    $primary_site = $_POST['primary_site'];
-    $other_primary = $_POST['other_primary'];
-    $tumor_size = $_POST['tumor_size'];
-    $nodes = isset($_POST['nodes']) ? $_POST['nodes'] : '';
-    $metastatis = isset($_POST['metastatis']) ? $_POST['metastatis'] : '';
-    $cancer_stage = $_POST['cancer_stage'];
-    $patient_treatment = $_POST['patient_treatment'];
-    $patient_status = $_POST['patient_status'];
-    $cod = $_POST['cod'];
-    $pod = $_POST['pod'];
-    $death_date = $_POST['death_date'];
-    $transferred_hospital = $_POST['transferred_hospital'];
-    $referral_reason = $_POST['referral_reason'];
-    $final_diagnosis = $_POST['final_diagnosis'];
-    $last_name = $_POST['last_name'];
-    $first_name = $_POST['first_name'];
-    $sub_middle_name = $_POST['sub_middle_name'];
-    $designation = $_POST['designation'];
-    $dateInserted = date("Y-m-d");
-
-
-    $host = "host=db.tcfwwoixwmnbwfnzchbn.supabase.co port=5432 dbname=postgres user=postgres password=sbit4e-4thyear-capstone-2023";
-
-    try {
-        $dbh = new PDO("pgsql:$host");
-        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        // Retrieve hospital_id using prepared statement
-        $sql1 = "SELECT hospital_id FROM public.repo_user WHERE repo_user_id = :repo_user_id";
-        $stmt = $dbh->prepare($sql1);
-        $stmt->bindParam(':repo_user_id', $repo_user_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result) {
-            $hospital_id = $result['hospital_id'];
-        } else {
-            // Handle the case where no matching record is found
-            echo "Hospital ID not found for repo_user_id: $repo_user_id";
-            exit;
-        }
-
-        if (isset($_FILES['csv']) && $_FILES['csv']['error'] == UPLOAD_ERR_OK) {
-            $file_name = $_FILES['csv']['name'];
-            $file_tmp = $_FILES['csv']['tmp_name'];
-        
-            // Move the uploaded file to Supabase Storage
-            $supabaseUrl = 'https://tcfwwoixwmnbwfnzchbn.supabase.co';
-            $storagePath = __DIR__ . './assets/csv/'. $file_name;;
-
-            // Upload file to Supabase Storage
-            $uploadUrl = $file_name;
-            file_put_contents($uploadUrl, file_get_contents($file_tmp));
-            move_uploaded_file($_FILES['csv']['tmp_name'], $storagePath);
-
-        
-        
-        }
-        // Insert data into patient_general_info using prepared statement
-        $sql2 = "UPDATE patient_general_info 
-         SET type_of_patient = :patient_type,
-             patient_last_name = :surname,
-             patient_first_name = :given_name,
-             patient_middle_name = :middle_name,
-             sex = :gender,
-             civil_status = :civil_status,
-             birthday = :dob,
-             nationality = :nationality,
-             occupation = :occupation,
-             educational_attainment = :educational_attainment,
-             race = :race,
-             address_region = :address,
-             address_barangay = :barangay,
-             address_province = :province,
-             address_city_municipality = :city,
-             hospital_id = :hospital_id,
-             repo_user_id = :repo_user_id
-         WHERE patient_id = :patient_id";
-
-$query = $dbh->prepare($sql2);
-$query->bindParam(':patient_id', $patient_id, PDO::PARAM_STR); // Assuming $patient_id is the identifier for the record to be updated
-$query->bindParam(':patient_type', $patient_type, PDO::PARAM_STR);
-$query->bindParam(':surname', $surname, PDO::PARAM_STR);
-$query->bindParam(':given_name', $given_name, PDO::PARAM_STR);
-$query->bindParam(':middle_name', $middle_name, PDO::PARAM_STR);
-$query->bindParam(':gender', $gender, PDO::PARAM_STR);
-$query->bindParam(':civil_status', $civil_status, PDO::PARAM_STR);
-$query->bindParam(':dob', $dob, PDO::PARAM_STR);
-$query->bindParam(':nationality', $nationality, PDO::PARAM_STR);
-$query->bindParam(':occupation', $occupation, PDO::PARAM_STR);
-$query->bindParam(':educational_attainment', $educational_attainment, PDO::PARAM_STR);
-$query->bindParam(':race', $race, PDO::PARAM_STR);
-$query->bindParam(':address', $address, PDO::PARAM_STR);
-$query->bindParam(':barangay', $barangay, PDO::PARAM_STR);
-$query->bindParam(':province', $province, PDO::PARAM_STR);
-$query->bindParam(':city', $city, PDO::PARAM_STR);
-$query->bindParam(':hospital_id', $hospital_id, PDO::PARAM_INT);
-$query->bindParam(':repo_user_id', $repo_user_id, PDO::PARAM_INT);
-
-$query->execute();
-
-
-    
-
-        // Add another insert statement
-       // Assuming $generatedPatientID is the patient_id to be updated
-
-$sql3 = "UPDATE patient_history_info 
-SET smoking = :smoking,
-    estimate_years_smoking = :years_smoking,
-    physical_activity = :physical_activity,
-    diet = :diet,
-    drinking_alcohol = :drinking_alcohol,
-    estimate_years_alcohol = :years_drinking,
-    chemical_exposure = :chemical_exposure,
-    no_of_sexual_partners = :no_sexual,
-    early_age_sexual_intercourse = :early_age_sexual,
-    use_of_contraceptive = :use_contraceptives,
-    family_history_with_cancer = :family_history,
-    height = :height,
-    weight = :weight,
-    classification_bmi = :bmi,
-    human_papillomavirus = :papilloma,
-    helicobacter_pylori_virus = :helicobacter,
-    hepatitis_b_virus = :hepatitis
-WHERE patient_id = :patient_id";
-
-$query2 = $dbh->prepare($sql3);
-
-// Bind parameters for the update
-$query2->bindParam(':patient_id', $generatedPatientID, PDO::PARAM_INT);
-$query2->bindParam(':smoking', $smoking, PDO::PARAM_STR);
-$query2->bindParam(':years_smoking', $years_smoking, PDO::PARAM_STR);
-$query2->bindParam(':physical_activity', $physical_activity, PDO::PARAM_STR);
-$query2->bindParam(':diet', $dietJson, PDO::PARAM_STR);
-$query2->bindParam(':drinking_alcohol', $drinking_alcohol, PDO::PARAM_STR);
-$query2->bindParam(':years_drinking', $years_drinking, PDO::PARAM_STR);
-$query2->bindParam(':chemical_exposure', $chemical_exposure, PDO::PARAM_STR);
-$query2->bindParam(':no_sexual', $no_sexual, PDO::PARAM_STR);
-$query2->bindParam(':early_age_sexual', $early_age_sexual, PDO::PARAM_STR);
-$query2->bindParam(':use_contraceptives', $use_contraceptives, PDO::PARAM_STR);
-$query2->bindParam(':family_history', $family_history, PDO::PARAM_STR);
-$query2->bindParam(':height', $height, PDO::PARAM_STR);
-$query2->bindParam(':weight', $weight, PDO::PARAM_STR);
-$query2->bindParam(':bmi', $bmi, PDO::PARAM_STR);
-$query2->bindParam(':papilloma', $papilloma, PDO::PARAM_STR);
-$query2->bindParam(':helicobacter', $helicobacter, PDO::PARAM_STR);
-$query2->bindParam(':hepatitis', $hepatitis, PDO::PARAM_STR);
-
-// Execute the update
-$query2->execute();
-
-
-$sql4 = "UPDATE patient_cancer_info 
-SET consultation_date = :doc,
-    diagnosis_date = :dod,
-    valid_diagnosis_non_microscopic = :non_microscopic,
-    valid_diagnosis_microscopic = :microscopic,
-    multiple_primaries = :multiple_primaries,
-    primary_site_others = :other_primary,
-    tumor_size = :tumor_size,
-    nodes = :nodes,
-    metastasis = :metastasis,
-    cancer_stage = :cancer_stage,
-    final_diagnosis = :final_diagnosis,
-    patient_treatment = :patient_treatment,
-    patient_status = :patient_status,
-    cause_of_death = :cod,
-    place_of_death = :pod,
-    date_of_death = :death_date,
-    transferred_hospital = :transferred_hospital,
-    reason_for_referral = :referral_reason,
-    completed_by_lname = :last_name,
-    completed_by_fname = :first_name,
-    completed_by_mname = :sub_middle_name,
-    designation = :designation,
-    date_completed = :dateInserted,
-    primary_site = :primary_site,
-    time_stamp = NOW()
-WHERE patient_id = :patient_id";
-
-$query3 = $dbh->prepare($sql4);
-
-// Bind parameters for update
-$query3->bindParam(':patient_id', $generatedPatientID, PDO::PARAM_INT);
-$query3->bindParam(':doc', $doc, PDO::PARAM_STR);
-$query3->bindParam(':dod', $dod, PDO::PARAM_STR);
-$query3->bindParam(':non_microscopic', $non_microscopic, PDO::PARAM_STR);
-$query3->bindParam(':microscopic', $microscopic, PDO::PARAM_STR);
-$query3->bindParam(':multiple_primaries', $multiple_primaries, PDO::PARAM_STR);
-$query3->bindParam(':other_primary', $other_primary, PDO::PARAM_STR);
-$query3->bindParam(':tumor_size', $tumor_size, PDO::PARAM_STR);
-$query3->bindParam(':nodes', $nodes, PDO::PARAM_STR);
-$query3->bindParam(':metastasis', $metastasis, PDO::PARAM_STR);
-$query3->bindParam(':cancer_stage', $cancer_stage, PDO::PARAM_STR);
-$query3->bindParam(':final_diagnosis', $final_diagnosis, PDO::PARAM_STR);
-$query3->bindParam(':patient_treatment', $patient_treatment, PDO::PARAM_STR);
-$query3->bindParam(':patient_status', $patient_status, PDO::PARAM_STR);
-$query3->bindParam(':cod', $cod, PDO::PARAM_STR);
-$query3->bindParam(':pod', $pod, PDO::PARAM_STR);
-$query3->bindParam(':death_date', $death_date, PDO::PARAM_STR);
-$query3->bindParam(':transferred_hospital', $transferred_hospital, PDO::PARAM_STR);
-$query3->bindParam(':referral_reason', $referral_reason, PDO::PARAM_STR);
-$query3->bindParam(':last_name', $last_name, PDO::PARAM_STR);
-$query3->bindParam(':first_name', $first_name, PDO::PARAM_STR);
-$query3->bindParam(':sub_middle_name', $sub_middle_name, PDO::PARAM_STR);
-$query3->bindParam(':designation', $designation, PDO::PARAM_STR);
-$query3->bindParam(':dateInserted', $dateInserted, PDO::PARAM_STR);
-$query3->bindParam(':primary_site', $primary_site, PDO::PARAM_STR);
-
-$query3->execute();
-
-
-        echo "Data inserted successfully";
-
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
-}
-?>
 
 
 <!DOCTYPE html>
@@ -451,7 +180,7 @@ $query3->execute();
 
         <div class="page-wrapper">
             <div class="containers">
-                <form method="post" action="" id="registrationForm" enctype="multipart/form-data">
+                <form method="post" action="update_patient.php" id="registrationForm" enctype="multipart/form-data">
                     <div id="step1" class="form-step">
                         <div class="content container-fluid">
 
@@ -509,8 +238,9 @@ $query3->execute();
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Suffix</label>
-                                                    <input name="suffix" type="text" class="form-control"
-                                                        autocomplete="off">
+                                                    <input name="suffix_name" type="text" class="form-control"
+                                                        autocomplete="off"
+                                                        value="<?php echo $row['patient_suffix_name']; ?>">
 
                                                 </div>
                                             </div>
@@ -580,7 +310,8 @@ $query3->execute();
                                                 <div class="form-group">
                                                     <label class="custom-label">Place Of Birth</label>
                                                     <input name="birth_place" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row['place_of_birth']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
@@ -647,7 +378,8 @@ $query3->execute();
                                                 <div class="form-group">
                                                     <label class="custom-label">Contact Number</label>
                                                     <input name="contact_number" type="number" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row['contact_number']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
@@ -672,7 +404,10 @@ $query3->execute();
                                                 <div class="form-group">
                                                     <label style="font-size:16px;"><b></b></label>
                                                     <div class="modal-footer justify-content-center">
-                                                        <button class="btn btn btn-primary nextButton">Next</button>
+
+                                                        <button type="button"
+                                                            class="btn btn-primary nextButton">Next</button>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -708,6 +443,10 @@ $query3->execute();
                                 <div class="wizard-content">
 
                                     <section>
+                                        <?php
+								$query2 = $dbh->query("SELECT * FROM patient_history_info  WHERE patient_id = '$get_id'");
+								$row2 = $query2->fetch(PDO::FETCH_ASSOC);								
+									?>
                                         <div class="row">
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -715,22 +454,26 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="smoking"
-                                                            id="yesOption" value="TRUE">
+                                                            id="yesOption" value="TRUE"
+                                                            <?php echo ($row2['smoking'] == 'TRUE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="smoking"
-                                                            id="noOption" value="FALSE">
+                                                            id="noOption" value="FALSE"
+                                                            <?php echo ($row2['smoking'] == 'FALSE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">No. of years smoking</label>
                                                     <input name="years_smoking" type="number" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row2['estimate_years_smoking']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
@@ -739,42 +482,54 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="physical_activity" id="yesOption" value="TRUE">
+                                                            name="physical_activity" id="yesOption" value="TRUE"
+                                                            <?php echo ($row2['physical_activity'] == 'TRUE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="physical_activity" id="noOption" value="FALSE">
+                                                            name="physical_activity" id="noOption" value="FALSE"
+                                                            <?php echo ($row2['physical_activity'] == 'FALSE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
+                                                <?php
+                                                    // Decode the JSON string into a PHP array
+                                                    $dietArray = isset($row2['diet']) ? json_decode($row2['diet'], true) : [];
+                                                ?>
                                                 <div class="form-group">
                                                     <label class="custom-label">Diet</label>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="option1"
-                                                            name="diet[]" value="Meat">
+                                                            name="diet[]" value="Meat"
+                                                            <?php echo in_array('Meat', $dietArray) ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="option1">Meat</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="option2"
-                                                            name="diet[]" value="Fruit">
+                                                            name="diet[]" value="Fruit"
+                                                            <?php echo in_array('Fruit', $dietArray) ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="option2">Fruit</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="option3"
-                                                            name="diet[]" value="Carbohydrates">
+                                                            name="diet[]" value="Carbohydrates"
+                                                            <?php echo in_array('Carbohydrates', $dietArray) ? 'checked' : ''; ?>>
                                                         <label class="form-check-label"
                                                             for="option3">Carbohydrates</label>
                                                     </div>
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" id="option4"
-                                                            name="diet[]" value="Other">
+                                                            name="diet[]" value="Other"
+                                                            <?php echo in_array('Other', $dietArray) ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="option4">Other</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
                                         <div class="row">
@@ -784,29 +539,34 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="drinking_alcohol" id="yesOption" value="TRUE">
+                                                            name="drinking_alcohol" id="yesOption" value="TRUE"
+                                                            <?php echo ($row2['drinking_alcohol'] == 'TRUE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="drinking_alcohol" id="noOption" value="FALSE">
+                                                            name="drinking_alcohol" id="noOption" value="FALSE"
+                                                            <?php echo ($row2['drinking_alcohol'] == 'FALSE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
                                             </div>
+
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">No. of years drinking</label>
                                                     <input name="years_drinking" type="number" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row2['estimate_years_alcohol']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Number of Sexual-Partners</label>
                                                     <input name="no_sexual" type="number" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row2['no_of_sexual_partners']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
@@ -815,16 +575,19 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="use_contraceptives" id="yesOption" value="TRUE">
+                                                            name="use_contraceptives" id="yesOption" value="TRUE"
+                                                            <?php echo ($row2['use_of_contraceptive'] == 'TRUE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="use_contraceptives" id="noOption" value="FALSE">
+                                                            name="use_contraceptives" id="noOption" value="FALSE"
+                                                            <?php echo ($row2['use_of_contraceptive'] == 'FALSE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
+
                                             </div>
 
                                         </div>
@@ -835,13 +598,15 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="early_age_sexual" id="yesOption" value="TRUE">
+                                                            name="early_age_sexual" id="yesOption" value="TRUE"
+                                                            <?php echo ($row2['early_age_sexual_intercourse'] == 'TRUE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="early_age_sexual" id="noOption" value="FALSE">
+                                                            name="early_age_sexual" id="noOption" value="FALSE"
+                                                            <?php echo ($row2['early_age_sexual_intercourse'] == 'FALSE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
@@ -852,16 +617,19 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="chemical_exposure" id="yesOption" value="TRUE">
+                                                            name="chemical_exposure" id="yesOption" value="TRUE"
+                                                            <?php echo ($row2['chemical_exposure'] == 'TRUE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="chemical_exposure" id="noOption" value="FALSE">
+                                                            name="chemical_exposure" id="noOption" value="FALSE"
+                                                            <?php echo ($row2['chemical_exposure'] == 'FALSE') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -869,16 +637,19 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="family_history" id="yesOption" value="true">
+                                                            name="family_history" id="yesOption" value="true"
+                                                            <?php echo ($row2['family_history_with_cancer'] === 'true') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="family_history" id="noOption" value="false">
+                                                            name="family_history" id="noOption" value="false"
+                                                            <?php echo ($row2['family_history_with_cancer'] === 'false') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -886,31 +657,36 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="hepatitis"
-                                                            id="yesOption" value="true">
+                                                            id="yesOption" value="true"
+                                                            <?php echo ($row2['hepatitis_b_virus'] === 'true') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="hepatitis"
-                                                            id="noOption" value="false">
+                                                            id="noOption" value="false"
+                                                            <?php echo ($row2['hepatitis_b_virus'] === 'false') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Height</label>
+                                                    <label class="custom-label">Height (cm)</label>
                                                     <input name="height" type="text" class="form-control" id="height"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row2['height']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Weight </label>
+                                                    <label class="custom-label">Weight (Kg)</label>
                                                     <input name="weight" type="text" class="form-control" id="weight"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row2['weight']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
@@ -918,13 +694,22 @@ $query3->execute();
                                                     <label class="custom-label">BMI Classification</label>
                                                     <select name="bmi" class="custom-select form-control"
                                                         required="true" autocomplete="off">
-                                                        <option value="" disabled selected>Select Type</option>
-                                                        <option value="Under-weight">Under-weight</option>
-                                                        <option value="Normal">Normal</option>
-                                                        <option value="Over-weight">Over-weight</option>
-                                                        <option value="Obese">Obese</option>
+                                                        <option value="" disabled>Select Type</option>
+                                                        <option value="Under-weight"
+                                                            <?php echo ($row2['bmi'] == 'Under-weight') ? 'selected' : ''; ?>>
+                                                            Under-weight</option>
+                                                        <option value="Normal"
+                                                            <?php echo ($row2['bmi'] == 'Normal') ? 'selected' : ''; ?>>
+                                                            Normal</option>
+                                                        <option value="Over-weight"
+                                                            <?php echo ($row2['bmi'] == 'Over-weight') ? 'selected' : ''; ?>>
+                                                            Over-weight</option>
+                                                        <option value="Obese"
+                                                            <?php echo ($row2['bmi'] == 'Obese') ? 'selected' : ''; ?>>
+                                                            Obese</option>
                                                     </select>
                                                 </div>
+
                                             </div>
 
                                         </div>
@@ -935,16 +720,19 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="papilloma"
-                                                            id="yesOption" value="true">
+                                                            id="yesOption" value="true"
+                                                            <?php echo ($row2['human_papillomavirus'] === 'true') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="papilloma"
-                                                            id="noOption" value="false">
+                                                            id="noOption" value="false"
+                                                            <?php echo ($row2['human_papillomavirus'] === 'false') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -953,16 +741,19 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="helicobacter"
-                                                            id="yesOption" value="true">
+                                                            id="yesOption" value="true"
+                                                            <?php echo ($row2['helicobacter_pylori_virus'] === 'true') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="helicobacter"
-                                                            id="noOption" value="false">
+                                                            id="noOption" value="false"
+                                                            <?php echo ($row2['helicobacter_pylori_virus'] === 'false') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -977,7 +768,9 @@ $query3->execute();
                                                 <div class="form-group">
                                                     <label style="font-size:16px;"><b></b></label>
                                                     <div class="modal-footer justify-content-center">
-                                                        <button class="btn btn btn-primary nextButton">Next</button>
+                                                        <button type="button"
+                                                            class="btn btn-primary nextButton">Next</button>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -1013,6 +806,10 @@ $query3->execute();
                                 <div class="wizard-content">
 
                                     <section>
+                                        <?php
+								$query3 = $dbh->query("SELECT * FROM patient_cancer_info  WHERE patient_id = '$get_id'");
+								$row3 = $query3->fetch(PDO::FETCH_ASSOC);								
+									?>
                                         <div class="row">
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -1020,13 +817,15 @@ $query3->execute();
                                                     <div class="input-group date">
                                                         <input name="doc" type="text" class="form-control date-picker"
                                                             id="datepicker2" required="true" autocomplete="off"
-                                                            placeholder="mm/dd/yyyy">
+                                                            placeholder="mm/dd/yyyy"
+                                                            value="<?php echo $row3['consultation_date']; ?>">
                                                         <div class="input-group-append">
                                                             <span class="input-group-text"><i
                                                                     class="fa fa-calendar"></i></span>
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -1034,7 +833,8 @@ $query3->execute();
                                                     <div class="input-group date">
                                                         <input name="dod" type="text" class="form-control date-picker"
                                                             id="datepicker3" required="true" autocomplete="off"
-                                                            placeholder="mm/dd/yyyy">
+                                                            placeholder="mm/dd/yyyy"
+                                                            value="<?php echo $row3['diagnosis_date']; ?>">
                                                         <div class="input-group-append">
                                                             <span class="input-group-text"><i
                                                                     class="fa fa-calendar"></i></span>
@@ -1065,16 +865,25 @@ $query3->execute();
                                                     <label class="custom-label">Valid Diagnosis Non-microscopic</label>
                                                     <select name="non_microscopic" class="custom-select form-control"
                                                         required="true" autocomplete="off">
-                                                        <option value="" disabled selected>Select Type</option>
-                                                        <option value="N/A">N/A</option>
-                                                        <option value="Death Certificate">Death Certificate</option>
-                                                        <option value="Clinical Investigation">Clinical Investigation
-                                                        </option>
-                                                        <option value="Clinical Only">Clinical Only</option>
-                                                        <option value="Specific Tumor Markers">Specific Tumor Markers
-                                                        </option>
+                                                        <option value="" disabled>Select Type</option>
+                                                        <option value="N/A"
+                                                            <?php echo ($row3['valid_diagnosis_non_microscopic'] == 'N/A') ? 'selected' : ''; ?>>
+                                                            N/A</option>
+                                                        <option value="Death Certificate"
+                                                            <?php echo ($row3['valid_diagnosis_non_microscopic'] == 'Death Certificate') ? 'selected' : ''; ?>>
+                                                            Death Certificate</option>
+                                                        <option value="Clinical Investigation"
+                                                            <?php echo ($row3['valid_diagnosis_non_microscopic'] == 'Clinical Investigation') ? 'selected' : ''; ?>>
+                                                            Clinical Investigation</option>
+                                                        <option value="Clinical Only"
+                                                            <?php echo ($row3['valid_diagnosis_non_microscopic'] == 'Clinical Only') ? 'selected' : ''; ?>>
+                                                            Clinical Only</option>
+                                                        <option value="Specific Tumor Markers"
+                                                            <?php echo ($row3['valid_diagnosis_non_microscopic'] == 'Specific Tumor Markers') ? 'selected' : ''; ?>>
+                                                            Specific Tumor Markers</option>
                                                     </select>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -1082,14 +891,21 @@ $query3->execute();
                                                     <select name="microscopic" class="custom-select form-control"
                                                         required="true" autocomplete="off">
                                                         <option value="" disabled selected>Select Type</option>
-                                                        <option value="N/A">N/A</option>
-                                                        <option value="Cytology Hematology">Cytology Hematology</option>
-                                                        <option value="Histology of Metastatis">Histology of Metastatis
-                                                        </option>
-                                                        <option value="Histology of Primary">Histology of Primary
-                                                        </option>
+                                                        <option value="N/A"
+                                                            <?php echo ($row3['valid_diagnosis_microscopic'] == 'N/A') ? 'selected' : ''; ?>>
+                                                            N/A</option>
+                                                        <option value="Cytology Hematology"
+                                                            <?php echo ($row3['valid_diagnosis_microscopic'] == 'Cytology Hematology') ? 'selected' : ''; ?>>
+                                                            Cytology Hematology</option>
+                                                        <option value="Histology of Metastatis"
+                                                            <?php echo ($row3['valid_diagnosis_microscopic'] == 'Histology of Metastatis') ? 'selected' : ''; ?>>
+                                                            Histology of Metastatis</option>
+                                                        <option value="Histology of Primary"
+                                                            <?php echo ($row3['valid_diagnosis_microscopic'] == 'Histology of Primary') ? 'selected' : ''; ?>>
+                                                            Histology of Primary</option>
                                                     </select>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -1097,47 +913,96 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="multiple_primaries" id="yesOption" value="TRUE">
+                                                            name="multiple_primaries" id="yesOption" value="true"
+                                                            <?php echo ($row3['multiple_primaries'] === 'true') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="yesOption">Yes</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input"
-                                                            name="multiple_primaries" id="noOption" value="FALSE">
+                                                            name="multiple_primaries" id="noOption" value="false"
+                                                            <?php echo ($row3['multiple_primaries'] === 'false') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label" for="noOption">No</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Primary Site</label>
                                                     <select name="primary_site" class="custom-select form-control"
                                                         required="true" autocomplete="off">
-                                                        <option value="" disabled selected>Select Type</option>
-                                                        <option value="N/A">N/A</option>
-                                                        <option value="Brain">Brain</option>
-                                                        <option value="Bladder">Bladder</option>
-                                                        <option value="Breast">Breast</option>
-                                                        <option value="Colon">Colon</option>
-                                                        <option value="Corpus-uteri">Corpus-uteri</option>
-                                                        <option value="Esophagus">Esophagus</option>
-                                                        <option value="Kidney">Kidney</option>
-                                                        <option value="Larynx">Larynx</option>
-                                                        <option value="Leukemia">Leukemia</option>
-                                                        <option value="Liver">Liver</option>
-                                                        <option value="Lung">Lung</option>
-                                                        <option value="Skin">Skin</option>
-                                                        <option value="Nasopharynx">Nasopharynx</option>
-                                                        <option value="Oral">Oral</option>
-                                                        <option value="Ovary">Ovary</option>
-                                                        <option value="Prostate">Prostate</option>
-                                                        <option value="Rectum">Rectum</option>
-                                                        <option value="Stomach">Stomach</option>
-                                                        <option value="Testis">Testis</option>
-                                                        <option value="Thyroid">Thyroid</option>
-                                                        <option value="Uterine">Uterine</option>
+                                                        <option value="" disabled>Select Type</option>
+                                                        <option value="N/A"
+                                                            <?php echo ($row3['primary_site'] == 'N/A') ? 'selected' : ''; ?>>
+                                                            N/A</option>
+                                                        <option value="Brain"
+                                                            <?php echo ($row3['primary_site'] == 'Brain') ? 'selected' : ''; ?>>
+                                                            Brain</option>
+                                                        <option value="Bladder"
+                                                            <?php echo ($row3['primary_site'] == 'Bladder') ? 'selected' : ''; ?>>
+                                                            Bladder</option>
+                                                        <option value="Breast"
+                                                            <?php echo ($row3['primary_site'] == 'Breast') ? 'selected' : ''; ?>>
+                                                            Breast</option>
+                                                        <option value="Colon"
+                                                            <?php echo ($row3['primary_site'] == 'Colon') ? 'selected' : ''; ?>>
+                                                            Colon</option>
+                                                        <option value="Corpus-uteri"
+                                                            <?php echo ($row3['primary_site'] == 'Corpus-uteri') ? 'selected' : ''; ?>>
+                                                            Corpus-uteri</option>
+                                                        <option value="Esophagus"
+                                                            <?php echo ($row3['primary_site'] == 'Esophagus') ? 'selected' : ''; ?>>
+                                                            Esophagus</option>
+                                                        <option value="Kidney"
+                                                            <?php echo ($row3['primary_site'] == 'Kidney') ? 'selected' : ''; ?>>
+                                                            Kidney</option>
+                                                        <option value="Larynx"
+                                                            <?php echo ($row3['primary_site'] == 'Larynx') ? 'selected' : ''; ?>>
+                                                            Larynx</option>
+                                                        <option value="Leukemia"
+                                                            <?php echo ($row3['primary_site'] == 'Leukemia') ? 'selected' : ''; ?>>
+                                                            Leukemia</option>
+                                                        <option value="Liver"
+                                                            <?php echo ($row3['primary_site'] == 'Liver') ? 'selected' : ''; ?>>
+                                                            Liver</option>
+                                                        <option value="Lung"
+                                                            <?php echo ($row3['primary_site'] == 'Lung') ? 'selected' : ''; ?>>
+                                                            Lung</option>
+                                                        <option value="Skin"
+                                                            <?php echo ($row3['primary_site'] == 'Skin') ? 'selected' : ''; ?>>
+                                                            Skin</option>
+                                                        <option value="Nasopharynx"
+                                                            <?php echo ($row3['primary_site'] == 'Nasopharynx') ? 'selected' : ''; ?>>
+                                                            Nasopharynx</option>
+                                                        <option value="Oral"
+                                                            <?php echo ($row3['primary_site'] == 'Oral') ? 'selected' : ''; ?>>
+                                                            Oral</option>
+                                                        <option value="Ovary"
+                                                            <?php echo ($row3['primary_site'] == 'Ovary') ? 'selected' : ''; ?>>
+                                                            Ovary</option>
+                                                        <option value="Prostate"
+                                                            <?php echo ($row3['primary_site'] == 'Prostate') ? 'selected' : ''; ?>>
+                                                            Prostate</option>
+                                                        <option value="Rectum"
+                                                            <?php echo ($row3['primary_site'] == 'Rectum') ? 'selected' : ''; ?>>
+                                                            Rectum</option>
+                                                        <option value="Stomach"
+                                                            <?php echo ($row3['primary_site'] == 'Stomach') ? 'selected' : ''; ?>>
+                                                            Stomach</option>
+                                                        <option value="Testis"
+                                                            <?php echo ($row3['primary_site'] == 'Testis') ? 'selected' : ''; ?>>
+                                                            Testis</option>
+                                                        <option value="Thyroid"
+                                                            <?php echo ($row3['primary_site'] == 'Thyroid') ? 'selected' : ''; ?>>
+                                                            Thyroid</option>
+                                                        <option value="Uterine"
+                                                            <?php echo ($row3['primary_site'] == 'Uterine') ? 'selected' : ''; ?>>
+                                                            Uterine</option>
                                                     </select>
                                                 </div>
+
+
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1146,14 +1011,17 @@ $query3->execute();
                                                     <label class="custom-label">Others Primary site</label>
                                                     <input name="other_primary" type="text"
                                                         class="form-control date-picker" required="true"
-                                                        autocomplete="off">
+                                                        autocomplete="off"
+                                                        value="<?php echo $row3['primary_site_others']; ?>">
+
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Tumor Size</label>
                                                     <input name="tumor_size" type="number" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row3['tumor_size']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
@@ -1162,16 +1030,21 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="nodes"
-                                                            id="positiveOption" value="Positive">
-                                                        <label class="form-check-label" for="yesOption">Positive</label>
+                                                            id="positiveOption" value="Positive"
+                                                            <?php echo ($row3['nodes'] == 'Positive') ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label"
+                                                            for="positiveOption">Positive</label>
                                                     </div>
 
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="nodes"
-                                                            id="negativeOption" value="Negative">
-                                                        <label class="form-check-label" for="noOption">Negative</label>
+                                                            id="negativeOption" value="Negative"
+                                                            <?php echo ($row3['nodes'] == 'Negative') ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label"
+                                                            for="negativeOption">Negative</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -1179,16 +1052,20 @@ $query3->execute();
                                                     <br>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="metastasis"
-                                                            id="metastatisOption" value="Present">
-                                                        <label class="form-check-label" for="noOption">Present</label>
+                                                            id="metastatisOptionPresent" value="Present"
+                                                            <?php echo ($row3['metastasis'] == 'Present') ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label"
+                                                            for="metastatisOptionPresent">Present</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="metastasis"
-                                                            id="metastatisOption" value="Absent">
+                                                            id="metastatisOptionAbsent" value="Absent"
+                                                            <?php echo ($row3['metastasis'] == 'Absent') ? 'checked' : ''; ?>>
                                                         <label class="form-check-label"
-                                                            for="absentOption">Absent</label>
+                                                            for="metastatisOptionAbsent">Absent</label>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1198,13 +1075,21 @@ $query3->execute();
                                                     <select name="cancer_stage" class="custom-select form-control"
                                                         required="true">
                                                         <option value="">Select Type</option>
-                                                        <option value="I">I</option>
-                                                        <option value="II">II</option>
-                                                        <option value="III">III</option>
-                                                        <option value="IV">IV</option>
+                                                        <option value="I"
+                                                            <?php echo ($row3['cancer_stage'] == 'I') ? 'selected' : ''; ?>>
+                                                            I</option>
+                                                        <option value="II"
+                                                            <?php echo ($row3['cancer_stage'] == 'II') ? 'selected' : ''; ?>>
+                                                            II</option>
+                                                        <option value="III"
+                                                            <?php echo ($row3['cancer_stage'] == 'III') ? 'selected' : ''; ?>>
+                                                            III</option>
+                                                        <option value="IV"
+                                                            <?php echo ($row3['cancer_stage'] == 'IV') ? 'selected' : ''; ?>>
+                                                            IV</option>
                                                     </select>
-
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -1212,30 +1097,47 @@ $query3->execute();
                                                     <select name="patient_treatment" class="custom-select form-control"
                                                         required="true">
                                                         <option value="">Select Type</option>
-                                                        <option value="Surgery">Surgery</option>
-                                                        <option value="Chemotherapy">Chemotherapy</option>
-                                                        <option value="Immunotherapy">Immunotherapy</option>
-                                                        <option value="Others">Others</option>
+                                                        <option value="Surgery"
+                                                            <?php echo ($row3['patient_treatment'] == 'Surgery') ? 'selected' : ''; ?>>
+                                                            Surgery</option>
+                                                        <option value="Chemotherapy"
+                                                            <?php echo ($row3['patient_treatment'] == 'Chemotherapy') ? 'selected' : ''; ?>>
+                                                            Chemotherapy</option>
+                                                        <option value="Immunotherapy"
+                                                            <?php echo ($row3['patient_treatment'] == 'Immunotherapy') ? 'selected' : ''; ?>>
+                                                            Immunotherapy</option>
+                                                        <option value="Others"
+                                                            <?php echo ($row3['patient_treatment'] == 'Others') ? 'selected' : ''; ?>>
+                                                            Others</option>
                                                     </select>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Patient Status</label>
                                                     <select name="patient_status" class="custom-select form-control"
                                                         required="true">
-                                                        <option value="" disabled selected>Select Status</option>
-                                                        <option value="Alive">Alive</option>
-                                                        <option value="Disposition">Disposition</option>
-                                                        <option value="Dead">Dead</option>
+                                                        <option value="" disabled>Select Status</option>
+                                                        <option value="Alive"
+                                                            <?php echo ($row3['patient_status'] == 'Alive') ? 'selected' : ''; ?>>
+                                                            Alive</option>
+                                                        <option value="Disposition"
+                                                            <?php echo ($row3['patient_status'] == 'Disposition') ? 'selected' : ''; ?>>
+                                                            Disposition</option>
+                                                        <option value="Dead"
+                                                            <?php echo ($row3['patient_status'] == 'Dead') ? 'selected' : ''; ?>>
+                                                            Dead</option>
                                                     </select>
                                                 </div>
+
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Cause of Death</label>
                                                     <input name="cod" type="text" class="form-control" required="true"
-                                                        autocomplete="off">
+                                                        autocomplete="off"
+                                                        value="<?php echo $row3['cause_of_death']; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -1245,7 +1147,8 @@ $query3->execute();
                                                 <div class="form-group">
                                                     <label class="custom-label">Place of Death</label>
                                                     <input name="pod" type="text" class="form-control" required="true"
-                                                        autocomplete="off">
+                                                        autocomplete="off"
+                                                        value="<?php echo $row3['place_of_death']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
@@ -1254,7 +1157,8 @@ $query3->execute();
                                                     <div class="input-group date">
                                                         <input name="death_date" type="text"
                                                             class="form-control date-picker" id="datepicker4"
-                                                            required="true" autocomplete="off" placeholder="mm/dd/yyyy">
+                                                            required="true" autocomplete="off" placeholder="mm/dd/yyyy"
+                                                            value="<?php echo $row3['date_of_death']; ?>">
                                                         <div class="input-group-append">
                                                             <span class="input-group-text"><i
                                                                     class="fa fa-calendar"></i></span>
@@ -1266,14 +1170,16 @@ $query3->execute();
                                                 <div class="form-group">
                                                     <label class="custom-label">Transferred Hospital</label>
                                                     <input name="transferred_hospital" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row3['transferred_hospital']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Reason for Referral</label>
                                                     <input name="referral_reason" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row3['reason_for_referral']; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -1282,11 +1188,13 @@ $query3->execute();
                                                 <div class="form-group">
                                                     <label class="custom-label">Final Diagnosis :</label>
                                                     <textarea id="textarea1" name="final_diagnosis" class="form-control"
-                                                        required maxlength="150"></textarea>
+                                                        required
+                                                        maxlength="150"><?php echo htmlspecialchars($row3['final_diagnosis']); ?></textarea>
                                                 </div>
+
                                             </div>
                                         </div>
-                                        <div class="page-header">
+                                        <div class=" page-header">
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <div
@@ -1305,28 +1213,32 @@ $query3->execute();
                                                 <div class="form-group">
                                                     <label class="custom-label">Last Name</label>
                                                     <input name="last_name" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row3['completed_by_lname']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">First Name</label>
                                                     <input name="first_name" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row3['completed_by_fname']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Middle Name</label>
                                                     <input name="sub_middle_name" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row3['completed_by_mname']; ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Designation</label>
                                                     <input name="designation" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                        required="true" autocomplete="off"
+                                                        value="<?php echo $row3['designation']; ?>">
                                                 </div>
                                             </div>
                                         </div>

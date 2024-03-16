@@ -186,7 +186,8 @@ include('includes/config.php');
                     <span class="user-text"></span>
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="user-profile.php">My Profile</a>
+                <a class="dropdown-item" href="user-profile.php?repo_user_id=<?php echo $_SESSION['repo_user_id']; ?>">My Profile</a>
+
                     <a class="dropdown-item" href="functions/user-logout-function.php" onclick="confirmLogout(event)">Logout</a>
                 </div>
             </div>

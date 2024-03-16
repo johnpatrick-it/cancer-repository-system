@@ -439,7 +439,7 @@ if (isset($_POST['submit'])) {
     <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-    <?php include("includes/user-header.php"); ?>
+        <?php include("includes/user-header.php"); ?>
         <?php include("includes/user-sidebar.php"); ?>
 
 
@@ -864,15 +864,15 @@ if (isset($_POST['submit'])) {
                                         <div class="row">
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Height</label>
-                                                    <input name="height" type="text" class="form-control" id="height"
+                                                    <label class="custom-label">Height (cm)</label>
+                                                    <input name="height" type="number" class="form-control" id="height"
                                                         required="true" autocomplete="off">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Weight </label>
-                                                    <input name="weight" type="text" class="form-control" id="weight"
+                                                    <label class="custom-label">Weight (Kg)</label>
+                                                    <input name="weight" type="number" class="form-control" id="weight"
                                                         required="true" autocomplete="off">
                                                 </div>
                                             </div>
@@ -1115,7 +1115,7 @@ if (isset($_POST['submit'])) {
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Tumor Size</label>
-                                                    <input name="tumor_size" type="text" class="form-control"
+                                                    <input name="tumor_size" type="number" class="form-control"
                                                         required="true" autocomplete="off">
                                                 </div>
                                             </div>
