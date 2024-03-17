@@ -1272,6 +1272,35 @@ $_SESSION['edit_id'] = $_GET['edit'];?>
         </div>
     </div>
 
+
+        <!-- Include SweetAlert library -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+    <script>
+        function editSuccessCredentialsAlert(success) {
+            Swal.fire({
+                title: 'Success!',
+                text: success,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            <?php
+            if (isset($_SESSION['edit-sent'])) {
+                $success = $_SESSION['edit-sent'];
+                // Clear the session error variable
+                unset($_SESSION['edit-sent']);
+
+                // Display the error for incorrect password
+                echo "editSuccessCredentialsAlert('$success');";
+            }
+            ?>
+
+
+        });
+    </script>
+
     <script src="./assets/js/script.js"></script>
     <!-- jQuery -->
     <script src="assets/js/jquery-3.2.1.min.js"></script>

@@ -283,7 +283,10 @@ if (isset($_POST['submit'])) {
         // Execute the query
         $query4->execute();
         
-        echo "Data inserted successfully";
+         // Invalid password
+         $_SESSION['already-sent'] = "Patient information successfully added!";
+         header("location: patient-form.php");
+         exit;  
 
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
@@ -1322,6 +1325,34 @@ if (isset($_POST['submit'])) {
             </div>
         </div>
     </div>
+
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+    <script>
+        function displaySuccessCredentialsAlert(success) {
+            Swal.fire({
+                title: 'Success!',
+                text: success,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            <?php
+            if (isset($_SESSION['already-sent'])) {
+                $success = $_SESSION['already-sent'];
+                // Clear the session error variable
+                unset($_SESSION['already-sent']);
+
+                // Display the error for incorrect password
+                echo "displaySuccessCredentialsAlert('$success');";
+            }
+            ?>
+
+
+        });
+    </script>
 
     <script src="./assets/js/script.js"></script>
     <!-- jQuery -->

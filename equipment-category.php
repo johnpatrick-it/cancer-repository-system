@@ -61,12 +61,12 @@ if (isset($_POST['add'])) {
        
 
         // Insert the new category
-        $insert_stmt = $dbh->prepare("INSERT INTO repo_equipment_category (equipment_name, description, created_at, admin_user_id, location) VALUES (:equipment_name, :description, :created_at, :admin_user_id, :location)");
+        $insert_stmt = $dbh->prepare("INSERT INTO repo_equipment_category (equipment_name, description, created_at, admin_user_id, image_data) VALUES (:equipment_name, :description, :created_at, :admin_user_id, :image_data)");
         $insert_stmt->bindParam(':equipment_name', $equipment_name);
         $insert_stmt->bindParam(':description', $description);
         $insert_stmt->bindParam(':created_at', $created_at);
         $insert_stmt->bindParam(':admin_user_id', $admin_user_id);
-        $insert_stmt->bindParam(':location', $location); // Add this line
+        $insert_stmt->bindParam(':image_data', $location); // Add this line
         
 
         if ($insert_stmt->execute()) {
@@ -355,7 +355,7 @@ if (isset($_POST['add'])) {
                                                 <td>
                                                     <?php
                                                 // Assuming $result->location contains the image filename
-                                                $imageFilename = htmlentities($result->location);
+                                                $imageFilename = htmlentities($result->image_data);
                                                 $imagePath = "uploads/$imageFilename"; // Adjust the folder name if needed
                                             
                                                 // Checking if the file exists before displaying it

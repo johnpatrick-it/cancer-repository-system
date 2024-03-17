@@ -3,24 +3,25 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
+ob_start(); // Start output buffering
+
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     // Redirect to the login page
     header("Location: login.php");
-    exit; 
+    exit;
 }
 
 $AdminID = $_SESSION['admin_id'] ?? '';
 
 $hospital_name_ID = $_SESSION['hospital_name'] ?? '';
 
-
 $host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
-                                            
+
 try {
     $dbh = new PDO("pgsql:" . $host);
-    
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
+    exit; // Terminate script execution if connection fails
 }
 
 $sql_uuid = "SELECT hospital_uuid, location FROM hospital_general_information WHERE hospital_name = :hospital_name";
@@ -38,10 +39,7 @@ if ($result) {
     exit;
 }
 
-
-
 if (isset($_POST['submit'])) {
-
     $hospitalName = isset($_POST['hospital_name']) ? $_POST['hospital_name'] : '';
     $hospitalEquipment = isset($_POST['hospital_equipment']) ? $_POST['hospital_equipment'] : [];
     $level = isset($_POST['level_hidden']) ? $_POST['level_hidden'] : '';
@@ -51,9 +49,7 @@ if (isset($_POST['submit'])) {
     $city = isset($_POST['city_hidden']) ? $_POST['city_hidden'] : '';
     $barangay = isset($_POST['barangay_hidden']) ? $_POST['barangay_hidden'] : '';
     $street = isset($_POST['street_hidden']) ? $_POST['street_hidden'] : '';
-    
-	$admin_user_id = $AdminID;
-
+    $admin_user_id = $AdminID;
 
     $equipmentIdStmt = $dbh->prepare("SELECT equipment_id FROM repo_equipment_category WHERE equipment_name = :equipment_name");
     if (!is_array($hospitalEquipment)) {
@@ -61,49 +57,53 @@ if (isset($_POST['submit'])) {
     }
 
     foreach ($hospitalEquipment as $equipment) {
-      
         $equipmentIdStmt->execute(array(':equipment_name' => $equipment));
         $equipmentId = $equipmentIdStmt->fetchColumn();
-   
-		$sql = "INSERT INTO hospital_general_information 
-				(admin_id, hospital_equipments, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street,location,hospital_uuid,equipment_id)
-				VALUES
-				(:admin_id, :equipment_name, :hospital_name, :hospital_level, :type_of_institution, :hospital_region, :hospital_province, :hospital_city, :hospital_barangay, :hospital_street, :location,:hospital_uuid, :equipment_id)";
-	
-		$stmt = $dbh->prepare($sql);
-		$stmt->bindParam(':admin_id', $admin_user_id, PDO::PARAM_INT);
-		$stmt->bindParam(':equipment_name', $equipment, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_name', $hospitalName, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_level', $level, PDO::PARAM_STR);
-		$stmt->bindParam(':type_of_institution', $institution, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_region', $region, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_province', $province, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_city', $city, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_barangay', $barangay, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_street', $street, PDO::PARAM_STR);
+
+        $sql = "INSERT INTO hospital_general_information 
+            (admin_id, hospital_equipments, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, location, hospital_uuid, equipment_id)
+            VALUES
+            (:admin_id, :equipment_name, :hospital_name, :hospital_level, :type_of_institution, :hospital_region, :hospital_province, :hospital_city, :hospital_barangay, :hospital_street, :location, :hospital_uuid, :equipment_id)";
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':admin_id', $admin_user_id, PDO::PARAM_INT);
+        $stmt->bindParam(':equipment_name', $equipment, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_name', $hospitalName, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_level', $level, PDO::PARAM_STR);
+        $stmt->bindParam(':type_of_institution', $institution, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_region', $region, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_province', $province, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_city', $city, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_barangay', $barangay, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_street', $street, PDO::PARAM_STR);
         $stmt->bindParam(':location', $location, PDO::PARAM_STR);
-		$stmt->bindParam(':hospital_uuid', $hospital_uuid, PDO::PARAM_STR);
+        $stmt->bindParam(':hospital_uuid', $hospital_uuid, PDO::PARAM_STR);
         $stmt->bindParam(':equipment_id', $equipmentId, PDO::PARAM_INT);
-	
-	
-		if ($stmt->execute()) {
-			echo '<script>';
-			echo 'Swal.fire("Data inserted successfully!");';
-			echo 'window.location.href = "hospital-information.php"';
-			echo '</script>';
-		} else {
-			echo "Error inserting data: " . $stmt->errorInfo()[2] . "\n";
-		}
-	}
 
-		
-		
+        if ($stmt->execute()) {
+            echo '<script>
+                Swal.fire({
+                    title: "Success!",
+                    text: "New equipment added successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "/../../../hospital-information.php";
+                    }
+                });
+            </script>';
+            exit;
+        } else {
+            echo "Error inserting data: " . $stmt->errorInfo()[2] . "\n";
+        }
     }
+}
 
-
-
-
+ob_end_flush(); // Flush the output buffer
 ?>
+
+
 <!-- Include SweetAlert2 library -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 

@@ -342,6 +342,16 @@ include('includes/config.php');
         });
     }
 
+
+    function userCreated(error) {
+        swal.fire({
+            title: 'Error!',
+            text: error,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
 
         <?php
@@ -352,6 +362,17 @@ include('includes/config.php');
 
             // Call the function to display success message
             echo "addUser('$success');";
+        }
+        ?>
+
+<?php
+        if (isset($_SESSION['user-created'])) {
+            $error = $_SESSION['user-created'];
+            // Clear the session variable
+            unset($_SESSION['user-created']);
+
+            // Call the function to display success message
+            echo "userCreated('$error');";
         }
         ?>
 

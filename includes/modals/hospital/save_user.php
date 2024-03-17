@@ -15,7 +15,7 @@ $AdminID = $_SESSION['admin_id'] ?? '';
 error_reporting(E_ALL);
 
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
-    header('.../login.php');
+    header('Location: /login.php');
     exit;
 }
 
@@ -29,6 +29,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if (!empty($firstName) && !empty($lastName) && !empty($hospitalID) && !empty($position) && !empty($email) && !empty($password)) {
+
+        // Check if the user already exists
+        $queryCheckUser = "SELECT COUNT(*) FROM repo_user WHERE email = $1";
+        $resultCheckUser = pg_query_params($db_connection, $queryCheckUser, array($email));
+        $count = pg_fetch_result($resultCheckUser, 0, 0); // Fetch the count properly
+
+        if ($count > 0) {
+          $_SESSION['user-created'] = "Email Already Exist";
+          header("location: /user-information.php");
+          exit;
+            exit;
+        }
+        
         $query = "INSERT INTO repo_user (admin_id, hospital_id, user_fname, user_mname, user_lname, position, email, password) 
                   VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
         
@@ -37,9 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result) {
             $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalID, $firstName, $middleName, $lastName, $position, $email, $password));
 
-            
             if ($result_exec) {
                 $_SESSION['add-user'] = "New user added successfully!";
+                $_SESSION['user_lname'] = $lastname;
 
                 // Fetch user data
                 $queryUser = "SELECT user_lname FROM repo_user WHERE admin_id = $1";

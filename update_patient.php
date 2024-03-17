@@ -287,21 +287,11 @@ if (isset($_POST['submit'])) {
 
         $query5->execute();
 
-
-         
-
-// -----------------------------------------------------------------------------------------------------------------------------------
-
         $dbh->commit();
 
-    echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
-    echo '<script>';
-    echo 'Swal.fire("Data Updated successfully!");';
-    echo '</script>';
-
-    echo '<script>';
-    echo 'setTimeout(function() { window.location.href = "manage-patient.php"; }, 2000);'; 
-    echo '</script>';
+        $_SESSION['update-sent'] = "Edit patient information successfully added!";
+        header("location: manage-patient.php");
+        exit;  
 
 
     } catch (PDOException $e) {
@@ -311,3 +301,4 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
+

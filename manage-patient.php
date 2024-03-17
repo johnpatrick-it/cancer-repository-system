@@ -261,6 +261,35 @@ include('includes/config.php');
 
         </div>
     </div>
+
+
+        <!-- Include SweetAlert library -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+    <script>
+        function editSuccessCredentialsAlert(success) {
+            Swal.fire({
+                title: 'Success!',
+                text: success,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            <?php
+            if (isset($_SESSION['update-sent'])) {
+                $success = $_SESSION['update-sent'];
+                // Clear the session error variable
+                unset($_SESSION['update-sent']);
+
+                // Display the error for incorrect password
+                echo "editSuccessCredentialsAlert('$success');";
+            }
+            ?>
+
+
+        });
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>

@@ -160,7 +160,7 @@ include('includes/config.php');
                                         data-target="#add_new_equipment">
                                         <i class="fa fa-medkit"></i> Add Hospital equipment
                                     </a>
-                                </div>
+                                </div>  
                               
                                 <div class="col-auto">
                                     <div class="dropdown">
@@ -252,10 +252,11 @@ include('includes/config.php');
 
             <!-- Delete Hospital Modal -->
          
-
-
         </div>
     </div>
+
+   
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
@@ -322,32 +323,7 @@ include('includes/config.php');
     <!-- Custom JS -->
     <script src="./assets/js/app.js"></script>
 
-    <script>
-    function addHospital(success) {
-        Swal.fire({
-            title: 'Success!',
-            text: success,
-            icon: 'success',
-            confirmButtonText: 'OK'
-        });
-    }
 
-
-    document.addEventListener('DOMContentLoaded', function() {
-        <?php
-        if (isset($_SESSION['add-hospital'])) {
-            $success = $_SESSION['add-hospital'];
-            // Clear the session variable
-            unset($_SESSION['add-hospital']);
-
-            // Call the function to display success message
-            echo "addHospital('$success');";
-        }
-        ?>
-
-
-    });
-    </script>
 
 </body>
 

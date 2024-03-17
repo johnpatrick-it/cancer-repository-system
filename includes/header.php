@@ -104,7 +104,7 @@ include('includes/config.php');
     <!-- DATE AND TIME -->
     <div class="page-title-box">
         <div class="d-flex flex-row">
-            <img class="weather-icon" src="./assets/img/clouds.png">
+            
         </div>
 
         <div class="d-flex flex-column">

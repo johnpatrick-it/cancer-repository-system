@@ -66,8 +66,11 @@
                             Dashboard</span> </a></li>
 
                 <!-- CANCER STATISTICS -->
-                <li><a href="#"><i class="la la-bar-chart"></i><span>Cancer Statistics</span></a></li>
+                <li><a href="./cancerstatistic.php"><i class="la la-bar-chart"></i><span>Cancer Statistics</span></a></li>
 
+                <li><a href="./equipment-category.php"><i class="la la-map"></i><span>Equipment Category</span></a></li>
+
+                
                 <!-- HOSPITAL INFORMATION -->
                 <li><a href="./hospital-information.php"><i class="la la-medkit"></i><span>Hospital
                             Information</span></a></li>
@@ -78,8 +81,7 @@
                 <!-- HOSPITAL MAPPING -->
                 <li><a href="./mapping.php"><i class="la la-map"></i><span>Hospital Mapping</span></a></li>
 
-                <li><a href="./equipment-category.php"><i class="la la-map"></i><span>Equipment Category</span></a></li>
-
+               
                 <!-- ACTIVITY LOGS -->
                 <li><a href="./activity-logs.php"><i class="la la-history"></i><span>Activity Logs</span></a></li>
 

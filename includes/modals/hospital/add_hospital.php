@@ -85,10 +85,19 @@ if (isset($_POST['submit'])) {
         $stmt->bindParam(':equipment_id', $equipmentId, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
-            echo '<script>';
-            echo 'Swal.fire("Data inserted successfully!");';
-            echo 'window.location.href = "hospital-information.php"';
-            echo '</script>';
+            echo '<script>
+                Swal.fire({
+                    title: "Success!",
+                    text: "New Hospital added successfully!",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "/../../../hospital-information.php";
+                    }
+                });
+            </script>';
+            exit;
         } else {
             echo "Error inserting data: " . $stmt->errorInfo()[2] . "\n";
         }

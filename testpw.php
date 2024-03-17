@@ -1,5 +1,5 @@
 <?php
-$plaintextPassword = 'M@nyakisako';
+$plaintextPassword = 'admin123';
 $hashedPassword = password_hash($plaintextPassword, PASSWORD_BCRYPT);
 echo htmlspecialchars($hashedPassword);
 ?>
