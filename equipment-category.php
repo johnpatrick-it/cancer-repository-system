@@ -25,61 +25,66 @@ try {
 
 <?php
 
+
+
+// Establish database connection (replace with your credentials)
+
+
 if (isset($_POST['add'])) {
-    $equipment_name = $_POST['equipment_name'];
-    $description = $_POST['description'];
-    $admin_user_id = $AdminID; // Assuming $session_id holds the admin's ID
+    $equipment_name = trim($_POST['equipment_name']);  // Trim whitespace for security
+    $description = trim($_POST['description']);
+    $admin_user_id = $AdminID;  // Assuming you've set $AdminID elsewhere
 
-
-    
-     
     if (isset($_FILES['image'])) {
-        $image = $_FILES['image']['name'];
-        move_uploaded_file($_FILES['image']['tmp_name'], './uploads/'.$image);
-        $location = $image;
-        
+        if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            // Validate image file type and size (replace with your allowed extensions)
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+            if (in_array($_FILES['image']['type'], $allowedTypes) && $_FILES['image']['size'] <= 2097152) { // 2MB limit
+                $tmp_name = $_FILES['image']['tmp_name'];
+                $image_data = file_get_contents($tmp_name);
+            } else {
+                $_SESSION['error'] = "Invalid image format or size.";
+                header("location: equipment-category.php");
+                exit;
+            }
+        } else {
+            $_SESSION['error'] = "Error uploading file.";
+            header("location: equipment-category.php");
+            exit;
+        }
     } else {
-        echo "No file uploaded or the 'image' key is not set in the \$_FILES array.";
+        $_SESSION['error'] = "Please select an image to upload.";
+        header("location: equipment-category.php");
+        exit;
     }
-    
-    // Check if the category already exists
+
+    // Check for existing equipment category
     $check_stmt = $dbh->prepare("SELECT * FROM repo_equipment_category WHERE equipment_name = :equipment_name");
     $check_stmt->bindParam(':equipment_name', $equipment_name);
     $check_stmt->execute();
-    $count = $check_stmt->rowCount();
 
-    if ($count > 0) {
-         // add error swal alert
-            $_SESSION['already-exist'] = "Equipment Already Exist";
-            header("location: equipment-category.php");
-            exit;
+    if ($check_stmt->rowCount() > 0) {
+        $_SESSION['already-exist'] = "Equipment Already Exist";
+        header("location: equipment-category.php");
+        exit;
     } else {
-        // If the category doesn't exist, proceed with the insertion
-
-        $created_at = date("Y-m-d H:i:s"); // Get the current date and time
-
-       
-
-        // Insert the new category
+        // Insert new category
+        $created_at = date("Y-m-d H:i:s");
         $insert_stmt = $dbh->prepare("INSERT INTO repo_equipment_category (equipment_name, description, created_at, admin_user_id, image_data) VALUES (:equipment_name, :description, :created_at, :admin_user_id, :image_data)");
         $insert_stmt->bindParam(':equipment_name', $equipment_name);
         $insert_stmt->bindParam(':description', $description);
         $insert_stmt->bindParam(':created_at', $created_at);
         $insert_stmt->bindParam(':admin_user_id', $admin_user_id);
-        $insert_stmt->bindParam(':image_data', $location); // Add this line
-        
+        $insert_stmt->bindParam(':image_data', $image_data, PDO::PARAM_LOB);
 
         if ($insert_stmt->execute()) {
-        // add success swal alert
-        $_SESSION['success'] = "Equipment added Successfully";
+            $_SESSION['success'] = "Equipment added Successfully";
+        } else {
+            $_SESSION['error'] = "Failed to add equipment";
+        }
+
         header("location: equipment-category.php");
         exit;
-        } else {
-            // add error swal alert
-            $_SESSION['already-exist'] = "Equipment Already Exist";
-            header("location: equipment-category.php");
-            exit;
-        }
     }
 }
 ?>
@@ -210,6 +215,14 @@ if (isset($_POST['add'])) {
         word-wrap: break-word;
 
     }
+
+    .equipment-image {
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        border: 1px solid black;
+
+    }
     </style>
 </head>
 
@@ -337,61 +350,61 @@ if (isset($_POST['add'])) {
                                             </tr>
                                         </thead>
                                         <tbody>
-
                                             <?php 
-                                    
-                                            $sql = "SELECT * from repo_equipment_category";
-											$query = $dbh -> prepare($sql);
-											$query->execute();
-											$results=$query->fetchAll(PDO::FETCH_OBJ);
-											$cnt=1;
-											if($query->rowCount() > 0)
-											{
-											foreach($results as $result)
-											{               ?>
+    // Your database connection details
+    $host = "host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023";
 
-                                            <tr>
-                                                <td> <?php echo htmlentities($cnt);?></td>
-                                                <td>
-                                                    <?php
-                                                // Assuming $result->location contains the image filename
-                                                $imageFilename = htmlentities($result->image_data);
-                                                $imagePath = "uploads/$imageFilename"; // Adjust the folder name if needed
-                                            
-                                                // Checking if the file exists before displaying it
-                                                if (file_exists($imagePath)) {
-                                                    echo "<img src=\"$imagePath\" alt=\"Image\" style=\"border-radius: 50%; width: 30px; height: 30px; border: 1px solid black;\">";
-                                                } else {
-                                                    echo "Image not found";
-                                                }
-                                                ?>
-                                                </td>
-                                                <td><?php $equipmentNameWords = explode(' ', htmlentities($result->equipment_name), 2);
-                                                          echo $equipmentNameWords[0] . "<br>" . $equipmentNameWords[1];?>
-                                                </td>
-                                                <td class="description-cell">
-                                                    <?php echo htmlentities($result->description);?></td>
-                                                <td><?php
-                                                $date = new DateTime($result->created_at);
-                                                echo htmlentities($date->format('Y-m-d'));
-                                                ?></td>
+    try {
+        // Create a new PDO instance
+        $dbh = new PDO("pgsql:" . $host);
+    } catch (PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+        exit; // Stop execution if unable to connect to the database
+    }
 
-                                                <td>
-                                                    <a href='#' data-toggle='modal' data-target='#edit_equipment'
-                                                        title='Edit'
-                                                        class='btn text-xs text-white btn-blue action-icon'><i
-                                                            class='fa fa-pencil'></i></a>
+    $query = "SELECT * FROM repo_equipment_category";
+    $stmt = $dbh->prepare($query);
+    $stmt->execute();
 
-                                                    <a href='#' data-toggle='modal' data-target='#delete_hospital'
-                                                        title='Delete'
-                                                        class='btn text-xs text-white btn-danger action-icon ml-2'><i
-                                                            class='fa fa-trash'></i></a>
-                                                </td>
-                                            </tr>
+    // Fetch all results
+    $results = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-                                            <?php $cnt++;} }?>
+    // Check if any images are found
+    if ($results) {
+        $cnt = 1;
+        // Display the images within a table
+        foreach ($results as $result) {
+            // Get the image data
+            $imageData = $result->image_data;
 
+            // Check if image data is empty or null
+            if ($imageData) {
+                // Convert the image data to base64 encoding
+                $base64Image = base64_encode(stream_get_contents($imageData));
+
+                // Display the image within a table row
+                echo '<tr>';
+                echo '<td>' . htmlentities($cnt) . '</td>';
+                echo '<td><img src="data:image/jpeg;base64,' . $base64Image . '" alt="Equipment Image" class="equipment-image"></td>';
+                echo '<td>' . htmlentities($result->equipment_name) . '</td>';
+                echo '<td class="description-cell">' . htmlentities($result->description) . '</td>';
+                echo '<td>' . htmlentities(date('Y-m-d', strtotime($result->created_at))) . '</td>';
+                echo '<td>';
+                echo '<a href="#" data-toggle="modal" data-target="#edit_equipment" title="Edit" class="btn text-xs text-white btn-blue action-icon"><i class="fa fa-pencil"></i></a>';
+                echo '<a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon ml-2"><i class="fa fa-trash"></i></a>';
+                echo '</td>';
+                echo '</tr>';
+                $cnt++;
+            } else {
+                echo "<tr><td colspan='6'>Image data is empty or null.</td></tr>";
+            }
+        }
+    } else {
+        echo "<tr><td colspan='6'>No images found.</td></tr>";
+    }
+    ?>
                                         </tbody>
+
                                     </table>
                                 </div>
                             </div>
@@ -406,36 +419,36 @@ if (isset($_POST['add'])) {
             <!-- Edit Hospital Modal -->
             <?php include_once 'includes/modals/hospital/edit_equipment.php'; ?>
 
-  
+
         </div>
     </div>
 
-   
+
 
     <!-- Include SweetAlert library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
     <script>
-        function successEquipment(Success) {
-            Swal.fire({
-                title: 'Success!',
-                text: 'Equipment Added Successfully',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        }
+    function successEquipment(Success) {
+        Swal.fire({
+            title: 'Success!',
+            text: 'Equipment Added Successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
 
-        function AlreadyExist(Error) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Equipment Already Exist',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        }
+    function AlreadyExist(Error) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Equipment Already Exist',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
 
 
-        document.addEventListener('DOMContentLoaded', function() {
-            <?php
+    document.addEventListener('DOMContentLoaded', function() {
+        <?php
             if (isset($_SESSION['success'])) {
                 $Success = $_SESSION['success'];
                 // Clear the session error variable
@@ -446,7 +459,7 @@ if (isset($_POST['add'])) {
             }
             ?>
 
-            <?php
+        <?php
             if (isset($_SESSION['already-exist'])) {
                 $Error = $_SESSION['already-exist'];
                 // Clear the session error variable
@@ -456,7 +469,7 @@ if (isset($_POST['add'])) {
                 echo "AlreadyExist('$Error');";
             }
             ?>
-        });
+    });
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
