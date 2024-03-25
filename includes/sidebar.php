@@ -62,26 +62,23 @@
                 </li>
 
                 <!-- DASHBOARD -->
-                <li class="sample-active mt-5"><a href="./index.php"><i class="la la-dashboard"></i> <span>
-                            Dashboard</span> </a></li>
+                <li class="sample-active mt-5"><a href="./index.php"><i class="la la-dashboard"></i> <span> Dashboard</span> </a></li>
 
                 <!-- CANCER STATISTICS -->
                 <li><a href="./cancerstatistic.php"><i class="la la-bar-chart"></i><span>Cancer Statistics</span></a></li>
 
-                <li><a href="./equipment-category.php"><i class="la la-map"></i><span>Equipment Category</span></a></li>
+                <!-- HOSPITAL MAPPING -->
+                <li><a href="./mapping.php"><i class="la la-map"></i><span>Hospital Mapping</span></a></li>
 
+                 <!-- Equipment Category     -->               
+                <li><a href="./equipment-category.php"><i class="la la-map"></i><span>Equipment Category</span></a></li>
                 
                 <!-- HOSPITAL INFORMATION -->
-                <li><a href="./hospital-information.php"><i class="la la-medkit"></i><span>Hospital
-                            Information</span></a></li>
+                <li><a href="./hospital-information.php"><i class="la la-medkit"></i><span>Hospital Information</span></a></li>
 
                 <!-- USER INFORMATION -->
                 <li><a href="./user-information.php"><i class="la la-user"></i><span>User Information</span></a></li>
 
-                <!-- HOSPITAL MAPPING -->
-                <li><a href="./mapping.php"><i class="la la-map"></i><span>Hospital Mapping</span></a></li>
-
-               
                 <!-- ACTIVITY LOGS -->
                 <li><a href="./activity-logs.php"><i class="la la-history"></i><span>Activity Logs</span></a></li>
 
