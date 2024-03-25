@@ -15,285 +15,6 @@ $hospital_name = $_SESSION['hospital_name'];
 
 ?>
 
-<?php
-
-
-if (isset($_POST['submit'])) {
-    // Retrieve form data
-    $surname = $_POST['surname'];
-    $given_name = $_POST['given_name'];
-    $middle_name = $_POST['middle_name'];
-    $suffix_name = $_POST['suffix_name'];
-    $patient_type = $_POST['patient_type'];
-    $gender = $_POST['gender'];
-    $civil_status = $_POST['civil_status'];
-    $dob = $_POST['dob'];
-    $birth_place = $_POST['birth_place'];
-    $nationality = $_POST['nationality'];
-    $occupation = $_POST['occupation'];
-    $educational_attainment = $_POST['educational_attainment'];
-    $race = $_POST['race'];
-    $address = $_POST['address'];
-    $barangay = $_POST['barangay'];
-    $province = $_POST['province'];
-    $city = $_POST['city'];
-    $contact_number = $_POST['contact_number'];
-   
-
-    // Get hospital_id based on repo_user_id
-    $repo_user_id = $_SESSION['repo_user_id'];
- 
-
-     // Second form 2222222222222222222222222222222222222222222222222222222222222
-
-     $smoking = isset($_POST['smoking']) ? $_POST['smoking'] : '';
-     $years_smoking = $_POST['years_smoking'];
-     $physical_activity = isset($_POST['physical_activity']) ? $_POST['physical_activity'] : '';
-     $diet = isset($_POST['diet']) ? $_POST['diet'] : [];
-     $dietJson = json_encode($diet);
-     $drinking_alcohol = isset($_POST['drinking_alcohol']) ? $_POST['drinking_alcohol'] : '';
-     $years_drinking = $_POST['years_drinking'];
-     $no_sexual = $_POST['no_sexual'];
-     $use_contraceptives = isset($_POST['use_contraceptives']) ? $_POST['use_contraceptives'] : '';
-     $early_age_sexual = isset($_POST['early_age_sexual']) ? $_POST['early_age_sexual'] : '';
-     $chemical_exposure = isset($_POST['chemical_exposure']) ? $_POST['chemical_exposure'] : '';
-     $family_history = isset($_POST['family_history']) ? $_POST['family_history'] : '';
-     $hepatitis = isset($_POST['hepatitis']) ? $_POST['hepatitis'] : '';
-     $height = $_POST['height'];
-     $weight = $_POST['weight'];
-     $bmi  = $_POST['bmi'];
-     $papilloma = isset($_POST['papilloma']) ? $_POST['papilloma'] : '';
-     $helicobacter = isset($_POST['helicobacter']) ? $_POST['helicobacter'] : '';
-
-    // third form 333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
-
-    $doc = $_POST['doc'];
-    $dod = $_POST['dod'];
-    $non_microscopic = $_POST['non_microscopic'];
-    $microscopic = $_POST['microscopic'];
-    $multiple_primaries = isset($_POST['multiple_primaries']) ? $_POST['multiple_primaries'] : '';
-    $primary_site = $_POST['primary_site'];
-    $other_primary = $_POST['other_primary'];
-    $tumor_size = $_POST['tumor_size'];
-    $nodes = isset($_POST['nodes']) ? $_POST['nodes'] : '';
-    $metastatis = isset($_POST['metastatis']) ? $_POST['metastatis'] : '';
-    $cancer_stage = $_POST['cancer_stage'];
-    $patient_treatment = $_POST['patient_treatment'];
-    $patient_status = $_POST['patient_status'];
-    $cod = $_POST['cod'];
-    $pod = $_POST['pod'];
-    $death_date = $_POST['death_date'];
-    $transferred_hospital = $_POST['transferred_hospital'];
-    $referral_reason = $_POST['referral_reason'];
-    $final_diagnosis = $_POST['final_diagnosis'];
-    $last_name = $_POST['last_name'];
-    $first_name = $_POST['first_name'];
-    $sub_middle_name = $_POST['sub_middle_name'];
-    $designation = $_POST['designation'];
-    $dateInserted = date("Y-m-d");
-
-
-    $host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
-
-    try {
-        $dbh = new PDO("pgsql:$host");
-        $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        // Retrieve hospital_id using prepared statement
-        $sql1 = "SELECT hospital_id FROM public.repo_user WHERE repo_user_id = :repo_user_id";
-        $stmt = $dbh->prepare($sql1);
-        $stmt->bindParam(':repo_user_id', $repo_user_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result) {
-            $hospital_id = $result['hospital_id'];
-        } else {
-            // Handle the case where no matching record is found
-            echo "Hospital ID not found for repo_user_id: $repo_user_id";
-            exit;
-        }
-
-        if (isset($_FILES['csv']) && $_FILES['csv']['error'] == UPLOAD_ERR_OK) {
-            $file_name = $_FILES['csv']['name'];
-            $file_tmp = $_FILES['csv']['tmp_name'];
-        
-            // Move the uploaded file to Supabase Storage
-            $supabaseUrl = 'https://tcfwwoixwmnbwfnzchbn.supabase.co';
-            $storagePath = __DIR__ . './assets/csv/'. $file_name;;
-
-            // Upload file to Supabase Storage
-            $uploadUrl = $file_name;
-            file_put_contents($uploadUrl, file_get_contents($file_tmp));
-            move_uploaded_file($_FILES['csv']['tmp_name'], $storagePath);
-
-        
-        
-        }
-        // Insert data into patient_general_info using prepared statement
-        $sql2 = "INSERT INTO patient_general_info (
-            patient_id,
-            type_of_patient,
-            patient_last_name,
-            patient_first_name,
-            patient_middle_name,
-            patient_suffix_name,
-            sex,
-            civil_status,
-            birthday,
-            place_of_birth,
-            nationality,
-            occupation,
-            educational_attainment,
-            race,
-            address_region,
-            address_barangay,
-            address_province,
-            address_city_municipality,
-            contact_number,
-            hospital_id,
-            repo_user_id
-      --      file
-        ) VALUES (
-            uuid_generate_v4(), -- Generate a new UUID
-            :patient_type,
-            :surname,
-            :given_name,
-            :middle_name,
-            :suffix_name,
-            :gender,
-            :civil_status,
-            :dob,
-            :birth_place,
-            :nationality,
-            :occupation,
-            :educational_attainment,
-            :race,
-            :address,
-            :barangay,
-            :province,
-            :city,
-            :contact_number,
-            :hospital_id,
-            :repo_user_id
-           -- :file
-        ) RETURNING patient_id;
-        ";
-        
-        $query = $dbh->prepare($sql2);
-        $query->bindParam(':patient_type', $patient_type, PDO::PARAM_STR);
-        $query->bindParam(':surname', $surname, PDO::PARAM_STR);
-        $query->bindParam(':given_name', $given_name, PDO::PARAM_STR);
-        $query->bindParam(':middle_name', $middle_name, PDO::PARAM_STR);
-        $query->bindParam(':suffix_name', $suffix_name, PDO::PARAM_STR);
-        $query->bindParam(':gender', $gender, PDO::PARAM_STR);
-        $query->bindParam(':civil_status', $civil_status, PDO::PARAM_STR);
-        $query->bindParam(':dob', $dob, PDO::PARAM_STR);
-        $query->bindParam(':birth_place', $birth_place, PDO::PARAM_STR);
-        $query->bindParam(':nationality', $nationality, PDO::PARAM_STR);
-        $query->bindParam(':occupation', $occupation, PDO::PARAM_STR);
-        $query->bindParam(':educational_attainment', $educational_attainment, PDO::PARAM_STR);
-        $query->bindParam(':race', $race, PDO::PARAM_STR);
-        $query->bindParam(':address', $address, PDO::PARAM_STR);
-        $query->bindParam(':barangay', $barangay, PDO::PARAM_STR);
-        $query->bindParam(':province', $province, PDO::PARAM_STR); 
-        $query->bindParam(':city', $city, PDO::PARAM_STR);
-        $query->bindParam(':contact_number', $contact_number, PDO::PARAM_INT);
-        $query->bindParam(':hospital_id', $hospital_id, PDO::PARAM_INT);
-        $query->bindParam(':repo_user_id', $repo_user_id, PDO::PARAM_INT);
-      //  $query->bindParam(':file', $uploadUrl, PDO::PARAM_STR); // Use $uploadUrl for the 'file' column
-
-
-        $query->execute();
-
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        $generatedPatientID = $result['patient_id'];
-
-        // Add another insert statement
-        $sql3 = "INSERT INTO patient_history_info (patient_id, smoking, estimate_years_smoking, physical_activity, diet, drinking_alcohol, estimate_years_alcohol, chemical_exposure, no_of_sexual_partners, early_age_sexual_intercourse, use_of_contraceptive, family_history_with_cancer, height, weight, classification_bmi, human_papillomavirus, helicobacter_pylori_virus, hepatitis_b_virus) 
-                VALUES (:patient_id, :smoking, :years_smoking, :physical_activity, :diet, :drinking_alcohol, :years_drinking, :chemical_exposure, :no_sexual, :early_age_sexual, :use_contraceptives, :family_history, :height, :weight, :bmi, :papilloma, :helicobacter, :hepatitis)";
-        $query2 = $dbh->prepare($sql3);
-        
-        // Bind parameters for the second insert
-        $query2->bindParam(':patient_id', $generatedPatientID, PDO::PARAM_INT);
-        $query2->bindParam(':smoking', $smoking, PDO::PARAM_STR);
-        $query2->bindParam(':years_smoking', $years_smoking, PDO::PARAM_STR);
-        $query2->bindParam(':physical_activity', $physical_activity, PDO::PARAM_STR);
-        $query2->bindParam(':diet', $dietJson, PDO::PARAM_STR);
-        $query2->bindParam(':drinking_alcohol', $drinking_alcohol, PDO::PARAM_STR);
-        $query2->bindParam(':years_drinking', $years_drinking, PDO::PARAM_STR);
-        $query2->bindParam(':chemical_exposure', $chemical_exposure, PDO::PARAM_STR);
-        $query2->bindParam(':no_sexual', $no_sexual, PDO::PARAM_STR);
-        $query2->bindParam(':early_age_sexual', $early_age_sexual, PDO::PARAM_STR);
-        $query2->bindParam(':use_contraceptives', $use_contraceptives, PDO::PARAM_STR);
-        $query2->bindParam(':family_history', $family_history, PDO::PARAM_STR);
-        $query2->bindParam(':height', $height, PDO::PARAM_STR);
-        $query2->bindParam(':weight', $weight, PDO::PARAM_STR);
-        $query2->bindParam(':bmi', $bmi, PDO::PARAM_STR);
-        $query2->bindParam(':papilloma', $papilloma, PDO::PARAM_STR);
-        $query2->bindParam(':helicobacter', $helicobacter, PDO::PARAM_STR);
-        $query2->bindParam(':hepatitis', $hepatitis, PDO::PARAM_STR);
-        // ... (similar bindings for other parameters)
-        
-        // Execute the second insert
-        $query2->execute();
-
-        $sql4 = "INSERT INTO patient_cancer_info (patient_id, consultation_date, diagnosis_date, valid_diagnosis_non_microscopic,valid_diagnosis_microscopic,multiple_primaries,primary_site_others,tumor_size,nodes,metastasis,cancer_stage,final_diagnosis,patient_treatment,patient_status,cause_of_death,place_of_death,date_of_death,transferred_hospital,reason_for_referral,completed_by_lname,completed_by_fname,completed_by_mname,designation,date_completed,primary_site,time_stamp) 
-                VALUES (:patient_id,:doc, :dod, :non_microscopic, :microscopic, :multiple_primaries, :other_primary, :tumor_size,:nodes, :metastasis, :cancer_stage, :final_diagnosis,:patient_treatment, :patient_status, :cod, :pod, :death_date, :transferred_hospital, :referral_reason, :last_name,:first_name, :sub_middle_name, :designation, :dateInserted,:primary_site, NOW())";
-
-        $query3 = $dbh->prepare($sql4);
-        // Bind parameters for third insert
-        $query3->bindParam(':patient_id', $generatedPatientID, PDO::PARAM_INT);
-        $query3->bindParam(':doc', $doc, PDO::PARAM_STR);
-        $query3->bindParam(':dod', $dod, PDO::PARAM_STR);
-        $query3->bindParam(':non_microscopic', $non_microscopic, PDO::PARAM_STR);
-        $query3->bindParam(':microscopic', $microscopic, PDO::PARAM_STR);
-        $query3->bindParam(':multiple_primaries', $multiple_primaries, PDO::PARAM_STR);
-        $query3->bindParam(':other_primary', $other_primary, PDO::PARAM_STR);
-        $query3->bindParam(':tumor_size', $tumor_size, PDO::PARAM_STR);
-        $query3->bindParam(':nodes', $nodes, PDO::PARAM_STR);
-        $query3->bindParam(':metastasis', $metastasis, PDO::PARAM_STR);
-        $query3->bindParam(':cancer_stage', $cancer_stage, PDO::PARAM_STR);
-        $query3->bindParam(':final_diagnosis', $final_diagnosis, PDO::PARAM_STR);
-        $query3->bindParam(':patient_treatment', $patient_treatment, PDO::PARAM_STR);
-        $query3->bindParam(':patient_status', $patient_status, PDO::PARAM_STR);
-        $query3->bindParam(':cod', $cod, PDO::PARAM_STR);
-        $query3->bindParam(':pod', $pod, PDO::PARAM_STR);
-        $query3->bindParam(':death_date', $death_date, PDO::PARAM_STR);
-        $query3->bindParam(':transferred_hospital', $transferred_hospital, PDO::PARAM_STR);
-        $query3->bindParam(':referral_reason', $referral_reason, PDO::PARAM_STR);
-        $query3->bindParam(':last_name', $last_name, PDO::PARAM_STR);
-        $query3->bindParam(':first_name', $first_name, PDO::PARAM_STR);
-        $query3->bindParam(':sub_middle_name', $sub_middle_name, PDO::PARAM_STR);
-        $query3->bindParam(':designation', $designation, PDO::PARAM_STR);
-        $query3->bindParam(':dateInserted', $dateInserted, PDO::PARAM_STR);
-        $query3->bindParam(':primary_site', $primary_site, PDO::PARAM_STR);
-        
-
-        $query3->execute();
-
-        $sql5 = "INSERT INTO repo_logs (repo_user_id, patient_id, log_timestamp, log_action) VALUES (:repo_user_id, :generatedPatientID, :dateInserted, 'Patient Registered')";
-        $query4 = $dbh->prepare($sql5);
-        
-        // Bind parameters
-        $query4->bindParam(':repo_user_id', $repo_user_id, PDO::PARAM_INT);
-        $query4->bindParam(':generatedPatientID', $generatedPatientID, PDO::PARAM_INT);
-        $query4->bindParam(':dateInserted', $dateInserted, PDO::PARAM_STR);
-        
-        // Execute the query
-        $query4->execute();
-        
-         // Invalid password
-         $_SESSION['already-sent'] = "Patient information successfully added!";
-         header("location: patient-form.php");
-         exit;  
-
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
-}
-?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -457,7 +178,7 @@ if (isset($_POST['submit'])) {
 
         <div class="page-wrapper">
             <div class="containers">
-                <form method="post" action="" id="registrationForm" enctype="multipart/form-data">
+            <form method="post" action="patient-form-v2-save.php" id="registrationForm" enctype="multipart/form-data">
                     <div id="step1" class="form-step">
                         <div class="content container-fluid">
 
@@ -485,9 +206,9 @@ if (isset($_POST['submit'])) {
                                         <div class="row">
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Date of Diagnosis</label>
+                                                        <label class="custom-label">Date of Diagnosis</label>
                                                     <div class="input-group date">
-                                                        <input name="diagnosis_date" type="date" class="form-control date-picker" id="datepicker3" required="true" autocomplete="off" placeholder="mm/dd/yyyy">
+                                                        <input name="diagnosis_date" type="date" class="form-control date-picker" id="datepicker3" required="true" autocomplete="off" onchange="updateMinDeathDate()">
                                                     </div>
                                                 </div>
                                             </div>
@@ -557,10 +278,10 @@ if (isset($_POST['submit'])) {
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Gender</label>
+                                                    <label class="custom-label">Sex</label>
                                                     <select name="gender" class="custom-select form-control"
                                                         required="true">
-                                                        <option value="">Select Gender</option>
+                                                        <option value="">Select Sex</option>
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
                                                     </select>
@@ -581,7 +302,7 @@ if (isset($_POST['submit'])) {
                                                 <div class="form-group" id="dateOfDeathField" style="display: none;">
                                                     <label class="custom-label">Date of Death</label>
                                                     <div class="input-group date">
-                                                        <input type="date" name="date_of_death" class="form-control date-picker" id="datepicker1" autocomplete="off" placeholder="mm/dd/yyyy">
+                                                        <input type="date" name="date_of_death" class="form-control date-picker" id="datepicker1" autocomplete="off">
                                                     </div>
                                                 </div>
                                             </div>
@@ -666,8 +387,7 @@ if (isset($_POST['submit'])) {
                                                 <div class="form-group">
                                                     <label style="font-size:16px;"><b></b></label>
                                                     <div class="modal-footer justify-content-center">
-                                                        <button class="btn btn-primary" name="submit" id=""
-                                                            data-toggle="modal">Submit</button>
+                                                        <button class="btn btn-primary" name="submit" id="" data-toggle="modal" onclick="return validateDates()">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -724,13 +444,25 @@ if (isset($_POST['submit'])) {
         var diagnosisDate = new Date(document.getElementById('datepicker3').value);
         var deathDate = new Date(document.getElementById('datepicker1').value);
 
-        // Check if Date of Death is before Date of Diagnosis
         if (deathDate < diagnosisDate) {
             displayError("Date of Death cannot be before Date of Diagnosis");
-            document.getElementById('datepicker1').value = ''; // Clear the Date of Death field
-            return false; // Prevent form submission
+            return false;
         }
-        return true; // Proceed with form submission
+        return true;
+    }
+
+    // Function to update min attribute of Date of Death input
+    function updateMinDeathDate() {
+        var diagnosisDate = new Date(document.getElementById('datepicker3').value);
+        document.getElementById('datepicker1').min = formatDate(diagnosisDate);
+    }
+
+    // Function to format date as YYYY-MM-DD
+    function formatDate(date) {
+        var year = date.getFullYear();
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var day = String(date.getDate()).padStart(2, '0');
+        return year + '-' + month + '-' + day;
     }
     </script>
 
