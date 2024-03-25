@@ -435,6 +435,15 @@ if (isset($_POST['submit'])) {
         color: #204A3D;
         font-weight: 500;
     }
+        /* Hide the spinner for number input */
+        input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] {
+        -moz-appearance: textfield; /* Firefox */
+    }
     </style>
 </head>
 
@@ -478,13 +487,7 @@ if (isset($_POST['submit'])) {
                                                 <div class="form-group">
                                                     <label class="custom-label">Date of Diagnosis</label>
                                                     <div class="input-group date">
-                                                        <input name="dod" type="text" class="form-control date-picker"
-                                                            id="datepicker3" required="true" autocomplete="off"
-                                                            placeholder="mm/dd/yyyy">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text"><i
-                                                                    class="fa fa-calendar"></i></span>
-                                                        </div>
+                                                        <input name="diagnosis_date" type="date" class="form-control date-picker" id="datepicker3" required="true" autocomplete="off" placeholder="mm/dd/yyyy">
                                                     </div>
                                                 </div>
                                             </div>
@@ -521,20 +524,17 @@ if (isset($_POST['submit'])) {
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Middle Name (Optional)</label>
-                                                    <input name="middle_name" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                    <label class="custom-label">Cancer Stage</label>
+                                                    <select name="cancer_stage" class="custom-select form-control"
+                                                        required="true">
+                                                        <option value="">Select Type</option>
+                                                        <option value=1>I</option>
+                                                        <option value=2>II</option>
+                                                        <option value=3>III</option>
+                                                        <option value=4>IV</option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Suffix</label>
-                                                    <input name="suffix_name" type="text" class="form-control"
-                                                        autocomplete="off">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Type of Patient</label>
@@ -544,6 +544,15 @@ if (isset($_POST['submit'])) {
                                                         <option value="In-patient">In-patient</option>
                                                         <option value="Out-patient">Out-patient</option>
                                                     </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-12">
+                                                <div class="form-group">
+                                                    <label class="custom-label">Age</label>
+                                                    <input name="age" type="number" class="form-control"
+                                                        required="true" autocomplete="off">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
@@ -559,22 +568,20 @@ if (isset($_POST['submit'])) {
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Civil Status</label>
-                                                    <input name="civil_status" type="text" class="form-control"
-                                                        id="password" required="true" autocomplete="off">
+                                                    <label class="custom-label">Patient Status</label>
+                                                    <select name="patient_status" class="custom-select form-control" required="true" onchange="toggleDateOfDeath(this)">
+                                                        <option value="" disabled selected>Select Status</option>
+                                                        <option value="Alive">Alive</option>
+                                                        <option value="Disposition">Survived</option>
+                                                        <option value="Dead">Dead</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Date Of Birth</label>
+                                                <div class="form-group" id="dateOfDeathField" style="display: none;">
+                                                    <label class="custom-label">Date of Death</label>
                                                     <div class="input-group date">
-                                                        <input type="text" name="dob" class="form-control date-picker"
-                                                            id="datepicker1" required="true" autocomplete="off"
-                                                            placeholder="mm/dd/yyyy">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text"><i
-                                                                    class="fa fa-calendar"></i></span>
-                                                        </div>
+                                                        <input type="date" name="date_of_death" class="form-control date-picker" id="datepicker1" autocomplete="off" placeholder="mm/dd/yyyy">
                                                     </div>
                                                 </div>
                                             </div>
@@ -582,34 +589,11 @@ if (isset($_POST['submit'])) {
                                         <div class="row">
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Place Of Birth</label>
-                                                    <input name="birth_place" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Occupation</label>
-                                                    <input name="occupation" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Educational Attainment</label>
-                                                    <input name="educational_attainment" type="text"
-                                                        class="form-control" required="true" autocomplete="off">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Race</label>
-                                                    <input name="race" type="text" class="form-control" required="true"
+                                                    <label class="custom-label">City/Municipality</label>
+                                                    <input name="city" type="text" class="form-control" required="true"
                                                         autocomplete="off">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Permanent Address</label>
@@ -617,44 +601,9 @@ if (isset($_POST['submit'])) {
                                                         required="true" autocomplete="off">
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Barangay</label>
-                                                    <input name="barangay" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Province</label>
-                                                    <input name="province" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">City/Municipality</label>
-                                                    <input name="city" type="text" class="form-control" required="true"
-                                                        autocomplete="off">
-                                                </div>
-                                            </div>
                                         </div>
 
                                         <div class="row">
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Contact Number</label>
-                                                    <input name="contact_number" type="number" class="form-control"
-                                                        required="true" autocomplete="off">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Nationality</label>
-                                                    <input name="nationality" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
-                                                </div>
-                                            </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <div class="form-group">
@@ -664,6 +613,8 @@ if (isset($_POST['submit'])) {
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="row">
                                         <div class="page-header">
                                             <div class="row">
                                                 <div class="col-sm-12">
@@ -757,6 +708,30 @@ if (isset($_POST['submit'])) {
 
 
         });
+        function toggleDateOfDeath(selectElement) {
+        var dateOfDeathField = document.getElementById('dateOfDeathField');
+        if (selectElement.value === 'Dead') {
+            dateOfDeathField.style.display = 'block';
+            document.getElementById('datepicker1').setAttribute('required', 'true');
+        } else {
+            dateOfDeathField.style.display = 'none';
+            document.getElementById('datepicker1').removeAttribute('required');
+        }
+    }
+
+    //DATE VALIDATION BETWEEM DIAGNONIS AND DEATH DATE
+    function validateDates() {
+        var diagnosisDate = new Date(document.getElementById('datepicker3').value);
+        var deathDate = new Date(document.getElementById('datepicker1').value);
+
+        // Check if Date of Death is before Date of Diagnosis
+        if (deathDate < diagnosisDate) {
+            displayError("Date of Death cannot be before Date of Diagnosis");
+            document.getElementById('datepicker1').value = ''; // Clear the Date of Death field
+            return false; // Prevent form submission
+        }
+        return true; // Proceed with form submission
+    }
     </script>
 
     <script src="./assets/js/script.js"></script>
