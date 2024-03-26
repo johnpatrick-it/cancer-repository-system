@@ -67,7 +67,7 @@
 
                 <!-- Patient Registry -->
                 <li>
-                    <a href="./patient-form.php">
+                    <a href="./patient-form-v2.php">
                         <i class="la la-user-plus"></i>
                         <span>Cancer Cases Repository</span>
                     </a>

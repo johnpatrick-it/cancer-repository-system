@@ -87,5 +87,3 @@ function sendUserAcc($admin, $db_connection)
         echo "Mailer Error: " . $mail->ErrorInfo;
     }
 }
-
-?>

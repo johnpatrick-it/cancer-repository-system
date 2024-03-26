@@ -10,9 +10,31 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
-// Access the hospital name from the session variable
+// Initializing ng hospital_name para sa banner
 $hospital_name = $_SESSION['hospital_name'];
 
+
+
+
+// Ang function ng code na to is to Fetch submitter information from the database
+$sql = "SELECT user_fname, user_lname, user_mname, position FROM repo_user WHERE repo_user_id = $1";
+$result = pg_query_params($db_connection, $sql, [$_SESSION['repo_user_id']]);
+
+//fetching user sa database
+$row = pg_fetch_assoc($result);
+if ($row) {
+    //variables na needed para sa fetching para ilagay doon sa form
+    $first_name = $row['user_fname'];
+    $last_name = $row['user_lname'];
+    $middle_name = $row['user_mname'];
+    $designation = $row['position'];
+} else {
+    // output kapag walang data
+    echo "No user found with the specified ID.";
+}
+
+
+pg_close($db_connection);
 ?>
 
 
@@ -354,29 +376,25 @@ $hospital_name = $_SESSION['hospital_name'];
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Last Name</label>
-                                                    <input name="last_name" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                    <input name="last_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $last_name; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">First Name</label>
-                                                    <input name="first_name" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                    <input name="first_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $first_name; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Middle Name</label>
-                                                    <input name="sub_middle_name" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                    <input name="sub_middle_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $middle_name; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Designation</label>
-                                                    <input name="designation" type="text" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                    <input name="designation" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $designation; ?>" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -386,8 +404,8 @@ $hospital_name = $_SESSION['hospital_name'];
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label style="font-size:16px;"><b></b></label>
-                                                    <div class="modal-footer justify-content-center">
-                                                        <button class="btn btn-primary" name="submit" id="" data-toggle="modal" onclick="return validateDates()">Submit</button>
+                                                    <div class="">
+                                                        <button class="btn btn-primary" name="submit" id="" data-toggle="modal" onclick="displaySuccessCredentialsAlert(event)">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -408,7 +426,6 @@ $hospital_name = $_SESSION['hospital_name'];
         function displaySuccessCredentialsAlert(success) {
             Swal.fire({
                 title: 'Success!',
-                text: success,
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
