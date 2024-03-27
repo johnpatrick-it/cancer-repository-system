@@ -165,8 +165,8 @@ $_SESSION['edit_id'] = $_GET['edit'];?>
     <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-        <?php include("user-header.php"); ?>
-        <?php include("user-sidebar.php"); ?>
+        <?php include("../includes/user-header.php"); ?>
+        <?php include("../includes/user-sidebar.php"); ?>
 
 
         <div class="page-wrapper">

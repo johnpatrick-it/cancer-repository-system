@@ -294,8 +294,7 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Age</label>
-                                                    <input name="age" type="number" class="form-control"
-                                                        required="true" autocomplete="off">
+                                                    <input name="age" type="number" class="form-control" required="true" autocomplete="off" placeholder="Enter age">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
@@ -315,7 +314,7 @@ pg_close($db_connection);
                                                     <select name="patient_status" class="custom-select form-control" required="true" onchange="toggleDateOfDeath(this)">
                                                         <option value="" disabled selected>Select Status</option>
                                                         <option value="Alive">Alive</option>
-                                                        <option value="Disposition">Survived</option>
+                                                        <option value="Survived">Survived</option>
                                                         <option value="Dead">Dead</option>
                                                     </select>
                                                 </div>
@@ -333,17 +332,158 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">City/Municipality</label>
-                                                    <input name="city" type="text" class="form-control" required="true"
-                                                        autocomplete="off">
+                                                    <select name="city" class="custom-select form-control" required="true">
+                                                        <option value="" disabled selected>Select City/Municipality</option>
+                                                        <option value="Alaminos">Alaminos</option>
+                                                        <option value="Angeles">Angeles</option>
+                                                        <option value="Antipolo">Antipolo</option>
+                                                        <option value="Bacolod">Bacolod</option>
+                                                        <option value="Bacoor">Bacoor</option>
+                                                        <option value="Bago">Bago </option>
+                                                        <option value="Baguio">Baguio </option>
+                                                        <option value="Bais">Bais </option>
+                                                        <option value="Balanga">Balanga </option>
+                                                        <option value="Baliwag">Baliwag </option>
+                                                        <option value="Batac">Batac</option>
+                                                        <option value="Batangas">Batangas </option>
+                                                        <option value="Bayawan">Bayawan </option>
+                                                        <option value="Baybay">Baybay </option>
+                                                        <option value="Bayugan">Bayugan </option>
+                                                        <option value="Biñan">Biñan </option>
+                                                        <option value="Bislig">Bislig </option>
+                                                        <option value="Bogo">Bogo </option>
+                                                        <option value="Borongan">Borongan </option>
+                                                        <option value="Butuan">Butuan </option>
+                                                        <option value="Cabadbaran">Cabadbaran </option>
+                                                        <option value="Cabanatuan">Cabanatuan </option>
+                                                        <option value="Cabuyao">Cabuyao </option>
+                                                        <option value="Cadiz">Cadiz </option>
+                                                        <option value="Cagayande Oro">Cagayande Oro </option>
+                                                        <option value="Calaca">Calaca </option>
+                                                        <option value="Calamba">Calamba </option>
+                                                        <option value="Calapan">Calapan </option>
+                                                        <option value="Calbayog">Calbayog</option>
+                                                        <option value="Caloocan">Caloocan </option>
+                                                        <option value="Candon">Candon </option>
+                                                        <option value="Canlaon">Canlaon </option>
+                                                        <option value="Carcar">Carcar </option>
+                                                        <option value="Catbalogan">Catbalogan </option>
+                                                        <option value="Cauayan">Cauayan </option>
+                                                        <option value="Cavite">Cavite </option>
+                                                        <option value="Cebu">Cebu </option>
+                                                        <option value="Cotabato">Cotabato </option>
+                                                        <option value="Dagupan">Dagupan </option>
+                                                        <option value="Danao">Danao </option>
+                                                        <option value="Dapitan">Dapitan </option>
+                                                        <option value="Dasmariñas">Dasmariñas </option>
+                                                        <option value="Davao">Davao </option>
+                                                        <option value="Digos">Digos </option>
+                                                        <option value="Dipolog">Dipolog </option>
+                                                        <option value="Dumaguete">Dumaguete </option>
+                                                        <option value="El Salvador">El Salvador </option>
+                                                        <option value="Escalante">Escalante </option>
+                                                        <option value="Gapan">Gapan </option>
+                                                        <option value="General Santos">General Santos </option>
+                                                        <option value="General Trias">General Trias </option>
+                                                        <option value="Gingoog">Gingoog</option>
+                                                        <option value="Guihulngan">Guihulngan</option>
+                                                        <option value="Himamaylan">Himamaylan </option>
+                                                        <option value="Ilagan">Ilagan</option>
+                                                        <option value="Iligan">Iligan </option>
+                                                        <option value="Iloilo">Iloilo </option>
+                                                        <option value="Imus">Imus </option>
+                                                        <option value="Iriga">Iriga </option>
+                                                        <option value="Isabela">Isabela </option>
+                                                        <option value="Kabankalan">Kabankalan </option>
+                                                        <option value="Kidapawan">Kidapawan </option>
+                                                        <option value="Koronadal">Koronadal </option>
+                                                        <option value="La Carlota">La Carlota </option>
+                                                        <option value="Lamitan">Lamitan </option>
+                                                        <option value="Lapu-Lapu">Lapu-Lapu </option>
+                                                        <option value="Las Piñas">Las Piñas </option>
+                                                        <option value="Legazpi">Legazpi </option>
+                                                        <option value="Ligao">Ligao </option>
+                                                        <option value="Lipa">Lipa </option>
+                                                        <option value="Lucena">Lucena </option>
+                                                        <option value="Maasin">Maasin</option>
+                                                        <option value="Mabalacat">Mabalacat</option>
+                                                        <option value="Makati">Makati</option>
+                                                        <option value="Malaybalay">Malaybalay</option>
+                                                        <option value="Malolos">Malolos</option>
+                                                        <option value="Mandaluyong">Mandaluyong</option>
+                                                        <option value="Mandaue">Mandaue</option>
+                                                        <option value="Manila">Manila</option>
+                                                        <option value="Marawi">Marawi</option>
+                                                        <option value="Marikina">Marikina</option>
+                                                        <option value="Masbate">Masbate</option>
+                                                        <option value="Mati">Mati</option>
+                                                        <option value="Meycauayan">Meycauayan</option>
+                                                        <option value="Muñoz">Muñoz</option>
+                                                        <option value="Muntinlupa">Muntinlupa</option>
+                                                        <option value="Naga">Naga</option>
+                                                        <option value="Navotas">Navotas</option>
+                                                        <option value="Olongapo">Olongapo</option>
+                                                        <option value="Ormoc">Ormoc</option>
+                                                        <option value="Oroquieta">Oroquieta</option>
+                                                        <option value="Ozamiz">Ozamiz</option>
+                                                        <option value="Pagadian">Pagadian</option>
+                                                        <option value="Palayan">Palayan</option>
+                                                        <option value="Panabo">Panabo</option>
+                                                        <option value="Parañaque">Parañaque</option>
+                                                        <option value="Pasay">Pasay</option>
+                                                        <option value="Pasig">Pasig</option>
+                                                        <option value="Passi">Passi</option>
+                                                        <option value="Puerto Princesa">Puerto Princesa</option>
+                                                        <option value="Quezon City">Quezon City</option>
+                                                        <option value="San Carlos">San Carlos</option>
+                                                        <option value="SanFernando">SanFernando</option>
+                                                        <option value="Samal">Samal</option>
+                                                        <option value="San Jose">San Jose</option>
+                                                        <option value="San Jose del Monte">San Jose del Monte</option>
+                                                        <option value="San Juan">San Juan</option>
+                                                        <option value="San Pablo">San Pablo</option>
+                                                        <option value="San Pedro">San Pedro</option>
+                                                        <option value="Santa Rosa">Santa Rosa</option>
+                                                        <option value="Santo Tomas">Santo Tomas</option>
+                                                        <option value="Santiago">Santiago</option>
+                                                        <option value="Silay">Silay</option>
+                                                        <option value="Sipalay">Sipalay</option>
+                                                        <option value="Sorsogon">Sorsogon</option>
+                                                        <option value="Surigao">Surigao</option>
+                                                        <option value="Tabaco">Tabaco</option>
+                                                        <option value="Tabuk">Tabuk</option>
+                                                        <option value="Tacloban">Tacloban</option>
+                                                        <option value="Tacurong">Tacurong</option>
+                                                        <option value="Tagaytay">Tagaytay</option>
+                                                        <option value="Tagbilaran">Tagbilaran</option>
+                                                        <option value="Taguig">Taguig</option>
+                                                        <option value="Tagum">Tagum</option>
+                                                        <option value="Talisay">Talisay</option>
+                                                        <option value="Tanauan">Tanauan</option>
+                                                        <option value="Tandag">Tandag</option>
+                                                        <option value="Tangub">Tangub</option>
+                                                        <option value="Tanjay">Tanjay</option>
+                                                        <option value="Tarlac">Tarlac</option>
+                                                        <option value="Tayabas">Tayabas</option>                                    
+                                                        <option value="Toledo">Toledo</option>
+                                                        <option value="Trece Martires">Trece Martires</option>
+                                                        <option value="Tuguegarao">Tuguegarao</option>
+                                                        <option value="Urdaneta">Urdaneta</option>
+                                                        <option value="Valencia">Valencia</option>
+                                                        <option value="Valenzuela">Valenzuela</option>
+                                                        <option value="Victorias">Victorias</option>
+                                                        <option value="Vigan">Vigan</option>
+                                                        <option value="Zamboanga">Zamboanga</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Permanent Address</label>
-                                                    <input name="address" type="text" class="form-control date-picker"
-                                                        required="true" autocomplete="off">
+                                                        <label class="custom-label">Patient Case Number</label>
+                                                    <input name="patient_case_number" type="text" class="form-control date-picker"
+                                                        required="true" autocomplete="off" placeholder="Patient Case Number">
                                                 </div>
-                                            </div>
+                                            </div>  
                                         </div>
 
                                         <div class="row">

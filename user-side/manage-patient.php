@@ -166,14 +166,14 @@ include('../includes/config.php');
                     <!-- TABLE -->
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="table-responsive">
+                            <div class="table-responsive">  
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Surname</th>
-                                            <th>Hospital</th>
-                                            <th>Type of Cancer</th>
+                                            <th>Patient Number</th>
+                                            <th>Diagnosis Date</th>
+                                            <th>Cancer Type</th>
+                                            <th>City</th>
                                             <th>Cancer Stage</th>
                                             <th>Status</th>
                                             <th>Action</th>
@@ -204,48 +204,39 @@ include('../includes/config.php');
 
                                             // PUTANG INANG SQL JOIN TO PUTANG INA MO
                                             $query = "SELECT
-                                                        pgi.patient_last_name AS name,
-                                                        pgi.patient_first_name AS surname,
-                                                        hgi.hospital_name AS hospital,
-                                                        pci.primary_site AS type_of_cancer,
-                                                        pci.cancer_stage,
-                                                        pci.patient_status AS status,
-                                                        pgi.patient_id 
+                                                        ccgi.patient_id,
+                                                        ccgi.patient_case_number,
+                                                        ccgi.diagnosis_date,
+                                                        ccgi.primary_site,
+                                                        ccgi.address_city_municipality,
+                                                        ccgi.cancer_stage,
+                                                        ccgi.patient_status
                                                     FROM
-                                                        patient_general_info pgi
+                                                        cancer_cases_general_info ccgi
                                                     JOIN
-                                                        hospital_general_information hgi ON pgi.hospital_id = hgi.hospital_id
-                                                    JOIN
-                                                        patient_cancer_info pci ON pgi.patient_id = pci.patient_id
+                                                        hospital_general_information hgi ON ccgi.hospital_id = hgi.hospital_id
                                                     WHERE
-                                                        pgi.hospital_id = '$hospital_id'";
-                                                        
+                                                        ccgi.hospital_id = '$hospital_id'";
+                                            //IF QUERY SUCCESSFUL DISPLAY NA SYA SA TABLE                                                                 
                                             $result = pg_query($db_connection, $query);
 
                                             if (!$result) {
                                                 echo "Error in query: " . pg_last_error($db_connection);
                                                 exit;
                                             }
-                                            //TABLE DISPLAY
+                                            // QUERY DISPLAYING
                                             while ($row = pg_fetch_assoc($result)) {
-                                                echo "<tr data-type='{$row['type_of_cancer']}' data-lastname='{$row['surname']}' data-firstname='{$row['name']}' data-hospital='{$row['hospital']}' data-cancer='{$row['type_of_cancer']}' data-stage='{$row['cancer_stage']}' data-status='{$row['status']}'>";
-                                                echo "<td>" . $row['name'] . "</td>";
-                                                echo "<td>" . $row['surname'] . "</td>";
-                                                echo "<td>" . $row['hospital'] . "</td>";
-                                                echo "<td>" . $row['type_of_cancer'] . "</td>";
+                                                echo "<td>" . $row['patient_case_number'] . "</td>";
+                                                echo "<td>" . $row['diagnosis_date'] . "</td>";
+                                                echo "<td>" . $row['primary_site'] . "</td>";
+                                                echo "<td>" . $row['address_city_municipality'] . "</td>";
                                                 echo "<td>" . $row['cancer_stage'] . "</td>";
-                                                echo "<td>" . $row['status'] . "</td>";
+                                                echo "<td>" . $row['patient_status'] . "</td>";
                                                 echo "<td>
-                                                <a href='patient-form-v2-edit.php?edit={$row['patient_id']}' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
-                                            </td>";
-                                            
-
-
+                                                        <a href='patient-form-v2-edit.php?edit={$row['patient_id']}' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
+                                                    </td>";
                                                 echo "</tr>";
                                             }
-                                            
-                                            
-
                                             echo "</tbody>";
                                         }
 

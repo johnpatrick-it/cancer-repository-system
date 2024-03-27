@@ -1,41 +1,101 @@
 <?php
-
 include('../includes/config.php');
 
 session_start();
-error_reporting(0);
 
 //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
-// Initializing ng hospital_name para sa banner
-$hospital_name = $_SESSION['hospital_name'];
 
+// Check if patient_id is set in the URL
+if (isset($_GET['edit']) && !empty($_GET['edit'])) {
+    // Retrieve the patient_id from the URL
+    $edit_patient_id = $_GET['edit'];
 
+    // Query to fetch patient information using patient_id
+    $query = "SELECT * FROM cancer_cases_general_info WHERE patient_id = $1";
+    $result = pg_query_params($db_connection, $query, array($edit_patient_id));
 
+    // Check if query was successful
+    if ($result) {
+        // Fetch patient information
+        $patient_info = pg_fetch_assoc($result);
+        if ($patient_info) {
+            // Extract patient information
+            $diagnosis_date = $patient_info['diagnosis_date'];
+            $primary_site = $patient_info['primary_site'];
+            $cancer_stage = $patient_info['cancer_stage'];
+            $type_of_patient = $patient_info['type_of_patient'];
+            $age = $patient_info['age'];
+            $sex = $patient_info['sex'];
+            $patient_status = $patient_info['patient_status'];
+            $date_of_death = $patient_info['date_of_death'];
+            $patient_case_number = $patient_info['patient_case_number'];
+            $address_city_municipality = $patient_info['address_city_municipality'];
+        } else {
+            // Patient not found
+            echo "Patient not found.";
+        }
+    } else {
+        // Error in query
+        echo "Error: " . pg_last_error($db_connection);
+    }
 
-// Ang function ng code na to is to Fetch submitter information from the database
-$sql = "SELECT user_fname, user_lname, user_mname, position FROM repo_user WHERE repo_user_id = $1";
-$result = pg_query_params($db_connection, $sql, [$_SESSION['repo_user_id']]);
+    // Ang function ng code na to is to Fetch submitter information from the database
+    $sql = "SELECT user_fname, user_lname, user_mname, position FROM repo_user WHERE repo_user_id = $1";
+    $result = pg_query_params($db_connection, $sql, [$_SESSION['repo_user_id']]);
 
-//fetching user sa database
-$row = pg_fetch_assoc($result);
-if ($row) {
-    //variables na needed para sa fetching para ilagay doon sa form
-    $first_name = $row['user_fname'];
-    $last_name = $row['user_lname'];
-    $middle_name = $row['user_mname'];
-    $designation = $row['position'];
+    //fetching user sa database
+    $row = pg_fetch_assoc($result);
+    if ($row) {
+        //variables na needed para sa fetching para ilagay doon sa form
+        $first_name = $row['user_fname'];
+        $last_name = $row['user_lname'];
+        $middle_name = $row['user_mname'];
+        $designation = $row['position'];
+    } else {
+        // output kapag walang data
+        echo "No user found with the specified ID.";
+    }
 } else {
-    // output kapag walang data
-    echo "No user found with the specified ID.";
+    // Redirect to an error page or display an error message
+    echo "Error: Patient ID not found in URL.";
 }
 
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Collect form data
+    $diagnosis_date = $_POST['diagnosis_date'];
+    $primary_site = $_POST['primary_site'];
+    $cancer_stage = $_POST['cancer_stage'];
+    $type_of_patient = $_POST['patient_type'];
+    $age = $_POST['age'];
+    $sex = $_POST['gender'];
+    $patient_status = $_POST['patient_status'];
+    $date_of_death = $_POST['date_of_death'];
+    $patient_case_number = $_POST['patient_case_number'];
+    $address_city_municipality = $_POST['city'];
 
-pg_close($db_connection);
+    // Query to update patient information in the database
+    $update_query = "UPDATE cancer_cases_general_info SET diagnosis_date = $1, primary_site = $2, cancer_stage = $3, type_of_patient = $4, age = $5, sex = $6, patient_status = $7, date_of_death = $8, patient_case_number = $9, address_city_municipality = $10 WHERE patient_id = $11";
+
+    // Prepare and execute the update query
+    $update_result = pg_query_params($db_connection, $update_query, array($diagnosis_date, $primary_site, $cancer_stage, $type_of_patient, $age, $sex, $patient_status, $date_of_death, $patient_case_number, $address_city_municipality, $edit_patient_id));
+
+    if ($update_result) {
+        // Redirect to a success page or display a success message
+        header("Location: manage-patient.php");
+        exit;
+    } else {
+        // Redirect to an error page or display an error message
+        echo "Error: Unable to update patient information. Please try again.";
+    }
+}
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -200,7 +260,7 @@ pg_close($db_connection);
 
         <div class="page-wrapper">
             <div class="containers">
-            <form method="post" action="patient-form-v2-save.php" id="registrationForm" enctype="multipart/form-data">
+            <form method="post" action="patient-form-v2-edit.php?edit=<?php echo htmlspecialchars($edit_patient_id, ENT_QUOTES, 'UTF-8'); ?>" id="registrationForm" enctype="multipart/form-data">
                     <div id="step1" class="form-step">
                         <div class="content container-fluid">
 
@@ -227,104 +287,94 @@ pg_close($db_connection);
                                     <section>
                                         <div class="row">
                                             <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
+                                                    <div class="form-group">
                                                         <label class="custom-label">Date of Diagnosis</label>
                                                     <div class="input-group date">
-                                                        <input name="diagnosis_date" type="date" class="form-control date-picker" id="datepicker3" required="true" autocomplete="off" onchange="updateMinDeathDate()">
+                                                        <input name="diagnosis_date" type="date" class="form-control date-picker" id="datepicker3" required="true" autocomplete="off" onchange="updateMinDeathDate()" value="<?php echo htmlspecialchars($diagnosis_date, ENT_QUOTES); ?>">
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>  
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Primary Site</label>
-                                                    <select name="primary_site" class="custom-select form-control"
-                                                        required="true" autocomplete="off">
+                                                    <select name="primary_site" class="custom-select form-control" required="true" autocomplete="off">
                                                         <option value="" disabled selected>Select Type</option>
-                                                        <option value="N/A">N/A</option>
-                                                        <option value="Brain">Brain</option>
-                                                        <option value="Bladder">Bladder</option>
-                                                        <option value="Breast">Breast</option>
-                                                        <option value="Colon">Colon</option>
-                                                        <option value="Corpus-uteri">Corpus-uteri</option>
-                                                        <option value="Esophagus">Esophagus</option>
-                                                        <option value="Kidney">Kidney</option>
-                                                        <option value="Larynx">Larynx</option>
-                                                        <option value="Leukemia">Leukemia</option>
-                                                        <option value="Liver">Liver</option>
-                                                        <option value="Lung">Lung</option>
-                                                        <option value="Skin">Skin</option>
-                                                        <option value="Nasopharynx">Nasopharynx</option>
-                                                        <option value="Oral">Oral</option>
-                                                        <option value="Ovary">Ovary</option>
-                                                        <option value="Prostate">Prostate</option>
-                                                        <option value="Rectum">Rectum</option>
-                                                        <option value="Stomach">Stomach</option>
-                                                        <option value="Testis">Testis</option>
-                                                        <option value="Thyroid">Thyroid</option>
-                                                        <option value="Uterine">Uterine</option>
+                                                        <?php
+                                                        // Array of primary site options
+                                                        $primary_site_options = array(
+                                                            "N/A", "Brain", "Bladder", "Breast", "Colon", "Corpus-uteri", "Esophagus",
+                                                            "Kidney", "Larynx", "Leukemia", "Liver", "Lung", "Skin", "Nasopharynx",
+                                                            "Oral", "Ovary", "Prostate", "Rectum", "Stomach", "Testis", "Thyroid", "Uterine"
+                                                        );
+
+                                                        // Loop through the options and populate the select element
+                                                        foreach ($primary_site_options as $site) {
+                                                            // Check if the current site matches the patient's existing primary site
+                                                            $selected = ($site == $patient_info['primary_site']) ? 'selected' : '';
+
+                                                            // Output the option element
+                                                            echo "<option value=\"$site\" $selected>$site</option>";
+                                                        }
+                                                        ?>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Cancer Stage</label>
-                                                    <select name="cancer_stage" class="custom-select form-control"
-                                                        required="true">
+                                                    <select name="cancer_stage" class="custom-select form-control" required="true">
                                                         <option value="">Select Type</option>
-                                                        <option value=1>I</option>
-                                                        <option value=2>II</option>
-                                                        <option value=3>III</option>
-                                                        <option value=4>IV</option>
+                                                        <option value="1" <?php if ($cancer_stage == "1") echo "selected"; ?>>I</option>
+                                                        <option value="2" <?php if ($cancer_stage == "2") echo "selected"; ?>>II</option>
+                                                        <option value="3" <?php if ($cancer_stage == "3") echo "selected"; ?>>III</option>
+                                                        <option value="4" <?php if ($cancer_stage == "4") echo "selected"; ?>>IV</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Type of Patient</label>
-                                                    <select name="patient_type" class="custom-select form-control"
-                                                        required="true" autocomplete="off">
-                                                        <option value="" disabled selected>Select Type</option>
-                                                        <option value="In-patient">In-patient</option>
-                                                        <option value="Out-patient">Out-patient</option>
+                                                    <select name="patient_type" class="custom-select form-control" required="true">
+                                                        <option value="" disabled selected>Select Type</option> 
+                                                        <option value="In-patient" <?php if ($type_of_patient == "In-patient") echo "selected"; ?>>In-patient</option>
+                                                        <option value="Out-patient" <?php if ($type_of_patient == "Out-patient") echo "selected"; ?>>Out-patient</option>
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Age</label>
-                                                    <input name="age" type="number" class="form-control"
-                                                        required="true" autocomplete="off">
-                                                </div>
+                                        <div class="col-md-3 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="custom-label">Age</label>
+                                                <input name="age" type="number" class="form-control" required="true" autocomplete="off" value="<?php echo htmlspecialchars($age, ENT_QUOTES, 'UTF-8'); ?>">
                                             </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Sex</label>
-                                                    <select name="gender" class="custom-select form-control"
-                                                        required="true">
-                                                        <option value="">Select Sex</option>
-                                                        <option value="Male">Male</option>
-                                                        <option value="Female">Female</option>
-                                                    </select>
-                                                </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="custom-label">Sex</label>
+                                                <select name="gender" class="custom-select form-control" required="true">
+                                                    <option value="">Select Sex</option>
+                                                    <option value="Male" <?php if ($sex === 'Male') echo 'selected'; ?>>Male</option>
+                                                    <option value="Female" <?php if ($sex === 'Female') echo 'selected'; ?>>Female</option>
+                                                </select>
                                             </div>
+                                        </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Patient Status</label>
                                                     <select name="patient_status" class="custom-select form-control" required="true" onchange="toggleDateOfDeath(this)">
-                                                        <option value="" disabled selected>Select Status</option>
-                                                        <option value="Alive">Alive</option>
-                                                        <option value="Disposition">Survived</option>
-                                                        <option value="Dead">Dead</option>
+                                                        <option value="" disabled>Select Status</option>
+                                                        <option value="Alive" <?php if ($patient_status === 'Alive') echo 'selected'; ?>>Alive</option>
+                                                        <option value="Disposition" <?php if ($patient_status === 'Disposition') echo 'selected'; ?>>Survived</option>
+                                                        <option value="Dead" <?php if ($patient_status === 'Dead') echo 'selected'; ?>>Dead</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
-                                                <div class="form-group" id="dateOfDeathField" style="display: none;">
+                                                <div class="form-group" id="dateOfDeathField" <?php if ($patient_status == 'Dead') echo 'style="display: block;"'; ?>>
                                                     <label class="custom-label">Date of Death</label>
                                                     <div class="input-group date">
-                                                        <input type="date" name="date_of_death" class="form-control date-picker" id="datepicker1" autocomplete="off">
+                                                        <input type="date" name="date_of_death" class="form-control date-picker" id="datepicker1" autocomplete="off" value="<?php echo htmlspecialchars($date_of_death); ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -333,19 +383,16 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">City/Municipality</label>
-                                                    <input name="city" type="text" class="form-control" required="true"
-                                                        autocomplete="off">
+                                                    <input name="city" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo htmlspecialchars($address_city_municipality); ?>">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Permanent Address</label>
-                                                    <input name="address" type="text" class="form-control date-picker"
-                                                        required="true" autocomplete="off">
+                                                    <label class="custom-label">Patient Case Number</label>
+                                                    <input name="patient_case_number" type="text" class="form-control date-picker" required="true" autocomplete="off" value="<?php echo htmlspecialchars($patient_case_number); ?>">
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
@@ -405,7 +452,7 @@ pg_close($db_connection);
                                                 <div class="form-group">
                                                     <label style="font-size:16px;"><b></b></label>
                                                     <div class="">
-                                                        <button class="btn btn-primary" name="submit" id="" data-toggle="modal" onclick="displaySuccessCredentialsAlert(event)">Submit</button>
+                                                    <button class="btn btn-primary" name="submit" id="submitBtn" data-toggle="modal" onclick="displaySuccessCredentialsAlert(event)">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>

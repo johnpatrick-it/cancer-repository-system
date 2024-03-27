@@ -39,7 +39,7 @@ if ($result_hospital_id) {
             $date_of_death = null;
         }
 
-        $permanent_address = $_POST["permanent_address"];
+        $patient_case_number = $_POST["patient_case_number"];
         $address_city_municipality = $_POST["city"];
         $last_name = $_POST["last_name"];
         $first_name = $_POST["first_name"];
@@ -53,7 +53,7 @@ if ($result_hospital_id) {
         }
 
         // Prepare SQL statement
-        $query_insert = "INSERT INTO public.cancer_cases_general_info (hospital_id, diagnosis_date, primary_site, cancer_stage, type_of_patient, age, sex, patient_status, date_of_death, permanent_address, address_city_municipality, completed_by_lname, completed_by_fname, completed_by_mname, designation, repo_user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)";
+        $query_insert = "INSERT INTO public.cancer_cases_general_info (hospital_id, diagnosis_date, primary_site, cancer_stage, type_of_patient, age, sex, patient_status, date_of_death, patient_case_number, address_city_municipality, completed_by_lname, completed_by_fname, completed_by_mname, designation, repo_user_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)";
 
         // Execute the query
         $result_insert = pg_query_params($db_connection, $query_insert, array(
@@ -66,7 +66,7 @@ if ($result_hospital_id) {
             $gender,
             $patient_status,
             $date_of_death,
-            $permanent_address,
+            $patient_case_number,
             $address_city_municipality,
             $last_name,
             $first_name,
