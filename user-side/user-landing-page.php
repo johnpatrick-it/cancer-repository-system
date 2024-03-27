@@ -370,14 +370,15 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                                             }
                                             // QUERY DISPLAYING
                                             while ($row = pg_fetch_assoc($result)) {
-                                                echo "<td><a href='manage-patient.php'>" . $row['patient_case_number'] . "</a></td>";
-                                                echo "<td><a href='manage-patient.php'>" . $row['age'] . "</a></td>";
-                                                echo "<td><a href='manage-patient.php'>" . $row['sex'] . "</a></td>";
-                                                echo "<td><a href='manage-patient.php'>" . $row['primary_site'] . "</a></td>";
-                                                echo "<td><a href='manage-patient.php'>" . $row['cancer_stage'] . "</a></td>";
-                                                echo "<td><a href='manage-patient.php'>" . $row['patient_status'] . "</a></td>";
+                                                echo "<td><a href='#' class='edit-patient' data-id='" . $row['patient_id'] . "'>" . $row['patient_case_number'] . "</a></td>";
+                                                echo "<td><a href='#' class='edit-patient' data-id='" . $row['patient_id'] . "'>" . $row['age'] . "</a></td>";
+                                                echo "<td><a href='#' class='edit-patient' data-id='" . $row['patient_id'] . "'>" . $row['sex'] . "</a></td>";
+                                                echo "<td><a href='#' class='edit-patient' data-id='" . $row['patient_id'] . "'>" . $row['primary_site'] . "</a></td>";
+                                                echo "<td><a href='#' class='edit-patient' data-id='" . $row['patient_id'] . "'>" . $row['cancer_stage'] . "</a></td>";
+                                                echo "<td><a href='#' class='edit-patient' data-id='" . $row['patient_id'] . "'>" . $row['patient_status'] . "</a></td>";
                                                 echo "</tr>";
                                             }
+                                            
                                             echo "</tbody>";
                                         }
 
@@ -396,6 +397,26 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
+
+          $(document).ready(function() {
+        $('.edit-patient').click(function(e) {
+            e.preventDefault();
+            var patientId = $(this).data('id');
+            Swal.fire({
+                title: 'Manage Patient',
+                text: 'Redirecting to Manage Patient!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'manage-patient.php'; // Redirect to manage-patient.php
+                }
+            });
+        });
+    });
+
         $(document).ready(function() {
             $('#searchInput').keyup(function() {
                 var searchText = $(this).val().toLowerCase();

@@ -233,8 +233,10 @@ include('../includes/config.php');
                                                 echo "<td>" . $row['cancer_stage'] . "</td>";
                                                 echo "<td>" . $row['patient_status'] . "</td>";
                                                 echo "<td>
-                                                        <a href='patient-form-v2-edit.php?edit={$row['patient_id']}' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
-                                                    </td>";
+                                                <button onclick=\"confirmEdit('{$row['patient_id']}')\" class='btn text-xs text-white btn-blue action-icon'>
+                                                    <i class='fa fa-pencil'></i>
+                                                </button>
+                                            </td>";
                                                 echo "</tr>";
                                             }
                                             echo "</tbody>";
@@ -257,6 +259,7 @@ include('../includes/config.php');
         <!-- Include SweetAlert library -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
     <script>
+        //Submit button succesful alert to
         function editSuccessCredentialsAlert(success) {
             Swal.fire({
                 title: 'Success!',
@@ -265,6 +268,23 @@ include('../includes/config.php');
                 confirmButtonText: 'OK'
             });
         }
+
+        // Edit patient button alert to
+    function confirmEdit(patientId) {
+        Swal.fire({
+            title: 'Edit Patient',
+            text: 'Are you sure you want to edit this patient?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            // If user clicks Yes, redirect to the edit page
+            if (result.isConfirmed) {
+                window.location.href = 'patient-form-v2-edit.php?edit=' + patientId;
+            }
+        });
+    }
 
         document.addEventListener('DOMContentLoaded', function() {
             <?php
