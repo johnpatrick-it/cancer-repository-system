@@ -1,6 +1,6 @@
 <?php
 
-include('./includes/config.php');
+include('../includes/config.php');
 
 session_start();
 
@@ -8,15 +8,6 @@ session_start();
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
-}
-
-$host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
-
-try {
-    $dbh = new PDO("pgsql:" . $host);
-    
-} catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
 }
 
 ?>
@@ -42,28 +33,28 @@ $_SESSION['edit_id'] = $_GET['edit'];?>
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="./assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="./assets/css/select2.min.css">
+    <link rel="stylesheet" href="../assets/css/select2.min.css">
 
     <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
 
     <style>
@@ -174,8 +165,8 @@ $_SESSION['edit_id'] = $_GET['edit'];?>
     <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-        <?php include("./includes/user-header.php"); ?>
-        <?php include("./includes/user-sidebar.php"); ?>
+        <?php include("user-header.php"); ?>
+        <?php include("user-sidebar.php"); ?>
 
 
         <div class="page-wrapper">

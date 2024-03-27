@@ -8,7 +8,7 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
 }
 
 error_reporting(0);
-include('includes/config.php');
+include('../includes/config.php');
 
 ?>
 
@@ -180,7 +180,7 @@ include('includes/config.php');
             <div class="user-container" id="userDropdown">
                 <a href="#" class="nav-link" data-toggle="dropdown">
                     <span class="user-img">
-                        <img src="./profiles/user.jpg" alt="User Picture">
+                        <img src="../profiles/user.jpg" alt="User Picture">
                      <?php echo $_SESSION['user_lname']?>
                     </span>
                     <span class="user-text"></span>

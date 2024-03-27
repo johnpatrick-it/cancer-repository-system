@@ -8,7 +8,7 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     exit;
 }
 
-include('includes/config.php');
+include('../includes/config.php');
 
 // Retrieve repo_user_id from session
 $repo_user_id = $_SESSION['repo_user_id'];

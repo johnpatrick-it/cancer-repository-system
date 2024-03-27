@@ -45,9 +45,9 @@
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
                 <li class="profile-block">
-                    <a href="./user-landing-page.php">
+                    <a href="user-landing-page.php">
                         <span class="user-img d-inline-block position-relative">
-                            <img src="./profiles/pcc-logo1.png" alt="User Picture" class="rounded-circle img-thumbnail neon-border">
+                            <img src="../profiles/pcc-logo1.png" alt="User Picture" class="rounded-circle img-thumbnail neon-border">
                         </span>
                     </a>
                     <a href="#">
@@ -57,9 +57,9 @@
                     </a>
                 </li>
 
-                <!-- User Dashboard -->
+                <!-- User Dashboard --> 
                 <li class="mt-5">
-                    <a href="./user-landing-page.php">
+                    <a href="user-landing-page.php">
                         <i class="la la-dashboard"></i>
                         <span>User Dashboard</span>
                     </a>
@@ -67,7 +67,7 @@
 
                 <!-- Patient Registry -->
                 <li>
-                    <a href="./patient-form-v2.php">
+                    <a href="patient-form-v2.php">
                         <i class="la la-user-plus"></i>
                         <span>Cancer Cases Repository</span>
                     </a>
@@ -75,7 +75,7 @@
 
                 <!-- Manage Patient -->
                 <li>
-                    <a href="./manage-patient.php">
+                    <a href="manage-patient.php">
                         <i class="la la-users"></i>
                         <span>Manage Patient</span>
                     </a>
@@ -83,7 +83,7 @@
 
                 <!-- Patient Report -->
                 <li>
-                    <a href="./patient-report.php">
+                    <a href="patient-report.php">
                         <i class="la la-file-text-o"></i>
                         <span>Patient Report</span>
                     </a>
@@ -116,7 +116,7 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "functions/user-logout-function.php";
+                window.location.href = "../functions/user-logout-function.php";
             } else {
                 console.log("Logout canceled");
             }

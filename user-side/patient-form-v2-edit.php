@@ -1,6 +1,6 @@
 <?php
 
-include('./includes/config.php');
+include('../includes/config.php');
 
 session_start();
 error_reporting(0);
@@ -54,28 +54,28 @@ pg_close($db_connection);
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="./assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="./assets/css/select2.min.css">
+    <link rel="stylesheet" href="../assets/css/select2.min.css">
 
     <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
     <style>
     .page-header {
@@ -194,8 +194,8 @@ pg_close($db_connection);
     <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-        <?php include("includes/user-header.php"); ?>
-        <?php include("includes/user-sidebar.php"); ?>
+        <?php include("user-header.php"); ?>
+        <?php include("user-sidebar.php"); ?>
 
 
         <div class="page-wrapper">
@@ -483,9 +483,9 @@ pg_close($db_connection);
     }
     </script>
 
-    <script src="./assets/js/script.js"></script>
+    <script src="../assets/js/script.js"></script>
     <!-- jQuery -->
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="../assets/js/jquery-3.2.1.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -514,31 +514,31 @@ pg_close($db_connection);
 
 
     <!-- jQuery -->
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="../assets/js/jquery-3.2.1.min.js"></script>
 
     <!-- Bootstrap Core JS -->
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/popper.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
 
     <!-- Slimscroll JS -->
-    <script src="assets/js/jquery.slimscroll.min.js"></script>
+    <script src="../assets/js/jquery.slimscroll.min.js"></script>
 
     <!-- Chart JS -->
-    <script src="assets/js/chart.js"></script>
+    <script src="../assets/js/chart.js"></script>
 
     <!-- Select2 JS -->
-    <script src="./assets/js/select2.min.js"></script>
+    <script src="../assets/js/select2.min.js"></script>
 
     <!-- Datetimepicker JS -->
-    <script src="./assets/js/moment.min.js"></script>
-    <script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../assets/js/moment.min.js"></script>
+    <script src="../assets/js/bootstrap-datetimepicker.min.js"></script>
 
     <!-- Datatable JS -->
-    <script src="./assets/js/jquery.dataTables.min.js"></script>
-    <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../assets/js/jquery.dataTables.min.js"></script>
+    <script src="../assets/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="./assets/js/app.js"></script>
+    <script src="../assets/js/app.js"></script>
 </body>
 
 </html>

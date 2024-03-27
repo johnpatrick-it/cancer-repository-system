@@ -92,7 +92,7 @@ function userLogin($email, $password) {
                         $_SESSION['user_lname'] = $userRow['user_lname'];
                         $_SESSION['email'] = $userRow['email'];
 
-                        header("Location: user-landing-page.php");
+                        header("Location: user-side/user-landing-page.php");
                         exit;
                     } else {
                         // Invalid password
@@ -110,7 +110,7 @@ function userLogin($email, $password) {
                         $_SESSION['user_lname'] = $userRow['user_lname'];
                         $_SESSION['email'] = $userRow['email'];
 
-                        header("Location: user-landing-page.php");
+                        header("Location: user-side/user-landing-page.php");
                         exit;
                     } else {
                         // Invalid password
@@ -134,4 +134,4 @@ function userLogin($email, $password) {
         exit;
     }
 }
-?>
+

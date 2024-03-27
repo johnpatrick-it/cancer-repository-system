@@ -9,7 +9,7 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     exit;
 }
 
-include('includes/config.php');
+include('../includes/config.php');
 
 
 $host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
@@ -88,28 +88,28 @@ $total_patients = $row_total_patients['total_patients'];
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="./assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="./assets/css/select2.min.css">
+    <link rel="stylesheet" href="../assets/css/select2.min.css">
 
     <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
     <style>
         .page-header {
@@ -213,8 +213,8 @@ $total_patients = $row_total_patients['total_patients'];
     <!-- Main Wrapper -->
     <div class="main-wrapper">
 
-        <?php include("includes/user-header.php"); ?>
-        <?php include("includes/user-sidebar.php"); ?>
+        <?php include("user-header.php"); ?>
+        <?php include("user-sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="content container-fluid">
@@ -427,31 +427,31 @@ $total_patients = $row_total_patients['total_patients'];
 
 
     <!-- jQuery -->
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="../assets/js/jquery-3.2.1.min.js"></script>
 
     <!-- Bootstrap Core JS -->
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/popper.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
 
     <!-- Slimscroll JS -->
-    <script src="assets/js/jquery.slimscroll.min.js"></script>
+    <script src="../assets/js/jquery.slimscroll.min.js"></script>
 
     <!-- Chart JS -->
-    <script src="assets/js/chart.js"></script>
+    <script src="../assets/js/chart.js"></script>
 
     <!-- Select2 JS -->
-    <script src="./assets/js/select2.min.js"></script>
+    <script src="../assets/js/select2.min.js"></script>
 
     <!-- Datetimepicker JS -->
-    <script src="./assets/js/moment.min.js"></script>
-    <script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../assets/js/moment.min.js"></script>
+    <script src="../assets/js/bootstrap-datetimepicker.min.js"></script>
 
     <!-- Datatable JS -->
-    <script src="./assets/js/jquery.dataTables.min.js"></script>
-    <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../assets/js/jquery.dataTables.min.js"></script>
+    <script src="../assets/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="./assets/js/app.js"></script>
+    <script src="../assets/js/app.js"></script>
 </body>
 
 </html>

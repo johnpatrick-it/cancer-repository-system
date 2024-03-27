@@ -11,7 +11,7 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
 $hospital_name = $_SESSION['hospital_name'];
 
 error_reporting(0);
-include('includes/config.php');
+include('../includes/config.php');
 
 ?>
 
@@ -29,28 +29,28 @@ include('includes/config.php');
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="./assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="./assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="./assets/css/select2.min.css">
+    <link rel="stylesheet" href="../assets/css/select2.min.css">
 
     <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="./assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
     <style>
     body {
@@ -124,8 +124,8 @@ include('includes/config.php');
 <body>
     <div class="main-wrapper">
 
-        <?php include("./includes/user-header.php"); ?>
-        <?php include("./includes/user-sidebar.php"); ?>
+        <?php include("user-header.php"); ?>
+        <?php include("user-sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="content container-fluid">
@@ -236,7 +236,7 @@ include('includes/config.php');
                                                 echo "<td>" . $row['cancer_stage'] . "</td>";
                                                 echo "<td>" . $row['status'] . "</td>";
                                                 echo "<td>
-                                                <a href='patient-form-edit.php?edit={$row['patient_id']}' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
+                                                <a href='patient-form-v2-edit.php?edit={$row['patient_id']}' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>
                                             </td>";
                                             
 
@@ -325,28 +325,28 @@ include('includes/config.php');
 
 
     <!-- jQuery -->
-    <script src="./assets/js/jquery-3.2.1.min.js"></script>
+    <script src="../assets/js/jquery-3.2.1.min.js"></script>
 
     <!-- Bootstrap Core JS -->
-    <script src="./assets/js/popper.min.js"></script>
-    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/popper.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
 
     <!-- Slimscroll JS -->
-    <script src="./assets/js/jquery.slimscroll.min.js"></script>
+    <script src="../assets/js/jquery.slimscroll.min.js"></script>
 
     <!-- Select2 JS -->
-    <script src="./assets/js/select2.min.js"></script>
+    <script src="../assets/js/select2.min.js"></script>
 
     <!-- Datetimepicker JS -->
-    <script src="./assets/js/moment.min.js"></script>
-    <script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="../assets/js/moment.min.js"></script>
+    <script src="../assets/js/bootstrap-datetimepicker.min.js"></script>
 
     <!-- Datatable JS -->
-    <script src="./assets/js/jquery.dataTables.min.js"></script>
-    <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../assets/js/jquery.dataTables.min.js"></script>
+    <script src="../assets/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="./assets/js/app.js"></script>
+    <script src="../assets/js/app.js"></script>
 </body>
 
 </html>
