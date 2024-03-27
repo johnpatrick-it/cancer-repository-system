@@ -262,7 +262,7 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                                 <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
                                 <div class="dash-widget-info">
                                     <h3><?php echo $new_patient; ?></h3>
-                                    <span class="span-text">New Patients</span>
+                                    <span class="span-text"><a href="#" id="new-patients-link">New Entries</a></span>
                                 </div>
                             </div>
                         </div>
@@ -273,7 +273,7 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                                 <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
                                 <div class="dash-widget-info">
                                     <h3><?php echo $total_patients; ?></h3>
-                                    <span class="span-text">Total Entries</span>
+                                    <span class="span-text"><a href="#" id="total-patients-link">Total Entries</a></span>
                                 </div>
                             </div>
                         </div>
@@ -397,8 +397,9 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
-
-          $(document).ready(function() {
+//Alert papunta sa manage patient
+$(document).ready(function() {
+        // Alert papunta sa manage patient
         $('.edit-patient').click(function(e) {
             e.preventDefault();
             var patientId = $(this).data('id');
@@ -415,8 +416,40 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                 }
             });
         });
-    });
 
+        // Alert papunta sa Cancer Cases Repository
+        $('#new-patients-link').click(function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Cancer Cases Repository',
+                text: 'Redirecting to Cancer Cases Repository!',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'patient-form-v2.php'; // Redirect to cancer-cases-repository.php
+                }
+            });
+        });
+    });
+            // Alert papunta sa Cancer Cases Repository
+            $('#total-patients-link').click(function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Cancer Cases Repository',
+                text: 'Redirecting to Cancer Cases Repository!',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'patient-form-v2.php'; // Redirect to cancer-cases-repository.php
+                }
+            });
+        });
         $(document).ready(function() {
             $('#searchInput').keyup(function() {
                 var searchText = $(this).val().toLowerCase();
