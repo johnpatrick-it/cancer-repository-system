@@ -240,7 +240,6 @@ pg_close($db_connection);
                                                     <select name="primary_site" class="custom-select form-control"
                                                         required="true" autocomplete="off">
                                                         <option value="" disabled selected>Select Type</option>
-                                                        <option value="N/A">N/A</option>
                                                         <option value="Brain">Brain</option>
                                                         <option value="Bladder">Bladder</option>
                                                         <option value="Breast">Breast</option>

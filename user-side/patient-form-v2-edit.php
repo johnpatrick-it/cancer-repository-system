@@ -5,7 +5,7 @@ session_start();
 
 //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit; 
 }
 
@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $age = $_POST['age'];
     $sex = $_POST['gender'];
     $patient_status = $_POST['patient_status'];
-    $date_of_death = $_POST['date_of_death'];
+    $date_of_death = ($_POST['patient_status'] == 'Dead') ? $_POST['date_of_death'] : NULL;
     $patient_case_number = $_POST['patient_case_number'];
     $address_city_municipality = $_POST['city'];
 
@@ -302,7 +302,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                         <?php
                                                         // Array of primary site options
                                                         $primary_site_options = array(
-                                                            "N/A", "Brain", "Bladder", "Breast", "Colon", "Corpus-uteri", "Esophagus",
+                                                            "Brain", "Bladder", "Breast", "Colon", "Corpus-uteri", "Esophagus",
                                                             "Kidney", "Larynx", "Leukemia", "Liver", "Lung", "Skin", "Nasopharynx",
                                                             "Oral", "Ovary", "Prostate", "Rectum", "Stomach", "Testis", "Thyroid", "Uterine"
                                                         );
@@ -365,7 +365,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <select name="patient_status" class="custom-select form-control" required="true" onchange="toggleDateOfDeath(this)">
                                                         <option value="" disabled>Select Status</option>
                                                         <option value="Alive" <?php if ($patient_status === 'Alive') echo 'selected'; ?>>Alive</option>
-                                                        <option value="Disposition" <?php if ($patient_status === 'Disposition') echo 'selected'; ?>>Survived</option>
+                                                        <option value="Survived" <?php if ($patient_status === 'Survived') echo 'selected'; ?>>Survived</option>
                                                         <option value="Dead" <?php if ($patient_status === 'Dead') echo 'selected'; ?>>Dead</option>
                                                     </select>
                                                 </div>

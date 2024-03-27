@@ -12,12 +12,11 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
 include('../includes/config.php');
 
 
-$host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
 
 try {
     $dbh = new PDO("pgsql:" . $host);
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+
 }
 
 
@@ -57,8 +56,8 @@ if (empty($hospital_id)) {
 }
 
 
-
-$query_total_patients = "SELECT COUNT(*) AS total_patients FROM patient_general_info WHERE hospital_id = '$hospital_id'::uuid";
+//Function para makita kung ilang yung count ng total entries
+$query_total_patients = "SELECT COUNT(*) AS total_patients FROM cancer_cases_general_info WHERE hospital_id = '$hospital_id'::uuid";
 $result_total_patients = pg_query($db_connection, $query_total_patients);
 
 // Check kung yung $result is empty
@@ -69,6 +68,27 @@ if (!$result_total_patients) {
 
 $row_total_patients = pg_fetch_assoc($result_total_patients);
 $total_patients = $row_total_patients['total_patients'];
+
+
+$sql = "SELECT COUNT(patient_id) AS new_patient 
+        FROM cancer_cases_general_info 
+        WHERE CAST(time_stamp AS DATE) BETWEEN CURRENT_DATE - INTERVAL '2 minutes' AND CURRENT_DATE 
+        AND hospital_id = (SELECT hospital_id FROM repo_user WHERE repo_user_id = $1)";
+
+// Prepare and execute the query with parameters
+$result = pg_query_params($db_connection, $sql, array($_SESSION['repo_user_id']));
+
+// Check if the query was successful
+if (!$result) {
+    echo "Error in query: " . pg_last_error($db_connection);
+    exit;
+}
+
+// Fetch the result row
+$row = pg_fetch_assoc($result);
+
+// Extract the new patient count
+$new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
 ?>
 
 
@@ -241,21 +261,7 @@ $total_patients = $row_total_patients['total_patients'];
                             <div class="card-body">
                                 <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
                                 <div class="dash-widget-info">
-                                    <?php
-                                    $sql = "SELECT COUNT(patient_id) AS new_patient
-                                        FROM patient_cancer_info
-                                        WHERE CAST(time_stamp AS DATE) BETWEEN CURRENT_DATE - INTERVAL '3 days' AND CURRENT_DATE";
-
-                                    $query = $dbh->prepare($sql);
-                                    $query->execute();
-                                    $result = $query->fetch(PDO::FETCH_ASSOC);
-
-                                    // Ensure the key exists in the result array before accessing it
-                                    $new_patient = isset($result['new_patient']) ? $result['new_patient'] : 0;
-
-                                    ?>
                                     <h3><?php echo $new_patient; ?></h3>
-
                                     <span class="span-text">New Patients</span>
                                 </div>
                             </div>
@@ -267,7 +273,7 @@ $total_patients = $row_total_patients['total_patients'];
                                 <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
                                 <div class="dash-widget-info">
                                     <h3><?php echo $total_patients; ?></h3>
-                                    <span class="span-text">Total Patients</span>
+                                    <span class="span-text">Total Entries</span>
                                 </div>
                             </div>
                         </div>
@@ -297,7 +303,6 @@ $total_patients = $row_total_patients['total_patients'];
                                         <input type="text" class="form-control pl-5 search-input" id="searchInput" placeholder="Search">
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -310,10 +315,10 @@ $total_patients = $row_total_patients['total_patients'];
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
-                                            <th>Patient Type</th>
-                                            <th>Last Name</th>
-                                            <th>First Name</th>
+                                            <th>Patient Number</th>
                                             <th>Gender</th>
+                                            <th>Age</th>
+                                            <th>Cancer</th>
                                             <th>Cancer Stage</th>
                                             <th>Status</th>
                                         </tr>
@@ -342,42 +347,37 @@ $total_patients = $row_total_patients['total_patients'];
                                             $hospital_id = $row_affiliation['hospital_id'];
 
                                             // PUTANG INANG SQL JOIN TO PUTANG INA MO
-                                            $query = "
-                                                SELECT 
-                                                    pgi.type_of_patient,
-                                                    pgi.patient_last_name,
-                                                    pgi.patient_first_name,
-                                                    pgi.sex,
-                                                    pci.cancer_stage,
-                                                    pci.patient_status
-                                                FROM 
-                                                    patient_general_info pgi
-                                                JOIN 
-                                                    patient_cancer_info pci ON pgi.patient_id = pci.patient_id
-                                                JOIN
-                                                    hospital_general_information hgi ON pgi.hospital_id = hgi.hospital_id
-                                                WHERE
-                                                    hgi.hospital_id = '$hospital_id'
-                                            ";
+                                            $query = "SELECT
+                                                        ccgi.patient_id,
+                                                        ccgi.patient_case_number,
+                                                        ccgi.sex,
+                                                        ccgi.age,
+                                                        ccgi.primary_site,
+                                                        ccgi.cancer_stage,
+                                                        ccgi.patient_status
+                                                    FROM
+                                                        cancer_cases_general_info ccgi
+                                                    JOIN
+                                                        hospital_general_information hgi ON ccgi.hospital_id = hgi.hospital_id
+                                                    WHERE
+                                                        ccgi.hospital_id = '$hospital_id'";
+                                            //IF QUERY SUCCESSFUL DISPLAY NA SYA SA TABLE                                                                 
                                             $result = pg_query($db_connection, $query);
 
                                             if (!$result) {
                                                 echo "Error in query: " . pg_last_error($db_connection);
                                                 exit;
                                             }
-                                            //TABLE DISPLAY
+                                            // QUERY DISPLAYING
                                             while ($row = pg_fetch_assoc($result)) {
-                                                echo "<tr data-type='{$row['type_of_patient']}' data-lastname='{$row['patient_last_name']}' data-firstname='{$row['patient_first_name']}' data-gender='{$row['sex']}' data-stage='{$row['cancer_stage']}' data-status='{$row['patient_status']}'>";
-                                                echo "<td>" . $row['type_of_patient'] . "</td>";
-                                                echo "<td>" . $row['patient_last_name'] . "</td>";
-                                                echo "<td>" . $row['patient_first_name'] . "</td>";
-                                                echo "<td>" . $row['sex'] . "</td>";
-                                                echo "<td>" . $row['cancer_stage'] . "</td>";
-                                                echo "<td>" . $row['patient_status'] . "</td>";
+                                                echo "<td><a href='manage-patient.php'>" . $row['patient_case_number'] . "</a></td>";
+                                                echo "<td><a href='manage-patient.php'>" . $row['age'] . "</a></td>";
+                                                echo "<td><a href='manage-patient.php'>" . $row['sex'] . "</a></td>";
+                                                echo "<td><a href='manage-patient.php'>" . $row['primary_site'] . "</a></td>";
+                                                echo "<td><a href='manage-patient.php'>" . $row['cancer_stage'] . "</a></td>";
+                                                echo "<td><a href='manage-patient.php'>" . $row['patient_status'] . "</a></td>";
                                                 echo "</tr>";
                                             }
-
-
                                             echo "</tbody>";
                                         }
 
