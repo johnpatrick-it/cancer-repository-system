@@ -8,7 +8,6 @@ function generateSalt($length = 16) {
 }
 
 function sanitizeString($input) {
-    // Sanitize string to prevent XSS attacks and remove leading/trailing whitespace
     $input = trim(strip_tags($input));
     return $input;
 }
@@ -54,4 +53,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } 
 }
-?>
+
