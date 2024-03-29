@@ -31,7 +31,12 @@ if ($result_hospital_id) {
         $age = $_POST["age"];
         $gender = $_POST["gender"];
         $patient_status = $_POST["patient_status"];
-        $date_of_death = $_POST["date_of_death"] ?? null; // Using null coalescing operator
+        // Check if patient status is "Dead" and set date_of_death accordingly
+        if ($patient_status === "Dead") {
+            $date_of_death = isset($_POST["date_of_death"]) ? $_POST["date_of_death"] : null;
+        } else {
+            $date_of_death = null;
+        }
         $patient_case_number = $_POST["patient_case_number"];
         $address_city_municipality = $_POST["city"];
         $last_name = $_POST["last_name"];
@@ -96,4 +101,4 @@ if ($result_hospital_id) {
     echo "Error retrieving hospital ID for repo_user_id: $repo_user_id";
     exit;
 }
-?>
+

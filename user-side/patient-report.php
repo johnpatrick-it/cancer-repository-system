@@ -174,7 +174,7 @@ include('../includes/config.php');
                                     <thead>
                                         <tr>
                                             <th>Log-id</th>
-                                            <th>Patient-id</th>
+                                            <th>Patient Case</th>
                                             <th>Date</th>
                                             <th>Description</th>
                                         </tr>
@@ -186,34 +186,25 @@ include('../includes/config.php');
                                         //THE ONLY LOGS THAT WILL APPEAR IS IF SAME NG REPO_USER_ID YUNG SUBMITTER
                                         //TYAKA NAKA SESSION NA REPO_USER
                                         $current_repo_user_id = $_SESSION['repo_user_id'];
-                                
-                                 
-                                        //PUTANG INANG JOIN QUERY
-                                        $query = "SELECT
-                                        log_id,
-                                        patient_id,
-                                        log_timestamp AS date,
-                                        log_action AS description
-                                      FROM
-                                        repo_logs
-                                      WHERE
-                                        repo_user_id = '$current_repo_user_id'";
-
-                                        $result = pg_query($db_connection, $query);
+                                        $query = "SELECT repository_log_id, patient_case_number, log_timestamp AS date, log_action AS description
+                                                  FROM repository_logs
+                                                  WHERE repo_user_id = $1"; // Use parameterized query
+                                        
+                                        $result = pg_query_params($db_connection, $query, array($current_repo_user_id));
                                         if ($result) {
+                                            // Loop through each row and display data in the table
                                             while ($row = pg_fetch_assoc($result)) {
                                                 echo "<tr>";
-                                                echo "<td>" . $row['log_id'] . "</td>";
-                                                echo "<td>" . $row['patient_id'] . "</td>";
-                                                echo "<td>" . $row['date'] . "</td>";
-                                                echo "<td>" . $row['description'] . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['repository_log_id']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['patient_case_number']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['description']) . "</td>";
                                                 echo "</tr>";
                                             }
                                             pg_free_result($result);
                                         } else {
                                             echo "Error in query: " . pg_last_error($db_connection);
                                         }
-                                        pg_close($db_connection);
                                         ?>
                                     </tbody>
                                 </table>

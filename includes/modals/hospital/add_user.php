@@ -9,6 +9,7 @@ if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header('.../login.php');
     exit;
 }
+
 ?>
 
 

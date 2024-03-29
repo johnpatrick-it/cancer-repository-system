@@ -85,6 +85,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $update_result = pg_query_params($db_connection, $update_query, array($diagnosis_date, $primary_site, $cancer_stage, $type_of_patient, $age, $sex, $patient_status, $date_of_death, $patient_case_number, $address_city_municipality, $edit_patient_id));
 
     if ($update_result) {
+        // Log the edit action
+        $log_action = "Patient Details Updated";
+        $query_log_success = "INSERT INTO public.repository_logs (log_timestamp, repo_user_id, patient_id, completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_case_number, log_action) VALUES (timezone('Asia/Manila', current_timestamp), $1, $2, $3, $4, $5, $6, $7, $8)";
+        $result_log_success = pg_query_params($db_connection, $query_log_success, array($_SESSION['repo_user_id'], $edit_patient_id, $last_name, $first_name, $middle_name, $designation, $patient_case_number, $log_action));
+
+        if (!$result_log_success) {
+            echo "Error logging action: " . pg_last_error($db_connection);
+            exit;
+        }
+
         // Redirect to a success page or display a success message
         header("Location: manage-patient.php");
         exit;
@@ -94,6 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 
 
 

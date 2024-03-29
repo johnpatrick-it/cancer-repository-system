@@ -203,38 +203,38 @@ include('includes/config.php');
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                            if (!$db_connection) {
-                                                echo "Failed to connect to the database.";
-                                            } else {
+                                    <?php
+                                        if ($db_connection) {
+                                            $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province,hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information WHERE hospital_name = $1";
+                                            $result = pg_query_params($db_connection, $query, array($hospital_name));
+                                            while ($row = pg_fetch_assoc($result)) {
+                                                echo "<tr data-name='" . htmlspecialchars($row['hospital_name']) . "' data-level='" . htmlspecialchars($row['hospital_level']) . "'"
+                                                    . " data-institution='" . htmlspecialchars($row['type_of_institution']) . "'"
+                                                    . " data-barangay='" . htmlspecialchars($row['hospital_barangay']) . "'"
+                                                    . " data-street='" . htmlspecialchars($row['hospital_street']) . "'>";
+                                                echo "<td class='hospital-name'>" . htmlspecialchars($row['hospital_name']) . "</td>";
+                                                echo "<td class='hospital-level'>" . htmlspecialchars($row['hospital_level']) . "</td>";
+                                                echo "<td class='type-of-institution'>" . htmlspecialchars($row['type_of_institution']) . "</td>";
+                                                echo "<td class='hospital-barangay'>" . htmlspecialchars($row['hospital_barangay']) . "</td>";
+                                                echo "<td class='hospital-street'>" . htmlspecialchars($row['hospital_street']) . "</td>";
+                                                echo "<td class='hospital-equiptments'>" . htmlspecialchars($row['hospital_equipments']) . "</td>";
 
-                                                $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information WHERE hospital_name = '$hospital_name'";
+                                                // Populate hidden input fields for additional data
+                                                echo "<input type='hidden' class='hospital-region' value='" . htmlspecialchars($row['hospital_region']) . "'>";
+                                                echo "<input type='hidden' class='hospital-province' value='" . htmlspecialchars($row['hospital_province']) . "'>";
+                                                echo "<input type='hidden' class='hospital-city' value='" . htmlspecialchars($row['hospital_city']) . "'>";
+                                                echo "<input type='hidden' class='hospital-streets' value='" . htmlspecialchars($row['hospital_street']) . "'>";
+                                                echo "<input type='hidden' class='hospital-equipments' value='" . htmlspecialchars($row['hospital_equipments']) . "'>";
 
-                                                $result = pg_query($db_connection, $query);
-                                                while ($row = pg_fetch_assoc($result)) {
-                                                    echo "<tr>";
-                                                    echo "<td class='hospital-name'>" . $row['hospital_name'] . "</td>";
-                                                    echo "<td class='hospital-level'>" . $row['hospital_level'] . "</td>";
-                                                    echo "<td class='type-of-institution'>" . $row['type_of_institution'] . "</td>";
-                                                    echo "<td class='hospital-barangay'>" . $row['hospital_barangay'] . "</td>";
-                                                    echo "<td class='hospital-street'>" . $row['hospital_street'] . "</td>";
-                                                    echo "<td class='hospital-equiptments'>" . $row['hospital_equipments'] . "</td>";
-                                                    
-                                                    // Populate hidden input fields for additional data
-                                                    echo "<input type='hidden' class='hospital-region' value='" . $row['hospital_region'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-province' value='" . $row['hospital_province'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-city' value='" . $row['hospital_city'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-streets' value='" . $row['hospital_street'] . "'>";
-                                                    echo "<input type='hidden' class='hospital-equipments' value='" . $row['hospital_equipments'] . "'>";
-                                                
-                                                    echo "<td>";
-                                                    echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . $row['hospital_id'] . "'><i class='fa fa-pencil'></i></a>";
-                                                    echo "</td>";
-                                                    echo "</tr>";
-                                                }
-                                                
+                                                echo "<td>";
+                                                echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . htmlspecialchars($row['hospital_id']) . "'><i class='fa fa-pencil'></i></a>";
+                                                echo "</td>";
+                                                echo "</tr>";
                                             }
-                                            pg_close($db_connection);
+                                        } else {
+                                            echo "Failed to connect to the database.";
+                                        }
+                                        pg_close($db_connection);
                                         ?>
                                     </tbody>
                                 </table>
@@ -328,3 +328,5 @@ include('includes/config.php');
 </body>
 
 </html>
+
+
