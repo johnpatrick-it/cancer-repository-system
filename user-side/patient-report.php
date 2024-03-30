@@ -119,6 +119,19 @@ include('../includes/config.php');
     .m-right {
         margin-right: -0.8rem;
     }
+    /* Add hover effect to table rows */
+/* Add hover effect to table rows */
+.table tbody tr:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+/* Add hover effect to text within table cells */
+.table tbody tr:hover td {
+    color: blue; /* Change text color on hover */
+}
+
+
     </style>
 </head>
 
@@ -170,7 +183,7 @@ include('../includes/config.php');
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-striped custom-table datatable">
+                                <table class="table table-striped custom-table datatable" id="logTable">
                                     <thead>
                                         <tr>
                                             <th>Log-id</th>
@@ -186,7 +199,8 @@ include('../includes/config.php');
                                         //THE ONLY LOGS THAT WILL APPEAR IS IF SAME NG REPO_USER_ID YUNG SUBMITTER
                                         //TYAKA NAKA SESSION NA REPO_USER
                                         $current_repo_user_id = $_SESSION['repo_user_id'];
-                                        $query = "SELECT repository_log_id, patient_case_number, log_timestamp AS date, log_action AS description
+                                        $query = "SELECT repository_log_id, patient_case_number, log_timestamp AS date, log_action AS description, 
+                                                         completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_id
                                                   FROM repository_logs
                                                   WHERE repo_user_id = $1"; // Use parameterized query
                                         
@@ -194,7 +208,15 @@ include('../includes/config.php');
                                         if ($result) {
                                             // Loop through each row and display data in the table
                                             while ($row = pg_fetch_assoc($result)) {
-                                                echo "<tr>";
+                                                echo "<tr class='log-details' 
+                                                    data-log-id='" . htmlspecialchars($row['repository_log_id']) . "'
+                                                    data-repo-user-id='" . htmlspecialchars($current_repo_user_id) . "'
+                                                    data-patient-id='" . htmlspecialchars($row['patient_id']) . "'
+                                                    data-completed-by='" . htmlspecialchars($row['completed_by_lname'] . ' ' . $row['completed_by_fname'] . ' ' . $row['completed_by_mname']) . "'
+                                                    data-designation='" . htmlspecialchars($row['designation']) . "'
+                                                    data-patient-case-number='" . htmlspecialchars($row['patient_case_number']) . "'
+                                                    data-log-timestamp='" . htmlspecialchars($row['date']) . "'
+                                                    data-log-action='" . htmlspecialchars($row['description']) . "'>";
                                                 echo "<td>" . htmlspecialchars($row['repository_log_id']) . "</td>";
                                                 echo "<td>" . htmlspecialchars($row['patient_case_number']) . "</td>";
                                                 echo "<td>" . htmlspecialchars($row['date']) . "</td>";
@@ -216,9 +238,90 @@ include('../includes/config.php');
 
         </div>
     </div>
+    <div class="modal fade" id="logModal" tabindex="-1" role="dialog" aria-labelledby="logModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logModalLabel">Log Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="logDetailsBody">
+                <!-- Log details will be displayed here -->
+                <!-- You can include your modal layout here -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="logId">Log ID:</label>
+                        <input type="text" class="form-control" id="logId" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="repoUserId">Repository User ID:</label>
+                        <input type="text" class="form-control" id="repoUserId" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="patientId">Patient ID:</label>
+                        <input type="text" class="form-control" id="patientId" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="completedBy">Completed By:</label>
+                        <input type="text" class="form-control" id="completedBy" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="designation">Designation:</label>
+                        <input type="text" class="form-control" id="designation" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="patientCaseNumber">Patient Case Number:</label>
+                        <input type="text" class="form-control" id="patientCaseNumber" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="logTimestamp">Log Timestamp:</label>
+                        <input type="text" class="form-control" id="logTimestamp" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="logAction">Log Action:</label>
+                        <input type="text" class="form-control" id="logAction" readonly>
+                    </div>
+                    <!-- Include other fields for log details as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    
 
     <script>
+         $(document).ready(function() {
+        // Handle click event on log-id
+        $('.log-details').click(function(e) {
+            e.preventDefault();
+            var logId = $(this).data('log-id');
+            var repoUserId = $(this).data('repo-user-id');
+            var patientId = $(this).data('patient-id');
+            var completedBy = $(this).data('completed-by');
+            var designation = $(this).data('designation');
+            var patientCaseNumber = $(this).data('patient-case-number');
+            var logTimestamp = $(this).data('log-timestamp');
+            var logAction = $(this).data('log-action');
+
+            // Set values in modal
+            $('#logId').val(logId);
+            $('#repoUserId').val(repoUserId);
+            $('#patientId').val(patientId);
+            $('#completedBy').val(completedBy);
+            $('#designation').val(designation);
+            $('#patientCaseNumber').val(patientCaseNumber);
+            $('#logTimestamp').val(logTimestamp);
+            $('#logAction').val(logAction);
+
+            // Show the modal
+            $('#logModal').modal('show');
+        });
+    });
+
+    
     $(document).ready(function() {
         $('#searchInput').keyup(function() {
             var searchText = $(this).val().toLowerCase();
