@@ -155,7 +155,7 @@ include('includes/config.php');
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-auto ml-auto m-right">
-                                    <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_user">
+                                    <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_hospital">
                                         <i class="fa fa-medkit"></i> Add User
                                     </a>
                                 </div>
@@ -310,18 +310,18 @@ include('includes/config.php');
     <script src="assets/js/chart.js"></script>
 
     <!-- Select2 JS -->
-    <script src="assets/js/select2.min.js"></script>
+    <script src="./assets/js/select2.min.js"></script>
 
     <!-- Datetimepicker JS -->
-    <script src="assets/js/moment.min.js"></script>
-    <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="./assets/js/moment.min.js"></script>
+    <script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
 
     <!-- Datatable JS -->
-    <script src="assets/js/jquery.dataTables.min.js"></script>
-    <script src="assets/js/dataTables.bootstrap4.min.js"></script>
+    <script src="./assets/js/jquery.dataTables.min.js"></script>
+    <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="assets/js/app.js"></script>
+    <script src="./assets/js/app.js"></script>
 
 
 
@@ -372,7 +372,7 @@ include('includes/config.php');
             unset($_SESSION['user-created']);
 
             // Call the function to display success message
-             echo "userCreated('$error');";
+            echo "userCreated('$error');";
         }
         ?>
 

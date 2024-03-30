@@ -83,7 +83,7 @@ h2 {
 						</div>
                         <div class="form-group col-md-3">
 							<label for="password">Password</label>
-							<input name="password" class="form-control" type="text" placeholder="Password" required>
+							<input name="password" class="form-control" type="password" placeholder="Password" required>
 						</div>
 					</div>
 					<div class="submit-section">
