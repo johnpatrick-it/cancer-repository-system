@@ -9,6 +9,18 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     exit; 
 }
 
+// Retrieve repo_user_id from session
+$repo_user_id = $_SESSION['repo_user_id'];
+
+// Retrieve hospital_id for the current user
+$query_hospital_id = "SELECT hospital_id FROM public.repo_user WHERE repo_user_id = $1";
+$result_hospital_id = pg_query_params($db_connection, $query_hospital_id, array($repo_user_id));
+
+if ($result_hospital_id) {
+    $row_hospital_id = pg_fetch_assoc($result_hospital_id);
+    $hospital_id = $row_hospital_id['hospital_id'];
+}
+
 // Check if patient_id is set in the URL
 if (isset($_GET['edit']) && !empty($_GET['edit'])) {
     // Retrieve the patient_id from the URL
@@ -86,14 +98,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($update_result) {
         // Log the edit action
+        // Log the edit action
         $log_action = "Patient Details Updated";
-        $query_log_success = "INSERT INTO public.repository_logs (log_timestamp, repo_user_id, patient_id, completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_case_number, log_action) VALUES (timezone('Asia/Manila', current_timestamp), $1, $2, $3, $4, $5, $6, $7, $8)";
-        $result_log_success = pg_query_params($db_connection, $query_log_success, array($_SESSION['repo_user_id'], $edit_patient_id, $last_name, $first_name, $middle_name, $designation, $patient_case_number, $log_action));
+        $query_log_success = "INSERT INTO public.repository_logs (log_timestamp, repo_user_id, patient_id, hospital_id, completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_case_number, log_action) VALUES (timezone('Asia/Manila', current_timestamp), $1, $2, $3, $4, $5, $6, $7, $8, $9)";
+        $result_log_success = pg_query_params($db_connection, $query_log_success, array($_SESSION['repo_user_id'], $edit_patient_id, $hospital_id, $last_name, $first_name, $middle_name, $designation, $patient_case_number, $log_action));
 
         if (!$result_log_success) {
             echo "Error logging action: " . pg_last_error($db_connection);
             exit;
         }
+   
 
         // Redirect to a success page or display a success message
         header("Location: manage-patient.php");

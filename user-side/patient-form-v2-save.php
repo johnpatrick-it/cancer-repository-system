@@ -23,7 +23,7 @@ if ($result_hospital_id) {
 
     // Proceed with data insertion
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Retrieve form data
+        // Retrieve form data   
         $diagnosis_date = $_POST["diagnosis_date"];
         $primary_site = $_POST["primary_site"];
         $cancer_stage = $_POST["cancer_stage"];
