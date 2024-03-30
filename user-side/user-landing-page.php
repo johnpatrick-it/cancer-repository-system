@@ -8,52 +8,49 @@ if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit;
 }
-
+//connection sa database
 include('../includes/config.php');
 
 
-
+//extra function para sa database
 try {
     $dbh = new PDO("pgsql:" . $host);
 } catch (PDOException $e) {
 
 }
-
-
-
+//fectinng yung repo user id
 $repo_user_id = $_SESSION['repo_user_id'];
+//-------end--------
+
 
 
 //Querying yung mga Patient na same Hospital with the current in-session Repo user, then ilalagay sa table 
-//Nasa table sa baba yung next query nitong function nato haha
+//Nasa table sa baba yung next query nitong function nato hahaha
 $query_affiliation = "SELECT hgi.hospital_name
                       FROM repo_user ru
                       JOIN hospital_general_information hgi ON ru.hospital_id = hgi.hospital_id
                       WHERE ru.repo_user_id = '$repo_user_id'::uuid";
 $result_affiliation = pg_query($db_connection, $query_affiliation);
-
 if (!$result_affiliation) {
-    echo "Error in query_affiliation: " . pg_last_error($db_connection);
     exit;
 }
-
+//result and fetcing nung hospitalname based sa query sa taas
 $row_affiliation = pg_fetch_assoc($result_affiliation);
 $hospital_name = $row_affiliation['hospital_name'];
 $_SESSION['hospital_name'] = $hospital_name;
-
-
 //Querying yung total count ng patient para i display sa Metrics
 $query_hospital_id = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'::uuid";
 $result_hospital_id = pg_query($db_connection, $query_hospital_id);
-
+//iniitializing yung hospital id
 $row_hospital_id = pg_fetch_assoc($result_hospital_id);
 $hospital_id = $row_hospital_id['hospital_id'];
 
-// Check if $hospital_id is empty
+// Checking kung empty yung hospital ID
 if (empty($hospital_id)) {
-    echo "Error: Unable to retrieve the hospital ID. Please check the data in the repo_user table.";
     exit;
 }
+//-------end--------
+
 
 
 //Function para makita kung ilang yung count ng total entries
@@ -62,33 +59,31 @@ $result_total_patients = pg_query($db_connection, $query_total_patients);
 
 // Check kung yung $result is empty
 if (!$result_total_patients) {
-    echo "Error in query_total_patients: " . pg_last_error($db_connection);
     exit;
 }
-
+//variable totalpatients na ilalagay sa metric sa baba
 $row_total_patients = pg_fetch_assoc($result_total_patients);
 $total_patients = $row_total_patients['total_patients'];
+//-------end--------
 
 
+
+//query para sa mga new patient metric
 $sql = "SELECT COUNT(patient_id) AS new_patient 
-        FROM cancer_cases_general_info 
-        WHERE CAST(time_stamp AS DATE) BETWEEN CURRENT_DATE - INTERVAL '2 minutes' AND CURRENT_DATE 
-        AND hospital_id = (SELECT hospital_id FROM repo_user WHERE repo_user_id = $1)";
-
-// Prepare and execute the query with parameters
+FROM cancer_cases_general_info 
+WHERE time_stamp >= CURRENT_TIMESTAMP - INTERVAL '2 minutes' 
+AND hospital_id = (SELECT hospital_id FROM repo_user WHERE repo_user_id = $1)"; 
+//parameters 
 $result = pg_query_params($db_connection, $sql, array($_SESSION['repo_user_id']));
-
-// Check if the query was successful
+//Checking kung tama and hindi empty yung query
 if (!$result) {
-    echo "Error in query: " . pg_last_error($db_connection);
     exit;
 }
-
-// Fetch the result row
+// Fetching yung result
 $row = pg_fetch_assoc($result);
-
 // Extract the new patient count
 $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
+//-------end--------
 ?>
 
 
@@ -261,7 +256,8 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                             <div class="card-body">
                                 <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
                                 <div class="dash-widget-info">
-                                    <h3><?php echo $new_patient; ?></h3>
+                                    
+                                    <h3><?php echo $new_patient; //output ?></h3>
                                     <span class="span-text"><a href="#" id="new-patients-link">New Entries</a></span>
                                 </div>
                             </div>
@@ -272,7 +268,7 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                             <div class="card-body">
                                 <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
                                 <div class="dash-widget-info">
-                                    <h3><?php echo $total_patients; ?></h3>
+                                    <h3><?php echo $total_patients; //output ?></h3>
                                     <span class="span-text"><a href="#" id="total-patients-link">Total Entries</a></span>
                                 </div>
                             </div>
@@ -306,8 +302,6 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                             </div>
                         </div>
                     </div>
-                    <!-- Assuming you have already established a PostgreSQL connection ($db_connection) -->
-
                     <!-- TABLE -->
                     <div class="row">
                         <div class="col-md-12">
@@ -330,22 +324,21 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                                         //THEN I S-SAVE YUNG HOSPITAL-ID
                                         //THEN I QUERY KUNG ANONG PATIENT IS YUNG EQUAL DOON SA HOSPITAL-ID NA YON AT AYON YUNG I D-DISPLAY SA TABLE
                                         if (!$db_connection) {
-                                            echo "Failed to connect to the database.";
                                         } else {
                                             $repo_user_id = $_SESSION['repo_user_id'];
                                             //QUERY PARA SA HOSPITAL ID THE I S-SAVE AS $HOSPITAL_ID
                                             $query_affiliation = "SELECT hospital_id FROM repo_user WHERE repo_user_id = '$repo_user_id'";
                                             $result_affiliation = pg_query($db_connection, $query_affiliation);
-
+                                            //CHECKING IF WALANG RESULT          
                                             if (!$result_affiliation) {
-                                                echo "Error in query_affiliation: " . pg_last_error($db_connection);
                                                 exit;
                                             }
-
+                                            //FETCHING THE hospital_id
                                             $row_affiliation = pg_fetch_assoc($result_affiliation);
-
                                             $hospital_id = $row_affiliation['hospital_id'];
-
+                                            //-------end--------
+                                            
+                                            
                                             // PUTANG INANG SQL JOIN TO PUTANG INA MO
                                             $query = "SELECT
                                                         ccgi.patient_id,
@@ -363,12 +356,10 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                                                         ccgi.hospital_id = '$hospital_id'";
                                             //IF QUERY SUCCESSFUL DISPLAY NA SYA SA TABLE                                                                 
                                             $result = pg_query($db_connection, $query);
-
                                             if (!$result) {
-                                                echo "Error in query: " . pg_last_error($db_connection);
                                                 exit;
                                             }
-                                            // QUERY DISPLAYING
+                                            // QUERY DISPLAYING IN TABLE
                                             while ($row = pg_fetch_assoc($result)) {
                                                 echo "<td><a href='#' class='edit-patient' data-id='" . $row['patient_id'] . "'>" . $row['patient_case_number'] . "</a></td>";
                                                 echo "<td><a href='#' class='edit-patient' data-id='" . $row['patient_id'] . "'>" . $row['age'] . "</a></td>";
@@ -383,6 +374,7 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                                         }
 
                                         pg_close($db_connection);
+                                        //-------end--------
                                         ?>
                                     </tbody>
                                 </table>
@@ -397,7 +389,7 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
-//Alert papunta sa manage patient
+//Alert papunta sa manage patient gamit yung table sa repo landing page
 $(document).ready(function() {
         // Alert papunta sa manage patient
         $('.edit-patient').click(function(e) {
@@ -412,12 +404,14 @@ $(document).ready(function() {
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = 'manage-patient.php'; // Redirect to manage-patient.php
+                    window.location.href = 'manage-patient.php';
                 }
             });
         });
+        //-------end--------
 
-        // Alert papunta sa Cancer Cases Repository
+
+        // Alert papunta sa Cancer Cases Repository gamit yung new patient metric
         $('#new-patients-link').click(function(e) {
             e.preventDefault();
             Swal.fire({
@@ -429,12 +423,15 @@ $(document).ready(function() {
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = 'patient-form-v2.php'; // Redirect to cancer-cases-repository.php
+                    window.location.href = 'patient-form-v2.php'; 
                 }
             });
         });
     });
-            // Alert papunta sa Cancer Cases Repository
+    //-------end--------
+
+
+            // Alert papunta sa Cancer Cases Repository gamit yung total link metric
             $('#total-patients-link').click(function(e) {
             e.preventDefault();
             Swal.fire({
@@ -450,6 +447,10 @@ $(document).ready(function() {
                 }
             });
         });
+        //-------end--------
+
+
+        //search function
         $(document).ready(function() {
             $('#searchInput').keyup(function() {
                 var searchText = $(this).val().toLowerCase();
@@ -477,6 +478,9 @@ $(document).ready(function() {
                 });
             });
         });
+        //-------end--------
+
+
     </script>
 
 
@@ -507,5 +511,4 @@ $(document).ready(function() {
     <!-- Custom JS -->
     <script src="../assets/js/app.js"></script>
 </body>
-
 </html>
