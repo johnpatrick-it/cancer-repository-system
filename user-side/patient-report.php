@@ -1,19 +1,16 @@
 <?php
 session_start();
-
-// Access the hospital name from the session variable
+//SESSION para sa hospital name
 $hospital_name = $_SESSION['hospital_name'];
 //VERY IMPORTANT
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
     exit; 
 }
-
-// Access the hospital name from the session variable
-$hospital_name = $_SESSION['hospital_name'];
-
 error_reporting(0);
 include('../includes/config.php');
+//-------end--------
+
 
 ?>
 
@@ -202,18 +199,16 @@ include('../includes/config.php');
                                         $result_hospital = pg_query_params($db_connection, $query_hospital, array($hospital_name));
                                         $row_hospital = pg_fetch_assoc($result_hospital);
                                         $hospital_id = $row_hospital['hospital_id'];
-                                        
-                                        // Fetch logs for the hospital
+                                        // Fetching logs para sa ilalagay sa table nasa script sa baba yung code function
                                         $current_repo_user_id = $_SESSION['repo_user_id'];
                                         $query = "SELECT repository_log_id, patient_case_number, log_timestamp AS date, log_action AS description, 
                                                          completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_id
                                                   FROM repository_logs
-                                                  WHERE hospital_id = $1"; // Use parameterized query
-                                        
+                                                  WHERE hospital_id = $1";
+                                        //query para sa satinization
                                         $result = pg_query_params($db_connection, $query, array($hospital_id));
-                                        
+                                        //populating tables with clickable link para sa extra info nung logs
                                         if ($result) {
-                                            // Loop through each row and display data in the table
                                             while ($row = pg_fetch_assoc($result)) {
                                                 echo "<tr class='log-details' 
                                                       data-log-id='" . htmlspecialchars($row['repository_log_id']) . "'
@@ -232,8 +227,8 @@ include('../includes/config.php');
                                             }
                                             pg_free_result($result);
                                         } else {
-                                            echo "Error in query: " . pg_last_error($db_connection);
                                         }
+                                        //-------end--------
                                         ?>
                                     </tbody>
                                 </table>
@@ -255,8 +250,7 @@ include('../includes/config.php');
                 </button>
             </div>
             <div class="modal-body" id="logDetailsBody">
-                <!-- Log details will be displayed here -->
-                <!-- You can include your modal layout here -->
+                <!-- para sa extra log details using modal -->
                 <div class="row">
                     <div class="col-md-12">
                         <label for="logId">Log ID:</label>
@@ -290,7 +284,6 @@ include('../includes/config.php');
                         <label for="logAction">Log Action:</label>
                         <input type="text" class="form-control" id="logAction" readonly>
                     </div>
-                    <!-- Include other fields for log details as needed -->
                 </div>
             </div>
         </div>
@@ -300,8 +293,8 @@ include('../includes/config.php');
     
 
     <script>
+        //fetcing sa mga data na ilalagay sa modal
          $(document).ready(function() {
-        // Handle click event on log-id
         $('.log-details').click(function(e) {
             e.preventDefault();
             var logId = $(this).data('log-id');
@@ -312,8 +305,7 @@ include('../includes/config.php');
             var patientCaseNumber = $(this).data('patient-case-number');
             var logTimestamp = $(this).data('log-timestamp');
             var logAction = $(this).data('log-action');
-
-            // Set values in modal
+            // Set values sa modal
             $('#logId').val(logId);
             $('#repoUserId').val(repoUserId);
             $('#patientId').val(patientId);
@@ -322,13 +314,14 @@ include('../includes/config.php');
             $('#patientCaseNumber').val(patientCaseNumber);
             $('#logTimestamp').val(logTimestamp);
             $('#logAction').val(logAction);
-
-            // Show the modal
+            // Show the modal ito yung clicking part
             $('#logModal').modal('show');
         });
     });
+    //-------end--------
 
-    
+
+    //search function
     $(document).ready(function() {
         $('#searchInput').keyup(function() {
             var searchText = $(this).val().toLowerCase();
@@ -352,6 +345,7 @@ include('../includes/config.php');
             });
         });
     });
+    //-------end--------
     </script>
 
 
