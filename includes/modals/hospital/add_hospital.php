@@ -41,14 +41,14 @@ if (isset($_POST['submit'])) {
 
     $hospital_uuid = $dbh->query("SELECT uuid_generate_v4()")->fetchColumn();
     
-    if (isset($_FILES['image'])) {
-        $image = $_FILES['image']['name'];
-        move_uploaded_file($_FILES['image']['tmp_name'], './uploads/'.$image);
-        $location = $image;
-        
-    } else {
-        echo "No file uploaded or the 'image' key is not set in the \$_FILES array.";
-    }
+        if (isset($_FILES['image'])) {
+            $image = $_FILES['image']['name'];
+            move_uploaded_file($_FILES['image']['tmp_name'], './uploads/'.$image);
+            $location = $image;
+            
+        } else {
+            echo "No file uploaded or the 'image' key is not set in the \$_FILES array.";
+        }
 
   
     $equipmentIdStmt = $dbh->prepare("SELECT equipment_id FROM repo_equipment_category WHERE equipment_name = :equipment_name");

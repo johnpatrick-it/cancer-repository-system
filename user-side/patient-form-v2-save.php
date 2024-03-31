@@ -102,4 +102,3 @@ if ($result_hospital_id) {
     echo "Error retrieving hospital ID for repo_user_id: $repo_user_id";
     exit;
 }
-

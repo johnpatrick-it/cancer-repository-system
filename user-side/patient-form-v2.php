@@ -26,7 +26,7 @@ if ($row) {
     //variables na needed para sa fetching para ilagay doon sa form
     $first_name = $row['user_fname'];
     $last_name = $row['user_lname'];
-    $middle_name = $row['user_mname'];
+    $middle_name = $row['user_mname'];  
     $designation = $row['position'];
 } else {
     // output kapag walang data
@@ -230,15 +230,14 @@ pg_close($db_connection);
                                                 <div class="form-group">
                                                         <label class="custom-label">Date of Diagnosis</label>
                                                     <div class="input-group date">
-                                                        <input name="diagnosis_date" type="date" class="form-control date-picker" id="datepicker3" required="true" autocomplete="off" onchange="updateMinDeathDate()">
+                                                        <input name="diagnosis_date" type="date" class="form-control date-picker" id="diagnosis_date" autocomplete="off" onchange="updateMinDeathDate()" required="true">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Primary Site</label>
-                                                    <select name="primary_site" class="custom-select form-control"
-                                                        required="true" autocomplete="off">
+                                                    <select name="primary_site" id="primary_site" class="custom-select form-control" autocomplete="off" required="true">
                                                         <option value="" disabled selected>Select Type</option>
                                                         <option value="Brain">Brain</option>
                                                         <option value="Bladder">Bladder</option>
@@ -267,8 +266,7 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Cancer Stage</label>
-                                                    <select name="cancer_stage" class="custom-select form-control"
-                                                        required="true">
+                                                    <select name="cancer_stage" id="cancer_stage" class="custom-select form-control" required="true">
                                                         <option value="">Select Type</option>
                                                         <option value=1>I</option>
                                                         <option value=2>II</option>
@@ -280,8 +278,7 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Type of Patient</label>
-                                                    <select name="patient_type" class="custom-select form-control"
-                                                        required="true" autocomplete="off">
+                                                    <select name="patient_type" id="patient_type" class="custom-select form-control" autocomplete="off" required="true">
                                                         <option value="" disabled selected>Select Type</option>
                                                         <option value="In-patient">In-patient</option>
                                                         <option value="Out-patient">Out-patient</option>
@@ -293,14 +290,13 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Age</label>
-                                                    <input name="age" type="number" class="form-control" required="true" autocomplete="off" placeholder="Enter age">
+                                                    <input name="age" id="age" type="number" class="form-control" autocomplete="off" placeholder="Enter age" required="true">
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Sex</label>
-                                                    <select name="gender" class="custom-select form-control"
-                                                        required="true">
+                                                    <select name="gender" id="gender" class="custom-select form-control" required="true">
                                                         <option value="">Select Sex</option>
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
@@ -310,7 +306,7 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Patient Status</label>
-                                                    <select name="patient_status" class="custom-select form-control" required="true" onchange="toggleDateOfDeath(this)">
+                                                    <select name="patient_status" id="patient_status" class="custom-select form-control" onchange="toggleDateOfDeath(this)" required="true">
                                                         <option value="" disabled selected>Select Status</option>
                                                         <option value="Alive">Alive</option>
                                                         <option value="Survived">Survived</option>
@@ -322,7 +318,7 @@ pg_close($db_connection);
                                                 <div class="form-group" id="dateOfDeathField" style="display: none;">
                                                     <label class="custom-label">Date of Death</label>
                                                     <div class="input-group date">
-                                                        <input type="date" name="date_of_death" class="form-control date-picker" id="datepicker1" autocomplete="off">
+                                                    <input type="date" name="date_of_death" id="date_of_death" class="form-control date-picker" autocomplete="off" required="true">
                                                     </div>
                                                 </div>
                                             </div>
@@ -331,7 +327,7 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">City/Municipality</label>
-                                                    <select name="city" class="custom-select form-control" required="true">
+                                                    <select name="city" id="city" class="custom-select form-control" required="true">
                                                         <option value="" disabled selected>Select City/Municipality</option>
                                                         <option value="Alaminos">Alaminos</option>
                                                         <option value="Angeles">Angeles</option>
@@ -479,22 +475,9 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                         <label class="custom-label">Patient Case Number</label>
-                                                    <input name="patient_case_number" type="text" class="form-control date-picker"
-                                                        required="true" autocomplete="off" placeholder="Patient Case Number">
+                                                        <input name="patient_case_number" id="patient_case_number" type="text" class="form-control date-picker" autocomplete="off" placeholder="Patient Case Number" required="true">
                                                 </div>
                                             </div>  
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="form-group">
-                                                        <label>Attach CSV File:</label>
-                                                        <input name="csv" id="file" type="file" class="form-control"
-                                                            autocomplete="off">
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="row">
                                         <div class="page-header">
@@ -515,25 +498,25 @@ pg_close($db_connection);
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Last Name</label>
-                                                    <input name="last_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $last_name; ?>" readonly>
+                                                    <input name="last_name" type="text" class="form-control" autocomplete="off" value="<?php echo $last_name; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">First Name</label>
-                                                    <input name="first_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $first_name; ?>" readonly>
+                                                    <input name="first_name" type="text" class="form-control" autocomplete="off" value="<?php echo $first_name; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Middle Name</label>
-                                                    <input name="sub_middle_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $middle_name; ?>" readonly>
+                                                    <input name="sub_middle_name" type="text" class="form-control" autocomplete="off" value="<?php echo $middle_name; ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
                                                     <label class="custom-label">Designation</label>
-                                                    <input name="designation" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $designation; ?>" readonly>
+                                                    <input name="designation" type="text" class="form-control" autocomplete="off" value="<?php echo $designation; ?>" readonly>
                                                 </div>
                                             </div>
                                         </div>

@@ -72,6 +72,12 @@
                         <span>Cancer Cases Repository</span>
                     </a>
                 </li>
+                <li>
+                    <a href="file-insertion.php">
+                        <i class="la la-file-text-o"></i>
+                        <span>Attach File Instead</span>
+                    </a>
+                </li>
 
                 <!-- Manage Patient -->
                 <li>
