@@ -67,15 +67,15 @@
 
                 <!-- Patient Registry -->
                 <li>
-                    <a href="patient-form-v2.php">
+                    <a href="patient-form-v2.php" id="cancer-cases-link">
                         <i class="la la-user-plus"></i>
                         <span>Cancer Cases Repository</span>
                     </a>
                 </li>
-                <li>
+                <li id="attach-file-link" style="display: none;">
                     <a href="file-insertion.php">
                         <i class="la la-file-text-o"></i>
-                        <span>Attach File Instead</span>
+                        <span>Bulk Case Insertion</span>
                     </a>
                 </li>
 
@@ -130,3 +130,15 @@
     }
 </script>
 
+<script>
+   // Get the current URL
+   var currentUrl = window.location.href;
+
+// Check if the current URL contains 'patient-form-v2.php'
+if (currentUrl.indexOf('patient-form-v2.php') !== -1) {
+    // Show the 'Attach File Instead' link
+    document.getElementById('attach-file-link').style.display = 'block';
+}else if (currentUrl.indexOf('file-insertion.php') !== -1){
+    document.getElementById('attach-file-link').style.display = 'block';
+}
+</script>

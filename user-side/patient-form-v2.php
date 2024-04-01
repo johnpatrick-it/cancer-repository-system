@@ -318,7 +318,7 @@ pg_close($db_connection);
                                                 <div class="form-group" id="dateOfDeathField" style="display: none;">
                                                     <label class="custom-label">Date of Death</label>
                                                     <div class="input-group date">
-                                                    <input type="date" name="date_of_death" id="date_of_death" class="form-control date-picker" autocomplete="off" required="true">
+                                                    <input type="date" name="date_of_death" id="date_of_death" class="form-control date-picker" autocomplete="off" >
                                                     </div>
                                                 </div>
                                             </div>
@@ -480,58 +480,56 @@ pg_close($db_connection);
                                             </div>  
                                         </div>
                                         <div class="row">
-                                        <div class="page-header">
+                                                <div class="page-header">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="welcome d-flex justify-content-between align-items-center">
+                                                                <h3 class="page-title">Submitter Information</h3>
+                                                            </div>
+                                                            <ul class="breadcrumb">
+                                                                <li class="breadcrumb-item active"></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div
-                                                        class="welcome d-flex justify-content-between align-items-center">
-                                                        <h3 class="page-title">Submitter Information</h3>
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="custom-label">Last Name</label>
+                                                        <input name="last_name" type="text" class="form-control" autocomplete="off" value="<?php echo $last_name; ?>" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="custom-label">First Name</label>
+                                                        <input name="first_name" type="text" class="form-control" autocomplete="off" value="<?php echo $first_name; ?>" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="custom-label">Middle Name</label>
+                                                        <input name="sub_middle_name" type="text" class="form-control" autocomplete="off" value="<?php echo $middle_name; ?>" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="custom-label">Designation</label>
+                                                        <input name="designation" type="text" class="form-control" autocomplete="off" value="<?php echo $designation; ?>" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                    </div>
-                                                    <ul class="breadcrumb">
-                                                        <li class="breadcrumb-item active"></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Last Name</label>
-                                                    <input name="last_name" type="text" class="form-control" autocomplete="off" value="<?php echo $last_name; ?>" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">First Name</label>
-                                                    <input name="first_name" type="text" class="form-control" autocomplete="off" value="<?php echo $first_name; ?>" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Middle Name</label>
-                                                    <input name="sub_middle_name" type="text" class="form-control" autocomplete="off" value="<?php echo $middle_name; ?>" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Designation</label>
-                                                    <input name="designation" type="text" class="form-control" autocomplete="off" value="<?php echo $designation; ?>" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label style="font-size:16px;"><b></b></label>
-                                                    <div class="">
-                                                        <button class="btn btn-primary" name="submit" id="" data-toggle="modal" onclick="displaySuccessCredentialsAlert(event)">Submit</button>
+                                            <div class="row">
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label style="font-size:16px;"><b></b></label>
+                                                        <div class="">
+                                                            <button class="btn btn-primary" name="submit" id="" data-toggle="modal" onclick="displaySuccessCredentialsAlert(event)">Submit</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
                                     </section>
                                 </div>
                             </div>
@@ -545,6 +543,22 @@ pg_close($db_connection);
     <!-- Include SweetAlert library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        <?php
+        if (isset($_SESSION['insertion_success'])) {
+            if ($_SESSION['insertion_success']) {
+                // Display success alert
+                echo "displaySuccessCredentialsAlert(true);";
+            } else {
+                // Display error alert
+                echo "displayErrorAlert();";
+            }
+
+            // Clear the session variable
+            unset($_SESSION['insertion_success']);
+        }
+        ?>
+
         function displaySuccessCredentialsAlert(success) {
             Swal.fire({
                 title: 'Success!',
@@ -553,6 +567,17 @@ pg_close($db_connection);
             });
         }
 
+        function displayErrorAlert() {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to insert data.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             <?php
             if (isset($_SESSION['already-sent'])) {

@@ -77,10 +77,10 @@ if ($result_hospital_id) {
         if ($result_insert && pg_num_rows($result_insert) > 0) {
             $patient_id_row = pg_fetch_assoc($result_insert);
             $patient_id = $patient_id_row['patient_id'];
-            // Log successful patient registration
+            $_SESSION['insertion_success'] = true;
             $log_action = "Patient Registered";
         } else {
-            // Log patient registration error
+            $_SESSION['insertion_success'] = false;
             $log_action = "Patient Registration Error";
         }
 
