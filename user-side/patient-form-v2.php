@@ -548,7 +548,7 @@ pg_close($db_connection);
         if (isset($_SESSION['insertion_success'])) {
             if ($_SESSION['insertion_success']) {
                 // Display success alert
-                echo "displaySuccessCredentialsAlert(true);";
+                echo "displaySuccessCredentialsAlert();";
             } else {
                 // Display error alert
                 echo "displayErrorAlert();";
@@ -559,9 +559,10 @@ pg_close($db_connection);
         }
         ?>
 
-        function displaySuccessCredentialsAlert(success) {
+        function displaySuccessCredentialsAlert() {
             Swal.fire({
                 title: 'Success!',
+                text: 'Data inserted successfully',
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
@@ -576,7 +577,8 @@ pg_close($db_connection);
             });
         }
     });
-    </script>
+</script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             <?php

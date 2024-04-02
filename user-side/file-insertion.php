@@ -215,8 +215,8 @@ pg_close($db_connection);
         <div class="page-wrapper">
             <div class="containers">
             <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="file-insertion-save.php">
-                <input type="hidden" name="action" value="file-insertion-save.php">
-                <input type="file" name="fileToUpload" id="fileToUpload">
+                <input type="hidden" name="action" value="file-insertion-save.php" required="true">
+                <input type="file" name="fileToUpload" id="fileToUpload" required="true" accept=".xls, .xlsx, .txt, .csv, .tsv, .json, .xml">
                 <input type="submit" value="Upload File" class="btn btn-primary">
             </form>
             </div>
@@ -225,100 +225,45 @@ pg_close($db_connection);
 
     <!-- Include SweetAlert library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
-    <script>
-        function displaySuccessCredentialsAlert(success) {
+    <script>    
+    document.addEventListener('DOMContentLoaded', function() {
+        <?php
+        if (isset($_SESSION['insertion_success'])) {
+            if ($_SESSION['insertion_success']) {
+                // Display success alert
+                echo "displaySuccessCredentialsAlert();";
+            } else {
+                // Display error alert
+                echo "displayErrorAlert();";
+            }
+
+            // Clear the session variable
+            unset($_SESSION['insertion_success']);
+        }
+        ?>
+
+        function displaySuccessCredentialsAlert() {
             Swal.fire({
                 title: 'Success!',
+                text: 'Data inserted successfully.',
                 icon: 'success',
                 confirmButtonText: 'OK'
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            <?php
-            if (isset($_SESSION['already-sent'])) {
-                $success = $_SESSION['already-sent'];
-                // Clear the session error variable
-                unset($_SESSION['already-sent']);
-
-                // Display the error for incorrect password
-                echo "displaySuccessCredentialsAlert('$success');";
-            }
-            ?>
-
-
-        });
-        function toggleDateOfDeath(selectElement) {
-        var dateOfDeathField = document.getElementById('dateOfDeathField');
-        if (selectElement.value === 'Dead') {
-            dateOfDeathField.style.display = 'block';
-            document.getElementById('datepicker1').setAttribute('required', 'true');
-        } else {
-            dateOfDeathField.style.display = 'none';
-            document.getElementById('datepicker1').removeAttribute('required');
-        }
-    }
-
-    //DATE VALIDATION BETWEEM DIAGNONIS AND DEATH DATE
-    function validateDates() {
-        var diagnosisDate = new Date(document.getElementById('datepicker3').value);
-        var deathDate = new Date(document.getElementById('datepicker1').value);
-
-        if (deathDate < diagnosisDate) {
-            displayError("Date of Death cannot be before Date of Diagnosis");
-            return false;
-        }
-        return true;
-    }
-
-    // Function to update min attribute of Date of Death input
-    function updateMinDeathDate() {
-        var diagnosisDate = new Date(document.getElementById('datepicker3').value);
-        document.getElementById('datepicker1').min = formatDate(diagnosisDate);
-    }
-
-    // Function to format date as YYYY-MM-DD
-    function formatDate(date) {
-        var year = date.getFullYear();
-        var month = String(date.getMonth() + 1).padStart(2, '0');
-        var day = String(date.getDate()).padStart(2, '0');
-        return year + '-' + month + '-' + day;
-    }
-    </script>
-
-<script>
-    // Function to remove the required attribute from form fields outside the modal
-    function removeRequiredAttribute() {
-        // Select all form fields by their IDs
-        var formFields = document.querySelectorAll('#diagnosis_date, #primary_site, #cancer_stage, #patient_type, #age, #gender, #patient_status, #date_of_death, #city, #patient_case_number');
-        
-        // Loop through each form field and remove the 'required' attribute
-        formFields.forEach(function(field) {
-            field.removeAttribute('required');
-        });
-    }
-
-        // Function to add the required attribute back to form fields outside the modal
-        function addRequiredAttribute() {
-            // Select all form fields by their IDs
-            var formFields = document.querySelectorAll('#diagnosis_date, #primary_site, #cancer_stage, #patient_type, #age, #gender, #patient_status, #date_of_death, #city, #patient_case_number');
-            
-            // Loop through each form field and add the 'required' attribute
-            formFields.forEach(function(field) {
-                field.setAttribute('required', 'true');
+        function displayErrorAlert() {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to insert data.',
+                icon: 'error',
+                confirmButtonText: 'OK'
             });
         }
-
-        // Event listener for when the modal is opened
-        $('#uploadModal').on('show.bs.modal', function() {
-            removeRequiredAttribute();
-        }); 
-
-        // Event listener for when the modal is closed
-        $('#uploadModal').on('hidden.bs.modal', function() {
-            addRequiredAttribute();
-        });
+    });
 </script>
+
+
+
 
 
     <script src="../assets/js/script.js"></script>

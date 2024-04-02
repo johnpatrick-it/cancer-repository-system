@@ -1,2 +1,0 @@
-diagnosis_date,primary_site,type_of_patient,sex,age,patient_status,date_of_death,cancer_stage,patient_case_number,address_city_municipality
-15/01/2023,Lung,Cancer Patient,Male,55,Alive,NULL,Stage II,CPN1234,New York
