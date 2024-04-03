@@ -20,17 +20,15 @@ $hospital_name = $_SESSION['hospital_name'];
 $sql = "SELECT user_fname, user_lname, user_mname, position FROM repo_user WHERE repo_user_id = $1";
 $result = pg_query_params($db_connection, $sql, [$_SESSION['repo_user_id']]);
 
-//fetching user sa database
+//fetching the user sa database
 $row = pg_fetch_assoc($result);
 if ($row) {
-    //variables na needed para sa fetching para ilagay doon sa form
+    //variables na needed para sa auto fetching and ilagay doon sa form
     $first_name = $row['user_fname'];
     $last_name = $row['user_lname'];
     $middle_name = $row['user_mname'];  
     $designation = $row['position'];
 } else {
-    // output kapag walang data
-    echo "No user found with the specified ID.";
 }
 
 
@@ -191,7 +189,7 @@ pg_close($db_connection);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* This ensures that the form is centered vertically on the viewport */
+    height: 100vh;
 }
 
 .containers {
@@ -225,7 +223,10 @@ pg_close($db_connection);
 
     <!-- Include SweetAlert library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
-    <script>    
+    <script>
+    //Function ng alert na 'to is if si user nag insert ng file v-validate yung ng file-insertion-save then kapag success
+    //yung result gagawa yon ng $session="success" then redirect dito sa file-insertion.php then titignan ng script na 'to
+    //kung may $session="success" s'ya if meron, mag a-alert sya ng insertion sucess      
     document.addEventListener('DOMContentLoaded', function() {
         <?php
         if (isset($_SESSION['insertion_success'])) {
@@ -250,7 +251,7 @@ pg_close($db_connection);
                 confirmButtonText: 'OK'
             });
         }
-
+//Ito naman pag false yung session succesful
         function displayErrorAlert() {
             Swal.fire({
                 title: 'Error!',
@@ -260,6 +261,7 @@ pg_close($db_connection);
             });
         }
     });
+//--------end function---------//
 </script>
 
 
