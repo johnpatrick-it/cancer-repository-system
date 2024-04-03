@@ -30,7 +30,6 @@ if ($row) {
     $designation = $row['position'];
 } else {
     // output kapag walang data
-    echo "No user found with the specified ID.";
 }
 
 
@@ -547,10 +546,8 @@ pg_close($db_connection);
         <?php
         if (isset($_SESSION['insertion_success'])) {
             if ($_SESSION['insertion_success']) {
-                // Display success alert
                 echo "displaySuccessCredentialsAlert();";
             } else {
-                // Display error alert
                 echo "displayErrorAlert();";
             }
 
