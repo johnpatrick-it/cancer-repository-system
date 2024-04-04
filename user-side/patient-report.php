@@ -184,7 +184,7 @@ include('../includes/config.php');
                                     <thead>
                                         <tr>
                                             <th>Log-id</th>
-                                            <th>Patient Case</th>
+                                            <th>User</th>
                                             <th>Date</th>
                                             <th>Description</th>
                                         </tr>
@@ -220,7 +220,7 @@ include('../includes/config.php');
                                                       data-log-timestamp='" . htmlspecialchars($row['date']) . "'
                                                       data-log-action='" . htmlspecialchars($row['description']) . "'>";
                                                 echo "<td>" . htmlspecialchars($row['repository_log_id']) . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['patient_case_number']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['completed_by_fname'] . " " . $row['completed_by_mname'] . " " . $row['completed_by_lname']) . "</td>";
                                                 echo "<td>" . htmlspecialchars($row['date']) . "</td>";
                                                 echo "<td>" . htmlspecialchars($row['description']) . "</td>";
                                                 echo "</tr>";
