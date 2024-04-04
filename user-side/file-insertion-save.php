@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Buffer output to prevent "Headers Already Sent" error
 session_start();
 ini_set('display_errors', 1);
 
@@ -92,45 +93,48 @@ if ($result_hospital_id) {
                         $patient_case_number = $data[7];
                         $address_city_municipality = $data[8];
 
-                        // Prepare SQL statement with placeholders for all columns
-                        $query = "INSERT INTO public.cancer_cases_general_info 
-                                (diagnosis_date, primary_site, type_of_patient, sex, age, patient_status, cancer_stage, patient_case_number, address_city_municipality, repo_user_id, hospital_id, completed_by_fname, completed_by_lname, completed_by_mname, designation) 
-                                VALUES 
-                                ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)";
+                        $query_insert_patient = "INSERT INTO public.cancer_cases_general_info 
+                        (diagnosis_date, primary_site, type_of_patient, sex, age, patient_status, cancer_stage, patient_case_number, address_city_municipality, repo_user_id, hospital_id, completed_by_fname, completed_by_lname, completed_by_mname, designation) 
+                        VALUES 
+                        ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+                        RETURNING patient_id";
 
-                        //statement
-                        $stmt = pg_prepare($db_connection, "", $query);
-                        if (!$stmt) {
-                            echo "Error preparing SQL statement: " . pg_last_error($db_connection) . "<br>";
-                            continue;
-                        }
+                            $stmt_insert_patient = pg_prepare($db_connection, "", $query_insert_patient);
+                            $result_insert_patient = pg_execute($db_connection, "", array(
+                                $diagnosis_date,
+                                $primary_site,
+                                $type_of_patient,
+                                $sex,
+                                $age,
+                                $patient_status,
+                                $cancer_stage,
+                                $patient_case_number,
+                                $address_city_municipality,
+                                $repo_user_id,
+                                $hospital_id,
+                                $first_name,
+                                $last_name,
+                                $middle_name,
+                                $designation
+                            ));
 
-                        // Bind parameters and execute the statement
-                        $result = pg_execute($db_connection, "", array(
-                            $diagnosis_date,
-                            $primary_site,
-                            $type_of_patient,
-                            $sex,
-                            $age,
-                            $patient_status,
-                            $cancer_stage,
-                            $patient_case_number,
-                            $address_city_municipality,
-                            $_SESSION['repo_user_id'],
-                            $_SESSION['hospital_id'], 
-                            $first_name,
-                            $last_name,
-                            $middle_name,
-                            $designation
-                        ));
-                        if ($result) {
-                            //session para sa sweet alert
-                            $_SESSION['insertion_success'] = true;
-                            // Delete the file after successful insertion
+                            if ($result_insert_patient) {
+                                $row_insert_patient = pg_fetch_row($result_insert_patient);
+                                $patient_id = $row_insert_patient[0];
+                                $_SESSION['insertion_success'] = true;
+                            }
+                            
+                            // Perform logs insertion using the retrieved patient_id
+                            $log_action = "Cancer Case Inserted";
+                            $query_log_success = "INSERT INTO public.repository_logs (log_timestamp, repo_user_id, patient_id, hospital_id, completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_case_number, log_action) VALUES (timezone('Asia/Manila', current_timestamp), $1, $2, $3, $4, $5, $6, $7, $8, $9)";
+                            $result_log_success = pg_query_params($db_connection, $query_log_success, array($repo_user_id, $patient_id, $hospital_id, $last_name, $first_name, $middle_name, $designation, $patient_case_number, $log_action));         
+                            if (!$result_log_success) {
+
+                            }
+                        
+                            // File insertion was successful, proceed with unlinking the file
                             unlink($target_file);
-                        } else {
-                            echo "Error executing SQL statement: " . pg_last_error($db_connection) . "<br>";
-                        }
+                        } 
                     }
                     fclose($file);
                 } else {
@@ -144,7 +148,7 @@ if ($result_hospital_id) {
         }
         header("Location: file-insertion.php");
     }
-}
+
 //--------end function---------//
 
 
