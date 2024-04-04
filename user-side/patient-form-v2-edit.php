@@ -419,69 +419,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="form-group">
-                                                        <label>Attach CSV File:</label>
-                                                        <input name="csv" id="file" type="file" class="form-control"
-                                                            autocomplete="off">
+                                                <div class="page-header">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="welcome d-flex justify-content-between align-items-center">
+                                                                <h3 class="page-title">Submitter Information</h3>
+                                                            </div>
+                                                            <ul class="breadcrumb">
+                                                                <li class="breadcrumb-item active"></li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                        <div class="page-header">
                                             <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div
-                                                        class="welcome d-flex justify-content-between align-items-center">
-                                                        <h3 class="page-title">Submitter Information</h3>
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="custom-label">Last Name</label>
+                                                        <input name="last_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $last_name; ?>" readonly>                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="custom-label">First Name</label>
+                                                        <input name="first_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $first_name; ?>" readonly>                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="custom-label">Middle Name</label>
+                                                        <input name="sub_middle_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $middle_name; ?>" readonly>                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label class="custom-label">Designation</label>
+                                                        <input name="designation" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $designation; ?>" readonly>                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                    </div>
-                                                    <ul class="breadcrumb">
-                                                        <li class="breadcrumb-item active"></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Last Name</label>
-                                                    <input name="last_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $last_name; ?>" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">First Name</label>
-                                                    <input name="first_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $first_name; ?>" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Middle Name</label>
-                                                    <input name="sub_middle_name" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $middle_name; ?>" readonly>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label class="custom-label">Designation</label>
-                                                    <input name="designation" type="text" class="form-control" required="true" autocomplete="off" value="<?php echo $designation; ?>" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br>
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-3 col-sm-12">
-                                                <div class="form-group">
-                                                    <label style="font-size:16px;"><b></b></label>
-                                                    <div class="">
-                                                    <button class="btn btn-primary" name="submit" id="submitBtn" data-toggle="modal" onclick="displaySuccessCredentialsAlert(event)">Submit</button>
+                                            <div class="row">
+                                                <div class="col-md-3 col-sm-12">
+                                                    <div class="form-group">
+                                                        <label style="font-size:16px;"><b></b></label>
+                                                        <div class="">
+                                                            <button class="btn btn-primary" name="submit" id="" data-toggle="modal" onclick="displaySuccessCredentialsAlert(event)">Submit</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+ 
                                     </section>
                                 </div>
                             </div>
