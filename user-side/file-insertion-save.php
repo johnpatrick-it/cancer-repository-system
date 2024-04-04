@@ -125,7 +125,7 @@ if ($result_hospital_id) {
                             }
                             
                             // Perform logs insertion using the retrieved patient_id
-                            $log_action = "Cancer Case Inserted";
+                            $log_action = "Case Registered";
                             $query_log_success = "INSERT INTO public.repository_logs (log_timestamp, repo_user_id, patient_id, hospital_id, completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_case_number, log_action) VALUES (timezone('Asia/Manila', current_timestamp), $1, $2, $3, $4, $5, $6, $7, $8, $9)";
                             $result_log_success = pg_query_params($db_connection, $query_log_success, array($repo_user_id, $patient_id, $hospital_id, $last_name, $first_name, $middle_name, $designation, $patient_case_number, $log_action));         
                             if (!$result_log_success) {

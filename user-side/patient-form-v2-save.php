@@ -78,10 +78,10 @@ if ($result_hospital_id) {
             $patient_id_row = pg_fetch_assoc($result_insert);
             $patient_id = $patient_id_row['patient_id'];
             $_SESSION['insertion_success'] = true;
-            $log_action = "Patient Registered";
+            $log_action = "Case Registered";
         } else {
             $_SESSION['insertion_success'] = false;
-            $log_action = "Patient Registration Error";
+            $log_action = "Case Registration Error";
         }
 
         // Prepare and execute the log query for success
