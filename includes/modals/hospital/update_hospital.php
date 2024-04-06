@@ -53,9 +53,6 @@ if ($result) {
     $defaultHospitaLevel = $result['hospital_level'];
 
 } else {
-    // Handle the case where no matching record is found
-    echo "Hospital ID not found: $hospital_id";
-    exit;
 }
 
 // Sanitize other input fields

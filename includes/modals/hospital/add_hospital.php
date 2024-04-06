@@ -231,7 +231,9 @@ h2 {
                             </div>
                         </div>
                     </div>
-
+                    <div class="submit-section">
+                        <button type="button" id="clearForm" class="btn btn-secondary clear-form-btn">Clear Hospital Equipments Form</button>
+                    </div>
                     <div class="submit-section">
                         <button type="submit" name="submit" class="btn btn-primary submit-btn">Submit</button>
                     </div>
@@ -240,6 +242,7 @@ h2 {
         </div>
     </div>
 </div>
+
 <script>
     //idea ng function na to is when user selected the level of hospital meron katumbas na institution leve and speciallevel yung
     //hospital nayon
@@ -395,39 +398,59 @@ $(document).ready(function() {
 });
 </script>
 <script>
-$(document).ready(function() {
-    // Counter for dynamically generating label
-    var counter = 2;
+    $(document).ready(function() {
+        // Counter for dynamically generating label
+        var counter = 2;
 
-    // Event delegation on the equipmentContainer
-    $("#equipmentContainer").on("click", ".add-equipment-btn", function() {
-        addNewDropdown();
-    });
+        // Event delegation on the equipmentContainer
+        $("#equipmentContainer").on("click", ".add-equipment-btn", function() {
+            addNewDropdown();
+        });
 
-    function addNewDropdown() {
-        var newDropdown = '<div class="form-group col-md-3">' +
-            '<label for="hospital-equipment"> ' + ' Equipment </label>' + " " + counter +
-            '<div class="input-group">' +
-            '<select name="hospital_equipment[]" class="form-control" required>' +
-            '<option value="" disabled selected>Select Medical Equipment</option>' +
-            '<?php
+        function addNewDropdown() {
+            var newDropdown = '<div class="form-group col-md-3">' +
+                '<label for="hospital-equipment">Equipment</label>' +
+                '<div class="input-group">' +
+                '<select name="hospital_equipment[]" class="form-control" required>' +
+                '<option value="" disabled selected>Select Medical Equipment</option>' +
+                '<?php
                 $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
                 while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                 ?>' +
-            '<option value="<?php echo $row['equipment_name']; ?>"><?php echo $row['equipment_name']; ?></option>' +
-            '<?php } ?>' +
-            '</select>' +
-            '<div class="input-group-append">' +
-            '<button type="button" class="btn btn-primary add-equipment-btn">+</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
+                '<option value="<?php echo $row['equipment_name']; ?>"><?php echo $row['equipment_name']; ?></option>' +
+                '<?php } ?>' +
+                '</select>' +
+                '<div class="input-group-append">';
+                
+            // Show "+" button only for the first input form
+            if (counter === 2) {
+                newDropdown += '<button type="button" class="btn btn-primary add-equipment-btn">+</button>';
+            }
+                
+            newDropdown += '<button type="button" class="btn btn-danger remove-equipment-btn">x</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
 
-        $("#equipmentContainer").append(newDropdown);
+            $("#equipmentContainer").append(newDropdown);
 
-        // Increment the counter for the next label
-        counter++;
-    }
-});
+            // Increment the counter for the next label
+            counter++;
+        }
+
+        // Event delegation for remove-equipment-btn
+        $("#equipmentContainer").on("click", ".remove-equipment-btn", function() {
+            $(this).closest('.form-group').remove();
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        // Clear form function
+        $("#clearForm").on("click", function() {
+            // Reset all form fields
+            $("form")[0].reset();
+        });
+    });
 </script>
 

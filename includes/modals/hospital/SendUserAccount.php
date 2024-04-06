@@ -4,6 +4,7 @@ require_once "vendor/autoload.php"; // Assuming PHPMailer is installed via Compo
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+
 function sendUserAcc($admin, $db_connection)
 {
    
