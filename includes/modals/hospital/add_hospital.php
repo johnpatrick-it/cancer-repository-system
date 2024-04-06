@@ -39,17 +39,29 @@ if (isset($_POST['submit'])) {
     $admin_user_id = $AdminID;
 
 
-    $hospital_uuid = $dbh->query("SELECT uuid_generate_v4()")->fetchColumn();
-    
-        if (isset($_FILES['image'])) {
-            $image = $_FILES['image']['name'];
-            move_uploaded_file($_FILES['image']['tmp_name'], './uploads/'.$image);
-            $location = $image;
-            
-        } else {
-            echo "No file uploaded or the 'image' key is not set in the \$_FILES array.";
-        }
+    $hospital_uuid = uniqid(); // Generating a unique ID for hospital
 
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        // Sanitize the filename to remove any potentially dangerous characters
+        $image_name = basename($_FILES['image']['name']);
+        // Specify the upload directory
+        $upload_directory = './uploads/';
+        // Set the location for the uploaded file
+        $location = $upload_directory . $hospital_uuid . "_" . $image_name;
+        
+        // Move the uploaded file to the specified location
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $location)) {
+            // File uploaded successfully
+            echo "File uploaded successfully.";
+        } else {
+            // Handle file upload failure
+            echo "Failed to move uploaded file.";
+        }
+    } else {
+        // Handle file upload error
+        echo "File upload error.";
+    }
+    
   
     $equipmentIdStmt = $dbh->prepare("SELECT equipment_id FROM repo_equipment_category WHERE equipment_name = :equipment_name");
 
@@ -143,30 +155,36 @@ h2 {
                             <input name="hospital_name" class="form-control" type="text" placeholder="Hospital Name"
                                 required>
                         </div>
-                        <div class="form-group col-md-3" required>
+                        <div class="form-group col-md-3">
                             <label for="level">Hospital Level</label>
-                            <label for="level">Institution </label>
-                            <select class="form-control select" name="level" required>
+                            <select class="form-control select" name="level" id="level" required>
                                 <option disabled selected>Select Level</option>
-                                <option>Level 1 General Hospital</option>
-                                <option>Level 2 General Hospital</option>
-                                <option>Level 3 General Hospital</option>
+                                <option value="non_hospital">Non-Hospital</option>
+                                <option value="level_1">Level 1 General Hospital</option>
+                                <option value="level_2">Level 2 General Hospital</option>
+                                <option value="level_3">Level 3 General Hospital</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label for="institution">Hospital Institution </label>
-                            <select class="form-control select" name="institution" required>
-                                <option disabled selected>Select institution</option>
-                                <option>Government</option>
-                                <option>Private</option>
+
+                        <div class="form-group col-md-3" id="institutionFieldLevel3">
+                            <label for="institution">Hospital Category</label>
+                            <select class="form-control select" name="institution_level3" required>
+                                <option disabled selected>Select Hospital Category</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label for="region">Region</label>
-                            <select class="form-control select" name="region" id="region"></select>
+
+                        <div class="form-group col-md-3" id="specialtyField">
+                            <label for="specialty">Specialty</label>
+                            <select class="form-control select" name="specialty" required>
+                                <option disabled selected>Select Hospital Specialty</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-row">
+                         <div class="form-group col-md-3">
+                            <label for="region">Region</label>
+                            <select class="form-control select" name="region" id="region"></select>
+                        </div>
                         <div class="form-group col-md-3">
                             <label for="province">Province</label>
                             <select class="form-control select" name="province" id="province"></select>
@@ -195,14 +213,14 @@ h2 {
                     <div class="form-row" id="equipmentContainer">
                         <!-- Initial dropdown -->
                         <div class="form-group col-md-3">
-                            <label for="hospital-equipment">Oncologists Medical Equipment 1</label>
+                            <label for="hospital-equipment">Medical Equipment</label>
                             <div class="input-group">
                                 <select name="hospital_equipment[]" class="form-control" required>
                                     <option value="" disabled selected>Select Medical Equipment</option>
                                     <?php
-                $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
-                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                ?>
+                                    $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
+                                    while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                    ?>
                                     <option value="<?php echo $row['equipment_name']; ?>">
                                         <?php echo $row['equipment_name']; ?></option>
                                     <?php } ?>
@@ -222,48 +240,49 @@ h2 {
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-$(document).ready(function() {
-    // Counter for dynamically generating label
-    var counter = 2;
+    //idea ng function na to is when user selected the level of hospital meron katumbas na institution leve and speciallevel yung
+    //hospital nayon
+    $(document).ready(function() {
+        $('#level').on('change', function() {
+            var selectedLevel = $(this).val();
+            var institutionField = $('#institutionFieldLevel3 select');
+            var specialtyField = $('#specialtyField select');
 
-    // Event delegation on the equipmentContainer
-    $("#equipmentContainer").on("click", ".add-equipment-btn", function() {
-        addNewDropdown();
+            institutionField.empty(); // Clear previous options
+            specialtyField.empty(); // Clear previous options
+
+            // Populate options based on selected level
+            if (selectedLevel === 'non_hospital') {
+                institutionField.append('<option disabled selected>Select Hospital Category</option>');
+                institutionField.append('<option value="Primary Cancer Control and Clinic (PCCPC)">Primary Cancer Control and Clinic (PCCPC)</option>');
+                specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
+                specialtyField.append('<option value="N/A">N/A</option>');
+            } else if (selectedLevel === 'level_1') {
+                institutionField.append('<option disabled selected>Select Hospital Category</option>');
+                institutionField.append('<option value="Secondary Cancer Control Clinic (SCCC)">Secondary Cancer Control Clinic (SCCC)</option>');
+                specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
+                specialtyField.append('<option value="N/A">N/A</option>');
+            } else if (selectedLevel === 'level_2') {
+                institutionField.append('<option disabled selected>Select Hospital Category</option>');
+                institutionField.append('<option value="Cancer Control Unit (CCU)">Cancer Control Unit (CCU)</option>');
+                specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
+                specialtyField.append('<option value="N/A">N/A</option>');
+            } else if (selectedLevel === 'level_3') {
+                institutionField.append('<option disabled selected>Select Hospital Category</option>');
+                institutionField.append('<option value="Advanced Comprehensive Cancer Centers (ACCC)">Advanced Comprehensive Cancer Centers (ACCC)</option>');
+                institutionField.append('<option value="Basic Comprehensive Cancer Center (BCCC)">Basic Comprehensive Cancer Center (BCCC)</option>');
+                specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
+                specialtyField.append('<option value="Multispecialty Cancer Center (MCC)">Multispecialty Cancer Center (MCC)</option>');
+                specialtyField.append('<option value="Specialty Cancer Center (SCC)">Specialty Cancer Center (SCC)</option>');
+            }
+        });
     });
-
-    function addNewDropdown() {
-        var newDropdown = '<div class="form-group col-md-3">' +
-            '<label for="hospital-equipment"> ' + ' Equipment </label>' + " " + counter +
-            '<div class="input-group">' +
-            '<select name="hospital_equipment[]" class="form-control" required>' +
-            '<option value="" disabled selected>Select Medical Equipment</option>' +
-            '<?php
-                $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
-                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                ?>' +
-            '<option value="<?php echo $row['equipment_name']; ?>"><?php echo $row['equipment_name']; ?></option>' +
-            '<?php } ?>' +
-            '</select>' +
-            '<div class="input-group-append">' +
-            '<button type="button" class="btn btn-primary add-equipment-btn">+</button>' +
-            '</div>' +
-            '</div>' +
-            '</div>';
-
-        $("#equipmentContainer").append(newDropdown);
-
-        // Increment the counter for the next label
-        counter++;
-    }
-});
 </script>
-
-
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <!-- PH AUTOMATIC ADDRESS WAG GALIWAN PARANG AWA-->
 <script>
@@ -375,3 +394,40 @@ $(document).ready(function() {
     });
 });
 </script>
+<script>
+$(document).ready(function() {
+    // Counter for dynamically generating label
+    var counter = 2;
+
+    // Event delegation on the equipmentContainer
+    $("#equipmentContainer").on("click", ".add-equipment-btn", function() {
+        addNewDropdown();
+    });
+
+    function addNewDropdown() {
+        var newDropdown = '<div class="form-group col-md-3">' +
+            '<label for="hospital-equipment"> ' + ' Equipment </label>' + " " + counter +
+            '<div class="input-group">' +
+            '<select name="hospital_equipment[]" class="form-control" required>' +
+            '<option value="" disabled selected>Select Medical Equipment</option>' +
+            '<?php
+                $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
+                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                ?>' +
+            '<option value="<?php echo $row['equipment_name']; ?>"><?php echo $row['equipment_name']; ?></option>' +
+            '<?php } ?>' +
+            '</select>' +
+            '<div class="input-group-append">' +
+            '<button type="button" class="btn btn-primary add-equipment-btn">+</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>';
+
+        $("#equipmentContainer").append(newDropdown);
+
+        // Increment the counter for the next label
+        counter++;
+    }
+});
+</script>
+
