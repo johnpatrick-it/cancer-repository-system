@@ -215,15 +215,13 @@ include('includes/config.php');
                                                     echo "<td>" . $row['hospital_street'] . "</td>";
                                                     echo "<td><img src='uploads/{$row['location']}' alt='Hospital Image' style='border-radius: 50%; width: 30px; height: 30px; border: 1px solid black;'></td>";
                                                        echo "<td>";
-                                                       echo "<a href='hospital-information-edit.php?edit={$row['hospital_name']}' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a>";
+                                                       echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . htmlspecialchars($row['hospital_id']) . "'><i class='fa fa-pencil'></i></a>";
                                                        echo "</td>";
                                                        echo "</tr>";
                                                    }
                                                    echo "</tbody>";
                                                 }
-                                       
-                                               pg_close($db_connection);
-                                           
+                                               pg_close($db_connection);                                       
                                        ?>
                                     </tbody>
                                 </table>

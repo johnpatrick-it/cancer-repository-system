@@ -320,7 +320,7 @@ include('includes/config.php');
     <script src="./assets/js/jquery.dataTables.min.js"></script>
     <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
 
-    <!-- Custom JS -->
+    <!-- Custom JS -->  
     <script src="./assets/js/app.js"></script>
 
 

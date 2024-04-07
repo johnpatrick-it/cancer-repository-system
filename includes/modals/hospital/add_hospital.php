@@ -225,13 +225,11 @@ h2 {
                                         <?php echo $row['equipment_name']; ?></option>
                                     <?php } ?>
                                 </select>
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary add-equipment-btn">+</button>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="submit-section">
+                        <button type="button" class="btn btn-primary add-equipment-btn">Add Equipment Form</button>
                         <button type="button" id="clearForm" class="btn btn-secondary clear-form-btn">Clear Hospital Equipments Form</button>
                     </div>
                     <div class="submit-section">
@@ -402,8 +400,8 @@ $(document).ready(function() {
         // Counter for dynamically generating label
         var counter = 2;
 
-        // Event delegation on the equipmentContainer
-        $("#equipmentContainer").on("click", ".add-equipment-btn", function() {
+        // Event delegation on the submit section for adding equipment
+        $(".submit-section").on("click", ".add-equipment-btn", function() {
             addNewDropdown();
         });
 
@@ -420,14 +418,8 @@ $(document).ready(function() {
                 '<option value="<?php echo $row['equipment_name']; ?>"><?php echo $row['equipment_name']; ?></option>' +
                 '<?php } ?>' +
                 '</select>' +
-                '<div class="input-group-append">';
-                
-            // Show "+" button only for the first input form
-            if (counter === 2) {
-                newDropdown += '<button type="button" class="btn btn-primary add-equipment-btn">+</button>';
-            }
-                
-            newDropdown += '<button type="button" class="btn btn-danger remove-equipment-btn">x</button>' +
+                '<div class="input-group-append">' +
+                '<button type="button" class="btn btn-danger remove-equipment-btn">x</button>' +
                 '</div>' +
                 '</div>' +
                 '</div>';
@@ -442,10 +434,7 @@ $(document).ready(function() {
         $("#equipmentContainer").on("click", ".remove-equipment-btn", function() {
             $(this).closest('.form-group').remove();
         });
-    });
-</script>
-<script>
-    $(document).ready(function() {
+
         // Clear form function
         $("#clearForm").on("click", function() {
             // Reset all form fields
