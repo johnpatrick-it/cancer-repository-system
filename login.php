@@ -25,7 +25,7 @@ include "functions/login-function.php";
         <!-- LEFT SIDE CONTAINER -->
         <div class="left-side slanted-divider">
             <div class="account-logo">
-                <a href="index.php"><img src="./profiles/pcc-3.png" alt="Company Logo"></a>
+                <a href="index.php"><img src="./profiles/pcc-logo.png" alt="Company Logo"></a>
             </div>
         </div>
 

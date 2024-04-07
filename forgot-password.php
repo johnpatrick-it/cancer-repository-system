@@ -10,7 +10,7 @@ include "functions/login-function.php";
         <title>Forgot password</title>
         <!-- Include SweetAlert library -->
         <!-- Favicon -->
-	    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
+	    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo.png">
         <link rel="stylesheet" href="assets/css/forgotpass.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
   
@@ -50,7 +50,7 @@ include "functions/login-function.php";
     <div class="right-side">
         <div class="upper-side">
         <!-- Add your logo for the upper right side -->
-        <img src="assets/img/Logo.png" alt="Logo">
+        <img src="./profiles/pcc-logo.png" alt="Logo">
         </div>
         <!-- Add your image for the right side -->
         <img src="assets/img/Forgot_img.png" alt="Two-Factor Authentication Image">
