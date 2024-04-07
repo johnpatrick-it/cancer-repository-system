@@ -189,10 +189,10 @@ include('includes/config.php');
                                         <tr>
                                             <th>Hospital Name</th>
                                             <th>Hospital Level</th>
-                                            <th>Type of Instituion</th>
+                                            <th>Hospital Category</th>
+                                            <th>Resource level</th>
                                             <th>Hospital Location UACS CODE</th>
                                             <th>Hospital Street</th>
-                                            <th>Logo</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -202,8 +202,8 @@ include('includes/config.php');
                                                echo "Failed to connect to the database.";
                                            } else {
                                             $query = "SELECT DISTINCT ON (hospital_name) 
-                  hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street,location 
-          FROM hospital_general_information";
+                                                    hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street, specialty,location 
+                                            FROM hospital_general_information";
 
                                                $result = pg_query($db_connection, $query);
                                                    while ($row = pg_fetch_assoc($result)) {
@@ -211,9 +211,9 @@ include('includes/config.php');
                                                     echo "<td>" . $row['hospital_name'] . "</td>";
                                                     echo "<td>" . $row['hospital_level'] . "</td>";
                                                     echo "<td>" . $row['type_of_institution'] . "</td>";
+                                                    echo "<td>" . $row['specialty'] . "</td>";
                                                     echo "<td>" . $row['hospital_barangay'] . "</td>";
                                                     echo "<td>" . $row['hospital_street'] . "</td>";
-                                                    echo "<td><img src='uploads/{$row['location']}' alt='Hospital Image' style='border-radius: 50%; width: 30px; height: 30px; border: 1px solid black;'></td>";
                                                        echo "<td>";
                                                        echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . htmlspecialchars($row['hospital_id']) . "'><i class='fa fa-pencil'></i></a>";
                                                        echo "</td>";

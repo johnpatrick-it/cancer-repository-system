@@ -1,15 +1,14 @@
 <?php
 session_start();
+include_once("../../../includes/config.php");
+
+$AdminID = $_SESSION['admin_id'] ?? '';
 error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
-    // Redirect to the login page
-    header("Location: login.php");
-    exit; 
+    header('.../login.php');
+    exit;
 }
-
-
 
 
 $AdminID = $_SESSION['admin_id'] ?? '';
@@ -22,103 +21,6 @@ try {
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
-
-if (isset($_POST['submit'])) {
-    $hospitalName = isset($_POST['hospital_name']) ? $_POST['hospital_name'] : '';
-    $hospitalEquipment = isset($_POST['hospital_equipment']) ? $_POST['hospital_equipment'] : [];
-
-    $hospitalLevel = $_POST['level'];
-    $institution = $_POST['institution'];
-    $region = $_POST['region'];
-    $province = $_POST['province'];
-    $city = $_POST['city'];
-    $barangay = $_POST['barangay'];
-    $street = $_POST['street'];
-  
-
-    $admin_user_id = $AdminID;
-
-
-    $hospital_uuid = uniqid(); // Generating a unique ID for hospital
-
-    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        // Sanitize the filename to remove any potentially dangerous characters
-        $image_name = basename($_FILES['image']['name']);
-        // Specify the upload directory
-        $upload_directory = './uploads/';
-        // Set the location for the uploaded file
-        $location = $upload_directory . $hospital_uuid . "_" . $image_name;
-        
-        // Move the uploaded file to the specified location
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $location)) {
-            // File uploaded successfully
-            echo "File uploaded successfully.";
-        } else {
-            // Handle file upload failure
-            echo "Failed to move uploaded file.";
-        }
-    } else {
-        // Handle file upload error
-        echo "File upload error.";
-    }
-    
-  
-    $equipmentIdStmt = $dbh->prepare("SELECT equipment_id FROM repo_equipment_category WHERE equipment_name = :equipment_name");
-
-    
-    if (!is_array($hospitalEquipment)) {
-        $hospitalEquipment = [$hospitalEquipment];
-    }
-
-    foreach ($hospitalEquipment as $equipment) {
-      
-        $equipmentIdStmt->execute(array(':equipment_name' => $equipment));
-        $equipmentId = $equipmentIdStmt->fetchColumn();
-
-        $sql = "INSERT INTO hospital_general_information 
-                (admin_id, hospital_equipments, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, location, hospital_uuid, equipment_id)
-                VALUES
-                (:admin_id, :equipment_name, :hospital_name, :hospital_level, :type_of_institution, :hospital_region, :hospital_province, :hospital_city, :hospital_barangay, :hospital_street, :location, :hospital_uuid, :equipment_id)";
-        
-        $stmt = $dbh->prepare($sql);
-
-        $stmt->bindParam(':admin_id', $admin_user_id, PDO::PARAM_INT);
-        $stmt->bindParam(':equipment_name', $equipment, PDO::PARAM_STR);
-        $stmt->bindParam(':hospital_name', $hospitalName, PDO::PARAM_STR);
-        $stmt->bindParam(':hospital_level', $hospitalLevel, PDO::PARAM_STR);
-        $stmt->bindParam(':type_of_institution', $institution, PDO::PARAM_STR);
-        $stmt->bindParam(':hospital_region', $region, PDO::PARAM_STR);
-        $stmt->bindParam(':hospital_province', $province, PDO::PARAM_STR);
-        $stmt->bindParam(':hospital_city', $city, PDO::PARAM_STR);
-        $stmt->bindParam(':hospital_barangay', $barangay, PDO::PARAM_STR);
-        $stmt->bindParam(':hospital_street', $street, PDO::PARAM_STR);
-        $stmt->bindParam(':location', $location);
-        $stmt->bindParam(':hospital_uuid', $hospital_uuid, PDO::PARAM_STR);
-        $stmt->bindParam(':equipment_id', $equipmentId, PDO::PARAM_INT);
-
-        if ($stmt->execute()) {
-            echo '<script>
-                Swal.fire({
-                    title: "Success!",
-                    text: "New Hospital added successfully!",
-                    icon: "success",
-                    confirmButtonText: "OK"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "/../../../hospital-information.php";
-                    }
-                });
-            </script>';
-            exit;
-        } else {
-            echo "Error inserting data: " . $stmt->errorInfo()[2] . "\n";
-        }
-    }
-
-}
-
-
-
 ?>
 <!-- Include SweetAlert2 library -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -147,7 +49,7 @@ h2 {
                 </button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="" enctype="multipart/form-data" autocomplete="off">
+                <form method="POST" action="/includes/modals/hospital/save_hospital.php" enctype="multipart/form-data" autocomplete="off">
                     <h2>HOSPITAL INFORMATION</h2>
                     <div class="form-row">
                         <div class="form-group col-md-3">
@@ -159,13 +61,12 @@ h2 {
                             <label for="level">Hospital Level</label>
                             <select class="form-control select" name="level" id="level" required>
                                 <option disabled selected>Select Level</option>
-                                <option value="non_hospital">Non-Hospital</option>
-                                <option value="level_1">Level 1 General Hospital</option>
-                                <option value="level_2">Level 2 General Hospital</option>
-                                <option value="level_3">Level 3 General Hospital</option>
+                                <option value="Non Hospital">Non-Hospital</option>
+                                <option value="Level 1 General Hospital">Level 1 General Hospital</option>
+                                <option value="Level 2 General Hospital">Level 2 General Hospital</option>
+                                <option value="Level 3 General Hospital">Level 3 General Hospital</option>
                             </select>
                         </div>
-
                         <div class="form-group col-md-3" id="institutionFieldLevel3">
                             <label for="institution">Hospital Category</label>
                             <select class="form-control select" name="institution_level3" required>
@@ -201,36 +102,32 @@ h2 {
                             <label for="street">Street Adress</label>
                             <input type="text" class="form-control" name="street" placeholder="Street Adress" required>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label for="street">Hospital Logo</label>
-                            <input name="image" type="file" class="form-control" required="true" autocomplete="off">
-                        </div>
                     </div>
 
                     <h2 class="mt-3 second-h2">HOSPITAL EQUIPMENTS</h2>
 
 
                     <div class="form-row" id="equipmentContainer">
-                        <!-- Initial dropdown -->
-                        <div class="form-group col-md-3">
-                            <label for="hospital-equipment">Medical Equipment</label>
-                            <div class="input-group">
-                                <select name="hospital_equipment[]" class="form-control" required>
-                                    <option value="" disabled selected>Select Medical Equipment</option>
-                                    <?php
-                                    $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
-                                    while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
-                                    ?>
-                                    <option value="<?php echo $row['equipment_name']; ?>">
-                                        <?php echo $row['equipment_name']; ?></option>
-                                    <?php } ?>
-                                </select>
+                <!-- Initial dropdown -->
+                            <div class="form-group col-md-3">
+                                <label for="hospital-equipment">Medical Equipment</label>
+                                <div class="input-group">
+                                    <select name="hospital_equipment[]" class="form-control" required>
+                                        <option value="" disabled selected>Select Medical Equipment</option>
+                                        <?php
+                                        $query = $dbh->query("SELECT equipment_name, equipment_id FROM repo_equipment_category");
+                                        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                        ?>
+                                        <option value="<?php echo $row['equipment_id']; ?>">
+                                            <?php echo $row['equipment_name']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
                     </div>
                     <div class="submit-section">
                         <button type="button" class="btn btn-primary add-equipment-btn">Add Equipment Form</button>
-                        <button type="button" id="clearForm" class="btn btn-secondary clear-form-btn">Clear Hospital Equipments Form</button>
+                        <button type="button" id="clearForm" class="btn btn-secondary clear-form-btn">Clear Equipments Form</button>
                     </div>
                     <div class="submit-section">
                         <button type="submit" name="submit" class="btn btn-primary submit-btn">Submit</button>
@@ -254,22 +151,22 @@ h2 {
             specialtyField.empty(); // Clear previous options
 
             // Populate options based on selected level
-            if (selectedLevel === 'non_hospital') {
+            if (selectedLevel === 'Non Ho   spital') {
                 institutionField.append('<option disabled selected>Select Hospital Category</option>');
                 institutionField.append('<option value="Primary Cancer Control and Clinic (PCCPC)">Primary Cancer Control and Clinic (PCCPC)</option>');
                 specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
                 specialtyField.append('<option value="N/A">N/A</option>');
-            } else if (selectedLevel === 'level_1') {
+            } else if (selectedLevel === 'Level 1 General Hospital') {
                 institutionField.append('<option disabled selected>Select Hospital Category</option>');
                 institutionField.append('<option value="Secondary Cancer Control Clinic (SCCC)">Secondary Cancer Control Clinic (SCCC)</option>');
                 specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
                 specialtyField.append('<option value="N/A">N/A</option>');
-            } else if (selectedLevel === 'level_2') {
+            } else if (selectedLevel === 'Level 2 General Hospital') {
                 institutionField.append('<option disabled selected>Select Hospital Category</option>');
                 institutionField.append('<option value="Cancer Control Unit (CCU)">Cancer Control Unit (CCU)</option>');
                 specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
                 specialtyField.append('<option value="N/A">N/A</option>');
-            } else if (selectedLevel === 'level_3') {
+            } else if (selectedLevel === 'Level 3 General Hospital') {
                 institutionField.append('<option disabled selected>Select Hospital Category</option>');
                 institutionField.append('<option value="Advanced Comprehensive Cancer Centers (ACCC)">Advanced Comprehensive Cancer Centers (ACCC)</option>');
                 institutionField.append('<option value="Basic Comprehensive Cancer Center (BCCC)">Basic Comprehensive Cancer Center (BCCC)</option>');
