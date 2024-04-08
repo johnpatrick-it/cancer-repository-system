@@ -41,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
         }
     }
-    var_dump($equipmentIds);
-    // Convert equipment IDs array to a string
-    $hospitalEquipmentsString = '{' . implode(',', $equipmentIds) . '}';
-
+    // Set session variable upon successful insertion
+    if (!empty($equipmentIds)) {
+        $_SESSION['equipment-sent'] = "New hospital added successfully!";
+    }
     // Construct insertion query
     $query = "INSERT INTO hospital_general_information (admin_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments, specialty, equipment_id) 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)";
@@ -53,14 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result) {
         // Convert hospitalEquipments array to a comma-separated string
-        $equipmentString = implode(',', $hospitalEquipments);
-    
+        $hospitalEquipmentsString = implode(',', $hospitalEquipments);
+
         // Execute the insertion query with the retrieved equipment_ids
-    $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, NULL, $specialty, $equipmentIds[0]));
-    
+        $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $hospitalEquipmentsString, $specialty, '{' . implode(',', $equipmentIds) . '}'));    
         if ($result_exec) {
             $_SESSION['add-hospital'] = "New hospital added successfully!";
-            header("Location: ");
+            header("Location: /hospital-information.php");
             exit();
         } else {
             echo "Error executing query: " . pg_last_error($db_connection);
@@ -72,4 +71,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     pg_close($db_connection);
 } else {
 }
-
+?>

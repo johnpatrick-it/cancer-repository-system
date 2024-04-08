@@ -244,31 +244,23 @@ include('includes/config.php');
 
          <!-- Include SweetAlert library -->
          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
-    <script>
-        function equipmentSuccessCredentialsAlert(success) {
-            Swal.fire({
-                title: 'Success!',
-                text: success,
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            <?php
-            if (isset($_SESSION['equipment-sent'])) {
-                $success = $_SESSION['equipment-sent'];
-                // Clear the session error variable
-                unset($_SESSION['equipment-sent']);
-
-                // Display the error for incorrect password
-                echo "equipmentSuccessCredentialsAlert('$success');";
-            }
-            ?>
-
-
+         <?php
+// Check if the session variable is set
+if (isset($_SESSION['equipment-sent'])) {
+    // Display the alert message
+    echo '<script>
+        Swal.fire({
+            title: "Success!",
+            text: "' . $_SESSION['equipment-sent'] . '",
+            icon: "success",
+            confirmButtonText: "OK"
         });
-    </script>
+    </script>';
+    
+    // Unset the session variable to prevent displaying the message again on page refresh
+    unset($_SESSION['equipment-sent']);
+}
+?>
     
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 

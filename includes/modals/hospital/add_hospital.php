@@ -54,12 +54,11 @@ h2 {
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="hospital_name">Hospital Name </label>
-                            <input name="hospital_name" class="form-control" type="text" placeholder="Hospital Name"
-                                required>
+                            <input name="hospital_name" class="form-control" type="text" placeholder="Hospital Name"required="true">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="level">Hospital Level</label>
-                            <select class="form-control select" name="level" id="level" required>
+                            <select class="form-control select" name="level" id="level" required="true">
                                 <option disabled selected>Select Level</option>
                                 <option value="Non Hospital">Non-Hospital</option>
                                 <option value="Level 1 General Hospital">Level 1 General Hospital</option>
@@ -69,14 +68,14 @@ h2 {
                         </div>
                         <div class="form-group col-md-3" id="institutionFieldLevel3">
                             <label for="institution">Hospital Category</label>
-                            <select class="form-control select" name="institution_level3" required>
+                            <select class="form-control select" name="institution_level3" required="true">
                                 <option disabled selected>Select Hospital Category</option>
                             </select>
                         </div>
 
                         <div class="form-group col-md-3" id="specialtyField">
                             <label for="specialty">Specialty</label>
-                            <select class="form-control select" name="specialty" required>
+                            <select class="form-control select" name="specialty" required="true">
                                 <option disabled selected>Select Hospital Specialty</option>
                             </select>
                         </div>
@@ -84,23 +83,23 @@ h2 {
                     <div class="form-row">
                          <div class="form-group col-md-3">
                             <label for="region">Region</label>
-                            <select class="form-control select" name="region" id="region"></select>
+                            <select class="form-control select" name="region" id="region" required="true"></select>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="province">Province</label>
-                            <select class="form-control select" name="province" id="province"></select>
+                            <select class="form-control select" name="province" id="province" required="true"></select>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="city">City/Municipality</label>
-                            <select class="form-control select" name="city" id="city"></select>
+                            <select class="form-control select" name="city" id="city" required="true"></select>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="barangay">Barangay</label>
-                            <select class="form-control select" name="barangay" id="barangay"></select>
+                            <select class="form-control select" name="barangay" id="barangay" required="true"></select>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="street">Street Adress</label>
-                            <input type="text" class="form-control" name="street" placeholder="Street Adress" required>
+                            <input type="text" class="form-control" name="street" placeholder="Street Adress" required="true">
                         </div>
                     </div>
 
@@ -112,7 +111,7 @@ h2 {
                         <div class="form-group col-md-3">
                             <label for="hospital-equipment">Oncologists Medical Equipment 1</label>
                             <div class="input-group">
-                                <select name="hospital_equipment[]" class="form-control" required>
+                                <select name="hospital_equipment[]" class="form-control" required="true">
                                     <option value="" disabled selected>Select Medical Equipment</option>
                                     <?php
                                         $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
@@ -176,6 +175,9 @@ h2 {
             }
         });
     });
+</script>
+<script>
+        
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Include jQuery -->
