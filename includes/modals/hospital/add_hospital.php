@@ -108,22 +108,22 @@ h2 {
 
 
                     <div class="form-row" id="equipmentContainer">
-                <!-- Initial dropdown -->
-                            <div class="form-group col-md-3">
-                                <label for="hospital-equipment">Medical Equipment</label>
-                                <div class="input-group">
-                                    <select name="hospital_equipment[]" class="form-control" required>
-                                        <option value="" disabled selected>Select Medical Equipment</option>
-                                        <?php
-                                        $query = $dbh->query("SELECT equipment_name, equipment_id FROM repo_equipment_category");
+                        <!-- Initial dropdown -->
+                        <div class="form-group col-md-3">
+                            <label for="hospital-equipment">Oncologists Medical Equipment 1</label>
+                            <div class="input-group">
+                                <select name="hospital_equipment[]" class="form-control" required>
+                                    <option value="" disabled selected>Select Medical Equipment</option>
+                                    <?php
+                                        $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
                                         while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
                                         ?>
-                                        <option value="<?php echo $row['equipment_id']; ?>">
-                                            <?php echo $row['equipment_name']; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
+                                    <option value="<?php echo $row['equipment_name']; ?>">
+                                        <?php echo $row['equipment_name']; ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
+                        </div>
                     </div>
                     <div class="submit-section">
                         <button type="button" class="btn btn-primary add-equipment-btn">Add Equipment Form</button>
@@ -151,7 +151,7 @@ h2 {
             specialtyField.empty(); // Clear previous options
 
             // Populate options based on selected level
-            if (selectedLevel === 'Non Ho   spital') {
+            if (selectedLevel === 'Non Hospital') {
                 institutionField.append('<option disabled selected>Select Hospital Category</option>');
                 institutionField.append('<option value="Primary Cancer Control and Clinic (PCCPC)">Primary Cancer Control and Clinic (PCCPC)</option>');
                 specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');

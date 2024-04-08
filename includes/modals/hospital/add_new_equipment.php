@@ -6,7 +6,6 @@ ini_set('display_errors', '1');
 ob_start(); // Start output buffering
 
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
-    // Redirect to the login page
     header("Location: login.php");
     exit;
 }
