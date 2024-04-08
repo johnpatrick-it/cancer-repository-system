@@ -52,11 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = pg_prepare($db_connection, "insert_query", $query);
 
     if ($result) {
-        // Convert hospitalEquipments array to a comma-separated string
-        $hospitalEquipmentsString = implode(',', $hospitalEquipments);
-
+    // Convert hospitalEquipments array to a comma-separated string
+    $hospitalEquipmentsString = implode(',', $hospitalEquipments);
+    
+    // Convert equipment IDs array to a unique array to avoid duplicates
+    $uniqueEquipmentIds = array_unique($equipmentIds);
+    
+    // Convert unique equipment IDs array to a string representation of PostgreSQL array
+    $equipmentIdsString = '{' . implode(',', $uniqueEquipmentIds) . '}';
         // Execute the insertion query with the retrieved equipment_ids
-        $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $hospitalEquipmentsString, $specialty, '{' . implode(',', $equipmentIds) . '}'));    
+        
+        $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $hospitalEquipmentsString, $specialty, $equipmentIdsString));    
         if ($result_exec) {
             $_SESSION['add-hospital'] = "New hospital added successfully!";
             header("Location: /hospital-information.php");
