@@ -7,7 +7,7 @@ session_start();
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?php echo $_SESSION['user_name']?>, Verify your account</title>
-	    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
+	    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo.png">
         <link rel="stylesheet" href="assets/css/authentication.css"> 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@latest/dist/sweetalert2.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
@@ -152,7 +152,7 @@ session_start();
   <div class="right-side">
     <div class="upper-side">
       <!-- Add your logo for the upper right side -->
-      <img src="assets/img/Logo.png" alt="Logo">
+      <img src="./profiles/pcc-logo.png" alt="Logo">
     </div>
     <!-- Add your image for the right side -->
     <img src="assets/img/2FA_img.png" alt="Two-Factor Authentication Image">
