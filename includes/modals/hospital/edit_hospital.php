@@ -19,12 +19,12 @@ if (!empty($hospitalId)) {
             $hospitalData = pg_fetch_assoc($result_exec);
             if ($hospitalData) {
                 // Extract hospital data
-                $hospitalName = $hospitalData['hospital_name'];
-                $hospitalLevel = $hospitalData['hospital_level'];
-                $typeOfInstitution = $hospitalData['type_of_institution'];
-                $hospitalBarangay = $hospitalData['hospital_barangay'];
-                $hospitalStreet = $hospitalData['hospital_street'];
-                $specialty = $hospitalData['specialty'];
+                    $hospitalName = $hospitalData['hospital_name'];
+                    $hospitalLevel = $hospitalData['hospital_level'];
+                    $typeOfInstitution = $hospitalData['type_of_institution'];
+                    $hospitalBarangay = $hospitalData['hospital_barangay'];
+                    $hospitalStreet = $hospitalData['hospital_street'];
+                    $specialty = $hospitalData['specialty'];
                 // Similarly extract other fields and populate them
             } else {
                 echo "Hospital data not found.";

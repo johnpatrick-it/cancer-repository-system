@@ -193,7 +193,6 @@ include('includes/config.php');
                                             <th>Resource level</th>
                                             <th>Hospital Location UACS CODE</th>
                                             <th>Hospital Street</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -224,7 +223,7 @@ include('includes/config.php');
                                                     echo "<td>" . htmlspecialchars($row['hospital_barangay']) . "</td>";
                                                     echo "<td>" . htmlspecialchars($row['hospital_street']) . "</td>";  
                                                     echo "<td>";
-                                                    echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . htmlspecialchars($row['hospital_id']) . "'><i class='fa fa-pencil'></i></a>";
+                                                    //echo "<a href='hospital-information-edit.php?hospital_id=" . htmlspecialchars($row['hospital_id']) . "' title='Edit' class='btn text-xs text-white btn-blue edit-action'><i class='fa fa-pencil'></i></a>";
                                                     echo "</td>";
                                                     echo "</tr>";
                                                 }

@@ -10,7 +10,7 @@ error_reporting(0);
 include('includes/config.php');
 
 // Fetching data sa Repo-log nasababa yung query
-$query = "SELECT * FROM repo_logs";
+$query = "SELECT * FROM repo_admin_logs";
 $result = pg_query($db_connection, $query);
 
 if (!$result) {
@@ -155,7 +155,7 @@ if (!$result) {
                                         <?php
         // Query for logid, name, and surname of the repo_user who registered the patient
         $query_logs = "SELECT rl.log_id, ru.user_fname, ru.user_lname, rl.log_timestamp, rl.log_action
-                        FROM repo_logs rl
+                        FROM repo_admin_logs rl
                         JOIN repo_user ru ON rl.repo_user_id = ru.repo_user_id
                         ORDER BY rl.log_timestamp DESC";
 
