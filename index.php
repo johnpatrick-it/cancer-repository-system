@@ -12,7 +12,7 @@ if (!$db_connection) {
     die("Connection failed: " . pg_last_error());
 }
 
-$sql = "SELECT COUNT(DISTINCT hospital_uuid) AS total_hospitals FROM hospital_general_information";
+$sql = "SELECT COUNT(DISTINCT hospital_id) AS total_hospitals FROM hospital_general_information";
 
 $result = pg_query($db_connection, $sql);
 
