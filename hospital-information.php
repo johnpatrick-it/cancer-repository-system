@@ -255,9 +255,9 @@ include('includes/config.php');
     </div>
 
 
-         <!-- Include SweetAlert library -->
-         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
-         <?php
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+<?php
 // Check if the session variable is set
 if (isset($_SESSION['equipment-sent'])) {
     // Display the alert message
@@ -274,9 +274,26 @@ if (isset($_SESSION['equipment-sent'])) {
     unset($_SESSION['equipment-sent']);
 }
 ?>
-    
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<?php
+// Check if the session variable is set
+if (isset($_SESSION['add-hospital'])) {
+    // Display the alert message
+    echo '<script>
+        Swal.fire({
+            title: "Success!",
+            text: "' . $_SESSION['hospital-created'] . '",
+            icon: "success",
+            confirmButtonText: "OK"
+        });
+    </script>';
+    
+    // Unset the session variable to prevent displaying the message again on page refresh
+    unset($_SESSION['hospital-created']);
+}
+?>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
     $(document).ready(function() {
         $('#searchInput').keyup(function() {

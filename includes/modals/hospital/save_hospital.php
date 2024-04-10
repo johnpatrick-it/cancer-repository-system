@@ -54,28 +54,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $result_insert_equipment = pg_query_params($db_connection, $insertEquipmentQuery, array($hospital_id, $equipmentId));
 
                         if (!$result_insert_equipment) {
-                            echo "Error inserting equipment: " . pg_last_error($db_connection);
                         }
-                    } else {
-                        echo "Error retrieving equipment ID: " . pg_last_error($db_connection);
-                    }
+                    } 
                 }
-                
                 $_SESSION['add-hospital'] = "New hospital added successfully!";
                 header("Location: /hospital-information.php");
                 exit();
-            } else {
-                echo "Error retrieving hospital ID: " . pg_last_error($db_connection);
             }
-        } else {
-            echo "Error inserting hospital: " . pg_last_error($db_connection);
-        }
-    } else {
-        echo "Error preparing query: " . pg_last_error($db_connection);
-    }
-
+        } 
+    } 
     pg_close($db_connection);
-} else {
-    // Handle other HTTP methods or requests here
 }
-?>
+
