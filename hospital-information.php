@@ -257,23 +257,41 @@ include('includes/config.php');
 
     <!-- Include SweetAlert library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
-<?php
-// Check if the session variable is set
-if (isset($_SESSION['equipment-sent'])) {
-    // Display the alert message
-    echo '<script>
-        Swal.fire({
-            title: "Success!",
-            text: "' . $_SESSION['equipment-sent'] . '",
-            icon: "success",
-            confirmButtonText: "OK"
+    <script>
+$(document).ready(function() {
+    // Event listener for edit button click
+    $('.edit-action').click(function() {
+        // Get the hospital ID from the data attribute
+        var hospitalId = $(this).data('hospital-id');
+
+        // Store the hospital ID in the hidden input field
+        $('#hospitalId').val(hospitalId);
+
+        // Fetch hospital data using AJAX
+        $.ajax({
+            url: 'fetch_hospital.php', // URL to your PHP script to fetch hospital data
+            method: 'POST',
+            data: { hospital_id: hospitalId },
+            success: function(response) {
+                // Parse the JSON response
+                var hospitalData = JSON.parse(response);
+
+                // Populate the modal fields with the fetched data
+                $('#hospital_name').val(hospitalData.hospital_name);
+                $('#hospital_level').val(hospitalData.hospital_level);
+                $('#type_of_institution').val(hospitalData.type_of_institution);
+                $('#specialty').val(hospitalData.specialty);
+                $('#hospital_barangay').val(hospitalData.hospital_barangay);
+                $('#hospital_street').val(hospitalData.hospital_street);
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(error);
+            }
         });
-    </script>';
-    
-    // Unset the session variable to prevent displaying the message again on page refresh
-    unset($_SESSION['equipment-sent']);
-}
-?>
+    });
+});
+</script>
 
 <?php
 // Check if the session variable is set
@@ -282,14 +300,14 @@ if (isset($_SESSION['add-hospital'])) {
     echo '<script>
         Swal.fire({
             title: "Success!",
-            text: "' . $_SESSION['hospital-created'] . '",
+            text: "' . $_SESSION['add-hospital'] . '",
             icon: "success",
             confirmButtonText: "OK"
         });
     </script>';
     
     // Unset the session variable to prevent displaying the message again on page refresh
-    unset($_SESSION['hospital-created']);
+    unset($_SESSION['add-hospital']);
 }
 ?>
 
