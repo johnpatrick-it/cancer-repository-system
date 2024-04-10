@@ -12,7 +12,7 @@ if (!$db_connection) {
     die("Connection failed: " . pg_last_error());
 }
 
-$sql = "SELECT COUNT(DISTINCT hospital_uuid) AS total_hospitals FROM hospital_general_information";
+$sql = "SELECT COUNT(DISTINCT hospital_id) AS total_hospitals FROM hospital_general_information";
 
 $result = pg_query($db_connection, $sql);
 
@@ -198,7 +198,7 @@ pg_close($db_connection);
                     </div>
                     <?php
                     // Add your SQL query to count the total number of patients
-                    $sql = "SELECT COUNT(*) as total_patients FROM patient_general_info";
+                    $sql = "SELECT COUNT(*) as total_patients FROM cancer_cases_general_info";
                     $result = pg_query($db_connection, $sql);
 
                     // Check if the query was successful
