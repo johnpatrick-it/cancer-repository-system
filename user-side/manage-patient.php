@@ -257,17 +257,21 @@ include('../includes/config.php');
 
 
         <!-- Include SweetAlert library -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
     <script>
-        //Submit button succesful alert to
-        function editSuccessCredentialsAlert(success) {
-            Swal.fire({
-                title: 'Success!',
-                text: success,
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        }
+                <?php
+            if (isset($_SESSION['edit_successfully'])) {
+                // Display SweetAlert success message
+                echo "<script>
+                        swal('Success', '".$_SESSION['edit_successfully']."', 'success');
+                    </script>";
+
+                // Unset the session variable to prevent the message from showing again
+                unset($_SESSION['edit_successfully']);
+            }
+            ?>
+    </script>
+    <script>
 
         // Edit patient button alert to
     function confirmEdit(patientId) {

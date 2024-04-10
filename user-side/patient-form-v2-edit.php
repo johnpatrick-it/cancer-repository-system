@@ -1,128 +1,112 @@
-<?php
-include('../includes/config.php');
+    <?php
+    include('../includes/config.php');
 
-session_start();
+    session_start();
 
-//SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
-if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
-    header("Location: ../login.php");
-    exit; 
-}
+    //SESSION FOR REPO_USER_ID (NEEDED FOR EVERY FILE)
+    if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
+        header("Location: ../login.php");
+        exit; 
+    }
 
-// Retrieve repo_user_id from session
-$repo_user_id = $_SESSION['repo_user_id'];
+    // Retrieve repo_user_id from session
+    $repo_user_id = $_SESSION['repo_user_id'];
 
-// Retrieve hospital_id for the current user
-$query_hospital_id = "SELECT hospital_id FROM public.repo_user WHERE repo_user_id = $1";
-$result_hospital_id = pg_query_params($db_connection, $query_hospital_id, array($repo_user_id));
+    // Retrieve hospital_id for the current user
+    $query_hospital_id = "SELECT hospital_id FROM public.repo_user WHERE repo_user_id = $1";
+    $result_hospital_id = pg_query_params($db_connection, $query_hospital_id, array($repo_user_id));
 
-if ($result_hospital_id) {
-    $row_hospital_id = pg_fetch_assoc($result_hospital_id);
-    $hospital_id = $row_hospital_id['hospital_id'];
-}
+    if ($result_hospital_id) {
+        $row_hospital_id = pg_fetch_assoc($result_hospital_id);
+        $hospital_id = $row_hospital_id['hospital_id'];
+    }
 
-// Check if patient_id is set in the URL
-if (isset($_GET['edit']) && !empty($_GET['edit'])) {
-    // Retrieve the patient_id from the URL
-    $edit_patient_id = $_GET['edit'];
+    // Check if patient_id is set in the URL
+    if (isset($_GET['edit']) && !empty($_GET['edit'])) {
+        // Retrieve the patient_id from the URL
+        $edit_patient_id = $_GET['edit'];
 
-    // Query to fetch patient information using patient_id
-    $query = "SELECT * FROM cancer_cases_general_info WHERE patient_id = $1";
-    $result = pg_query_params($db_connection, $query, array($edit_patient_id));
+        // Query to fetch patient information using patient_id
+        $query = "SELECT * FROM cancer_cases_general_info WHERE patient_id = $1";
+        $result = pg_query_params($db_connection, $query, array($edit_patient_id));
 
-    // Check if query was successful
-    if ($result) {
-        // Fetch patient information
-        $patient_info = pg_fetch_assoc($result);
-        if ($patient_info) {
-            // Extract patient information
-            $diagnosis_date = $patient_info['diagnosis_date'];
-            $primary_site = $patient_info['primary_site'];
-            $cancer_stage = $patient_info['cancer_stage'];
-            $type_of_patient = $patient_info['type_of_patient'];
-            $age = $patient_info['age'];
-            $sex = $patient_info['sex'];
-            $patient_status = $patient_info['patient_status'];
-            $date_of_death = $patient_info['date_of_death'];
-            $patient_case_number = $patient_info['patient_case_number'];
-            $address_city_municipality = $patient_info['address_city_municipality'];
+        // Check if query was successful
+        if ($result) {
+            // Fetch patient information
+            $patient_info = pg_fetch_assoc($result);
+            if ($patient_info) {
+                // Extract patient information
+                $diagnosis_date = $patient_info['diagnosis_date'];
+                $primary_site = $patient_info['primary_site'];
+                $cancer_stage = $patient_info['cancer_stage'];
+                $type_of_patient = $patient_info['type_of_patient'];
+                $age = $patient_info['age'];
+                $sex = $patient_info['sex'];
+                $patient_status = $patient_info['patient_status'];
+                $date_of_death = $patient_info['date_of_death'];
+                $patient_case_number = $patient_info['patient_case_number'];
+                $address_city_municipality = $patient_info['address_city_municipality'];
+            } else {
+                // Patient not found
+                echo "Patient not found.";
+            }
         } else {
-            // Patient not found
-            echo "Patient not found.";
+            // Error in query
+            echo "Error: " . pg_last_error($db_connection);
         }
-    } else {
-        // Error in query
-        echo "Error: " . pg_last_error($db_connection);
-    }
 
-    // Ang function ng code na to is to Fetch submitter information from the database
-    $sql = "SELECT user_fname, user_lname, user_mname, position FROM repo_user WHERE repo_user_id = $1";
-    $result = pg_query_params($db_connection, $sql, [$_SESSION['repo_user_id']]);
+        // Ang function ng code na to is to Fetch submitter information from the database
+        $sql = "SELECT user_fname, user_lname, user_mname, position FROM repo_user WHERE repo_user_id = $1";
+        $result = pg_query_params($db_connection, $sql, [$_SESSION['repo_user_id']]);
 
-    //fetching user sa database
-    $row = pg_fetch_assoc($result);
-    if ($row) {
-        //variables na needed para sa fetching para ilagay doon sa form
-        $first_name = $row['user_fname'];
-        $last_name = $row['user_lname'];
-        $middle_name = $row['user_mname'];
-        $designation = $row['position'];
-    } else {
-        // output kapag walang data
-        echo "No user found with the specified ID.";
-    }
-} else {
-    // Redirect to an error page or display an error message
-    echo "Error: Patient ID not found in URL.";
-}
-
-// Check if the form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect form data
-    $diagnosis_date = $_POST['diagnosis_date'];
-    $primary_site = $_POST['primary_site'];
-    $cancer_stage = $_POST['cancer_stage'];
-    $type_of_patient = $_POST['patient_type'];
-    $age = $_POST['age'];
-    $sex = $_POST['gender'];
-    $patient_status = $_POST['patient_status'];
-    $date_of_death = ($_POST['patient_status'] == 'Dead') ? $_POST['date_of_death'] : NULL;
-    $patient_case_number = $_POST['patient_case_number'];
-    $address_city_municipality = $_POST['city'];
-
-    // Query to update patient information in the database
-    $update_query = "UPDATE cancer_cases_general_info SET diagnosis_date = $1, primary_site = $2, cancer_stage = $3, type_of_patient = $4, age = $5, sex = $6, patient_status = $7, date_of_death = $8, patient_case_number = $9, address_city_municipality = $10 WHERE patient_id = $11";
-
-    // Prepare and execute the update query
-    $update_result = pg_query_params($db_connection, $update_query, array($diagnosis_date, $primary_site, $cancer_stage, $type_of_patient, $age, $sex, $patient_status, $date_of_death, $patient_case_number, $address_city_municipality, $edit_patient_id));
-
-    if ($update_result) {
-        // Log the edit action
-        // Log the edit action
-        $log_action = "Patient Details Updated";
-        $query_log_success = "INSERT INTO public.repository_logs (log_timestamp, repo_user_id, patient_id, hospital_id, completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_case_number, log_action) VALUES (timezone('Asia/Manila', current_timestamp), $1, $2, $3, $4, $5, $6, $7, $8, $9)";
-        $result_log_success = pg_query_params($db_connection, $query_log_success, array($_SESSION['repo_user_id'], $edit_patient_id, $hospital_id, $last_name, $first_name, $middle_name, $designation, $patient_case_number, $log_action));
-
-        if (!$result_log_success) {
-            echo "Error logging action: " . pg_last_error($db_connection);
-            exit;
+        //fetching user sa database
+        $row = pg_fetch_assoc($result);
+        if ($row) {
+            //variables na needed para sa fetching para ilagay doon sa form
+            $first_name = $row['user_fname'];
+            $last_name = $row['user_lname'];
+            $middle_name = $row['user_mname'];
+            $designation = $row['position'];
+        } else {
+            // output kapag walang data
+            echo "No user found with the specified ID.";
         }
-   
-
-        // Redirect to a success page or display a success message
-        header("Location: manage-patient.php");
-        exit;
     } else {
         // Redirect to an error page or display an error message
-        echo "Error: Unable to update patient information. Please try again.";
+        echo "Error: Patient ID not found in URL.";
     }
-}
+
+    // Check if the form is submitted
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Collect form data
+        $diagnosis_date = $_POST['diagnosis_date'];
+        $primary_site = $_POST['primary_site'];
+        $cancer_stage = $_POST['cancer_stage'];
+        $type_of_patient = $_POST['patient_type'];
+        $age = $_POST['age'];
+        $sex = $_POST['gender'];
+        $patient_status = $_POST['patient_status'];
+        $date_of_death = ($_POST['patient_status'] == 'Dead') ? $_POST['date_of_death'] : NULL;
+        $patient_case_number = $_POST['patient_case_number'];
+        $address_city_municipality = $_POST['city'];
+
+            // Query to update patient information in the database
+            $update_query = "UPDATE cancer_cases_general_info SET diagnosis_date = $1, primary_site = $2, cancer_stage = $3, type_of_patient = $4, age = $5, sex = $6, patient_status = $7, date_of_death = $8, patient_case_number = $9, address_city_municipality = $10 WHERE patient_id = $11";
+
+            // Prepare and execute the update query
+            $update_result = pg_query_params($db_connection, $update_query, array($diagnosis_date, $primary_site, $cancer_stage, $type_of_patient, $age, $sex, $patient_status, $date_of_death, $patient_case_number, $address_city_municipality, $edit_patient_id));
+
+            if ($update_result) {
+                // Log the edit action
+                $log_action = "Patient Details Updated";
+                $query_log_success = "INSERT INTO public.repository_logs (log_timestamp, repo_user_id, patient_id, hospital_id, completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_case_number, log_action) VALUES (timezone('Asia/Manila', current_timestamp), $1, $2, $3, $4, $5, $6, $7, $8, $9)";
+                $result_log_success = pg_query_params($db_connection, $query_log_success, array($_SESSION['repo_user_id'], $edit_patient_id, $hospital_id, $last_name, $first_name, $middle_name, $designation, $patient_case_number, $log_action));
+
+                if (!$result_log_success) {
+                }
+             }
+    }
 ?>
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -479,27 +463,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Include SweetAlert library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
     <script>
-        function displaySuccessCredentialsAlert(success) {
-            Swal.fire({
-                title: 'Success!',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        }
+        <?php
+            // Check if the form is submitted successfully
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && $update_result) {
+                // Display success alert using SweetAlert
+                echo "Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Patient details updated successfully.',
+                    timer: 2000, // Duration for the alert to close automatically
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                }).then((result) => {
+                    // Redirect to manage-patient.php after the alert is closed
+                    window.location.href = 'manage-patient.php';
+                });";
+            }
+        ?>
+    </script>
+    <script>
 
         document.addEventListener('DOMContentLoaded', function() {
-            <?php
-            if (isset($_SESSION['already-sent'])) {
-                $success = $_SESSION['already-sent'];
-                // Clear the session error variable
-                unset($_SESSION['already-sent']);
-
-                // Display the error for incorrect password
-                echo "displaySuccessCredentialsAlert('$success');";
-            }
-            ?>
-
-
         });
         function toggleDateOfDeath(selectElement) {
         var dateOfDeathField = document.getElementById('dateOfDeathField');
