@@ -1,5 +1,5 @@
 <?php
-include_once("../../config.php");
+include_once("config.php");
 require_once "vendor/autoload.php"; // Assuming PHPMailer is installed via Composer
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

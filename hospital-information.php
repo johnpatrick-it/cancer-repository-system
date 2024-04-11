@@ -193,36 +193,48 @@ include('includes/config.php');
                                             <th>Resource level</th>
                                             <th>Hospital Location UACS CODE</th>
                                             <th>Hospital Street</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                           if (!$db_connection) {
-                                               echo "Failed to connect to the database.";
-                                           } else {
-                                            $query = "SELECT DISTINCT ON (hospital_name) 
-                                                    hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street, specialty,location 
-                                            FROM hospital_general_information";
+                                        // Check if the database connection is successful
+                                        if (!$db_connection) {
+                                            echo "<tr><td colspan='7'>Failed to connect to the database.</td></tr>";
+                                        } else {
+                                            // Construct the query to retrieve hospital information along with equipment details
+                                            $query = "SELECT h.hospital_id, h.hospital_name, h.hospital_level, h.type_of_institution, h.hospital_barangay, h.hospital_street, h.specialty, array_agg(e.equipment_name) AS equipments
+                                                    FROM hospital_general_information h
+                                                    LEFT JOIN hospital_equipment he ON h.hospital_id = he.hospital_id
+                                                    LEFT JOIN repo_equipment_category e ON he.equipment_id = e.equipment_id
+                                                    GROUP BY h.hospital_id, h.hospital_name, h.hospital_level, h.type_of_institution, h.hospital_barangay, h.hospital_street, h.specialty";
 
-                                               $result = pg_query($db_connection, $query);
-                                                   while ($row = pg_fetch_assoc($result)) {
-                                                    echo "<tr data-name='{$row['hospital_name']}' data-level='{$row['hospital_level']}' data-institution='{$row['type_of_institution']}' data-barangay='{$row['hospital_barangay']}' data-street='{$row['hospital_street']}'>";
-                                                    echo "<td>" . $row['hospital_name'] . "</td>";
-                                                    echo "<td>" . $row['hospital_level'] . "</td>";
-                                                    echo "<td>" . $row['type_of_institution'] . "</td>";
-                                                    echo "<td>" . $row['specialty'] . "</td>";
-                                                    echo "<td>" . $row['hospital_barangay'] . "</td>";
-                                                    echo "<td>" . $row['hospital_street'] . "</td>";
-                                                       echo "<td>";
-                                                       echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . htmlspecialchars($row['hospital_id']) . "'><i class='fa fa-pencil'></i></a>";
-                                                       echo "</td>";
-                                                       echo "</tr>";
-                                                   }
-                                                   echo "</tbody>";
+                                            // Execute the query
+                                            $result = pg_query($db_connection, $query);
+
+                                            // Check if query execution is successful
+                                            if ($result) {
+                                                // Fetch and display hospital information
+                                                while ($row = pg_fetch_assoc($result)) {
+                                                    echo "<tr>";
+                                                    echo "<td>" . htmlspecialchars($row['hospital_name']) . "</td>";
+                                                    echo "<td>" . htmlspecialchars($row['hospital_level']) . "</td>";
+                                                    echo "<td>" . htmlspecialchars($row['type_of_institution']) . "</td>";
+                                                    echo "<td>" . htmlspecialchars($row['specialty']) . "</td>";
+                                                    echo "<td>" . htmlspecialchars($row['hospital_barangay']) . "</td>";
+                                                    echo "<td>" . htmlspecialchars($row['hospital_street']) . "</td>";  
+                                                    echo "<td>";
+                                                    //echo "<a href='hospital-information-edit.php?hospital_id=" . htmlspecialchars($row['hospital_id']) . "' title='Edit' class='btn text-xs text-white btn-blue edit-action'><i class='fa fa-pencil'></i></a>";
+                                                    echo "</td>";
+                                                    echo "</tr>";
                                                 }
-                                               pg_close($db_connection);                                       
-                                       ?>
+                                            } else {
+                                                echo "<tr><td colspan='7'>Failed to fetch hospital information.</td></tr>";
+                                            }
+
+                                            // Close the database connection
+                                            pg_close($db_connection);
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -242,28 +254,63 @@ include('includes/config.php');
     </div>
 
 
-         <!-- Include SweetAlert library -->
-         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
-         <?php
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+    <script>
+$(document).ready(function() {
+    // Event listener for edit button click
+    $('.edit-action').click(function() {
+        // Get the hospital ID from the data attribute
+        var hospitalId = $(this).data('hospital-id');
+
+        // Store the hospital ID in the hidden input field
+        $('#hospitalId').val(hospitalId);
+
+        // Fetch hospital data using AJAX
+        $.ajax({
+            url: 'fetch_hospital.php', // URL to your PHP script to fetch hospital data
+            method: 'POST',
+            data: { hospital_id: hospitalId },
+            success: function(response) {
+                // Parse the JSON response
+                var hospitalData = JSON.parse(response);
+
+                // Populate the modal fields with the fetched data
+                $('#hospital_name').val(hospitalData.hospital_name);
+                $('#hospital_level').val(hospitalData.hospital_level);
+                $('#type_of_institution').val(hospitalData.type_of_institution);
+                $('#specialty').val(hospitalData.specialty);
+                $('#hospital_barangay').val(hospitalData.hospital_barangay);
+                $('#hospital_street').val(hospitalData.hospital_street);
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(error);
+            }
+        });
+    });
+});
+</script>
+
+<?php
 // Check if the session variable is set
-if (isset($_SESSION['equipment-sent'])) {
+if (isset($_SESSION['add-hospital'])) {
     // Display the alert message
     echo '<script>
         Swal.fire({
             title: "Success!",
-            text: "' . $_SESSION['equipment-sent'] . '",
+            text: "' . $_SESSION['add-hospital'] . '",
             icon: "success",
             confirmButtonText: "OK"
         });
     </script>';
     
     // Unset the session variable to prevent displaying the message again on page refresh
-    unset($_SESSION['equipment-sent']);
+    unset($_SESSION['add-hospital']);
 }
 ?>
-    
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
     $(document).ready(function() {
         $('#searchInput').keyup(function() {

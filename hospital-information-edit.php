@@ -1,332 +1,477 @@
 <?php
 session_start();
+include_once("includes/config.php");
 
+// Check if user is logged in
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
-    // Redirect to the login page
-    header("Location: login.php");
-    exit; 
+    header('Location: /login.php');
+    exit;
 }
 
-error_reporting(0);
-include('includes/config.php');
+// Ensure hospital_id is provided in the URL
+if (!isset($_GET['hospital_id']) || empty($_GET['hospital_id'])) {
+    // Redirect if hospital_id is not provided
+    header('Location: /'); // Redirect to home page or any other appropriate page
+    exit;
+}
+
+// Fetch hospital_id from URL
+$hospital_id = $_GET['hospital_id'];
+
+// Connect to PostgreSQL database
+$conn = pg_connect($host);
+
+if (!$conn) {
+    echo "Failed to connect to PostgreSQL";
+    exit;
+}
+
+// Prepare SQL statement to fetch hospital data
+$query = "SELECT hospital_name, hospital_level, type_of_institution, hospital_barangay, hospital_street, specialty FROM hospital_general_information WHERE hospital_id = $1";
+$params = array($hospital_id);
+
+// Execute the query with parameters
+$result = pg_query_params($conn, $query, $params);
+
+if (!$result) {
+    echo "Error in SQL query";
+    exit;
+}
+
+// Check if hospital data is found
+if (pg_num_rows($result) > 0) {
+    // Fetch the hospital data
+    $hospitalData = pg_fetch_assoc($result);
+
+    // Extract fetched hospital data into variables
+    $hospitalName = $hospitalData['hospital_name'];
+    $hospitalLevel = $hospitalData['hospital_level'];
+    $typeOfInstitution = $hospitalData['type_of_institution'];
+    $hospitalBarangay = $hospitalData['hospital_barangay'];
+    $hospitalStreet = $hospitalData['hospital_street'];
+    $specialty = $hospitalData['specialty'];
+} else {
+    // Redirect if hospital data is not found
+    header('Location: /'); // Redirect to home page or any other appropriate page
+    exit;
+}
+
+// Close connection
+pg_close($conn);
+// Fetch regions from the database
+$query = "SELECT * FROM regions"; // Replace 'regions' with your actual table name
+$regions = []; // Fetch regions and store them in this array
+
+// Fetch provinces from the database based on region_code
+$query = "SELECT * FROM provinces WHERE region_code = ?"; // Replace 'provinces' with your actual table name
+$provinces = []; // Fetch provinces and store them in this array
+
+// Fetch cities/municipalities from the database based on province_code
+$query = "SELECT * FROM cities WHERE province_code = ?"; // Replace 'cities' with your actual table name
+$cities = []; // Fetch cities/municipalities and store them in this array
+
+// Fetch barangays from the database based on city_code
+$query = "SELECT * FROM barangays WHERE city_code = ?"; // Replace 'barangays' with your actual table name
+$barangays = []; // Fetch barangays and store them in this array
 ?>
-<?php $hospital_name = $_GET['edit']; ?>
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="This is a Philippine Cancer Repository System">
-    <meta name="keywords" content="PCC-CR, CR, Cancer Repository, Capstone, System, Repo">
-    <meta name="author" content="Heionim">
-    <meta name="robots" content="noindex, nofollow">
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-    <title>PCC CANCER REPOSITORY</title>
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-
-    <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-
-    <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="assets/css/line-awesome.min.css">
-
-    <!-- Datatable CSS -->
-    <link rel="stylesheet" href="assets/css/dataTables.bootstrap4.min.css">
-
-    <!-- Select2 CSS -->
-    <link rel="stylesheet" href="assets/css/select2.min.css">
-
-    <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
-
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
-
-    <!-- Sweetalert CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@latest/dist/sweetalert2.min.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Hospital Information</title>
+    <!-- Include SweetAlert2 library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="assets/js/addressSelector.js"></script>
     <style>
-    body {
-        background-color: #D4DEDB;
-    }
+        h2 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
 
-    .body-container {
-        background-color: #FAFAFA;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    }
+        .second-h2 {
+            border-top: 1px solid grey;
+            padding-top: 10px;
+        }
+                /* Body styles */
+                body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        /* Form container styles */
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        /* Form input styles */
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-control {
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        /* Button styles */
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
 
-    table {
-        text-align: center;
-        border: 1px solid #285D4D;
-    }
-
-    .page-title {
-        font-size: 1.3rem;
-        color: #204A3D;
-    }
-
-    .btn-blue {
-        background-color: #0D6EFD;
-    }
-
-    .search-container {
-        position: relative;
-    }
-
-    .search-input {
-        border: none;
-        border-radius: 5px;
-        width: 100%;
-        border: 1px solid #9E9E9E;
-        margin-bottom: 20px;
-    }
-
-    .search-input:focus {
-        outline: none;
-    }
-
-    .search-container i {
-        position: absolute;
-        left: 15px;
-        top: 45%;
-        transform: translateY(-50%);
-        color: #888;
-    }
-
-    .filter-btn,
-    .export-btn {
-        padding: 8px 20px;
-        background-color: #E5F6F1;
-        color: #204A3D;
-        border: 1px solid #204A3D;
-    }
-
-    .add-btn {
-        border-radius: 5px;
-        padding: 8px 2rem;
-    }
-
-    .m-right {
-        margin-right: -0.8rem;
-    }
     </style>
 </head>
-
 <body>
-    <div class="main-wrapper">
-
-        <?php include_once("includes/header.php"); ?>
-        <?php include_once("includes/sidebar.php"); ?>
-
-        <div class="page-wrapper">
-            <div class="content container-fluid">
-                <div class="body-container">
-
-                    <!-- HEADER -->
-                    <div class="page-header">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h3 class="page-title">Hospital Information</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SEARCH -->
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="search-container">
-                                <i class="fa fa-search"></i>
-                                <input type="text" id="searchInput" class="form-control pl-5 search-input"
-                                    placeholder="Search">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <!-- Empty Space -->
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-auto ml-auto m-right">
-                                    <a href="#" class="btn add-btn" data-toggle="modal"
-                                        data-target="#add_new_equipment">
-                                        <i class="fa fa-medkit"></i> Add Hospital equipment
-                                    </a>
-                                </div>  
-                              
-                                <div class="col-auto">
-                                    <div class="dropdown">
-                                        <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
-                                            data-bs-toggle="dropdown" aria-expanded="false"> <i
-                                                class="fa fa-download"></i> Export</button>
-                                        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">Export as
-                                                    PDF</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">Export
-                                                    as Excel</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('csv')">Export as
-                                                    CSV</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TABLE -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped custom-table datatable" id="imformationTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Hospital Name</th>
-                                            <th>Hospital Level</th>
-                                            <th>Type of Instituion</th>
-                                            <th>Hospital Location UACS CODE</th>
-                                            <th>Hospital Street</th>
-                                            <th>Hospital Equipment</th>
-                                            <th>Action</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                        if ($db_connection) {
-                                            $query = "SELECT hospital_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province,hospital_city, hospital_barangay, hospital_street, hospital_equipments FROM hospital_general_information WHERE hospital_name = $1";
-                                            $result = pg_query_params($db_connection, $query, array($hospital_name));
-                                            while ($row = pg_fetch_assoc($result)) {
-                                                echo "<tr data-name='" . htmlspecialchars($row['hospital_name']) . "' data-level='" . htmlspecialchars($row['hospital_level']) . "'"
-                                                    . " data-institution='" . htmlspecialchars($row['type_of_institution']) . "'"
-                                                    . " data-barangay='" . htmlspecialchars($row['hospital_barangay']) . "'"
-                                                    . " data-street='" . htmlspecialchars($row['hospital_street']) . "'>";
-                                                echo "<td class='hospital-name'>" . htmlspecialchars($row['hospital_name']) . "</td>";
-                                                echo "<td class='hospital-level'>" . htmlspecialchars($row['hospital_level']) . "</td>";
-                                                echo "<td class='type-of-institution'>" . htmlspecialchars($row['type_of_institution']) . "</td>";
-                                                echo "<td class='hospital-barangay'>" . htmlspecialchars($row['hospital_barangay']) . "</td>";
-                                                echo "<td class='hospital-street'>" . htmlspecialchars($row['hospital_street']) . "</td>";
-                                                echo "<td class='hospital-equiptments'>" . htmlspecialchars($row['hospital_equipments']) . "</td>";
-
-                                                // Populate hidden input fields for additional data
-                                                echo "<input type='hidden' class='hospital-region' value='" . htmlspecialchars($row['hospital_region']) . "'>";
-                                                echo "<input type='hidden' class='hospital-province' value='" . htmlspecialchars($row['hospital_province']) . "'>";
-                                                echo "<input type='hidden' class='hospital-city' value='" . htmlspecialchars($row['hospital_city']) . "'>";
-                                                echo "<input type='hidden' class='hospital-streets' value='" . htmlspecialchars($row['hospital_street']) . "'>";
-                                                echo "<input type='hidden' class='hospital-equipments' value='" . htmlspecialchars($row['hospital_equipments']) . "'>";
-
-                                                echo "<td>";
-                                                echo "<a href='#' data-toggle='modal' data-target='#edit_hospital' title='Edit' class='btn text-xs text-white btn-blue edit-action' data-hospital-id='" . htmlspecialchars($row['hospital_id']) . "'><i class='fa fa-pencil'></i></a>";
-                                                echo "</td>";
-                                                echo "</tr>";
-                                            }
-                                        } else {
-                                            echo "Failed to connect to the database.";
-                                        }
-                                        pg_close($db_connection);
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div id="add_hospital" class="modal custom-modal fade " role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Hospital</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <div class="modal-body">
+                <form method="POST" action="/includes/modals/hospital/save_hospital.php" enctype="multipart/form-data"
+                      autocomplete="off">
+                    <h2>HOSPITAL INFORMATION</h2>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="hospital_name">Hospital Name </label>
+                            <input name="hospital_name" class="form-control" type="text" placeholder="Hospital Name"
+                                   required="true" value="<?php echo htmlspecialchars($hospitalName); ?>">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="level">Hospital Level</label>
+                            <select class="form-control select" name="level" id="level" required="true">
+                                <option disabled selected>Select Level</option>
+                                <option value="Non Hospital" <?php if ($hospitalLevel === 'Non Hospital') echo 'selected'; ?>>
+                                    Non-Hospital
+                                </option>
+                                <option value="Level 1 General Hospital" <?php if ($hospitalLevel === 'Level 1 General Hospital') echo 'selected'; ?>>
+                                    Level 1 General Hospital
+                                </option>
+                                <option value="Level 2 General Hospital" <?php if ($hospitalLevel === 'Level 2 General Hospital') echo 'selected'; ?>>
+                                    Level 2 General Hospital
+                                </option>
+                                <option value="Level 3 General Hospital" <?php if ($hospitalLevel === 'Level 3 General Hospital') echo 'selected'; ?>>
+                                    Level 3 General Hospital
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3" id="institutionFieldLevel3">
+                            <label for="institution">Hospital Category</label>
+                            <select class="form-control select" name="institution_level3" required="true">
+                                <option disabled selected>Select Hospital Category</option>
+                                <?php
+                                // Fetch hospital categories from the database and generate <option> tags
+                                $hospitalCategories = array(
+                                    "Primary Cancer Control and Clinic (PCCPC)",
+                                    "Secondary Cancer Control Clinic (SCCC)",
+                                    "Cancer Control Unit (CCU)",
+                                    "Advanced Comprehensive Cancer Centers (ACCC)",
+                                    "Basic Comprehensive Cancer Center (BCCC)"
+                                );
+                                foreach ($hospitalCategories as $category) {
+                                    $selected = ($category === $typeOfInstitution) ? 'selected' : '';
+                                    echo "<option value='$category' $selected>$category</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
 
-            <!-- Add Hospital  Modal -->
-            <?php include_once 'includes/modals/hospital/add_new_equipment.php'; ?>
+                        <div class="form-group col-md-3" id="specialtyField">
+                            <label for="specialty">Specialty</label>
+                            <select class="form-control select" name="specialty" required="true">
+                                <option disabled selected>Select Hospital Specialty</option>
+                                <?php
+                                // Fetch hospital specialties from the database and generate <option> tags
+                                $hospitalSpecialties = array(
+                                    "Multispecialty Cancer Center (MCC)",
+                                    "Specialty Cancer Center (SCC)",
+                                    // Add more specialties as needed
+                                );
+                                foreach ($hospitalSpecialties as $specialty) {
+                                    // Check if the fetched specialty matches the one from the database
+                                    $selected = ($specialty === $specialty) ? 'selected' : '';
+                                    echo "<option value='$specialty' $selected>$specialty</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="region">Region</label>
+                            <select class="form-control select" name="region" id="region" required="true"></select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="province">Province</label>
+                            <select class="form-control select" name="province" id="province" required="true"></select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="city">City/Municipality</label>
+                            <select class="form-control select" name="city" id="city" required="true"></select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="barangay">Barangay</label>
+                            <select class="form-control select" name="barangay" id="barangay" required="true"></select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="street">Street Address</label>
+                            <input type="text" class="form-control" name="street" placeholder="Street Address"
+                                   required="true" value="<?php echo htmlspecialchars($hospitalStreet); ?>">
+                        </div>
+                    </div>
 
-            <!-- Edit Hospital Modal -->
-            <?php include_once 'includes/modals/hospital/edit_hospital.php'; ?>
+                    <h2 class="mt-3 second-h2">HOSPITAL EQUIPMENTS</h2>
 
-            <!-- Delete Hospital Modal -->
-         
+
+                    <div class="form-row" id="equipmentContainer">
+                        <!-- Initial dropdown -->
+                        <div class="form-group col-md-3">
+                            <label for="hospital-equipment">Oncologists Medical Equipment 1</label>
+                            <div class="input-group">
+                                <select name="hospital_equipment[]" class="form-control" required="true">
+                                    <option value="" disabled selected>Select Medical Equipment</option>
+                                    <?php
+                                    $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
+                                    while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                                        ?>
+                                        <option value="<?php echo $row['equipment_name']; ?>">
+                                            <?php echo $row['equipment_name']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="submit-section">
+                        <button type="button" class="btn btn-primary add-equipment-btn">Add Equipment Form</button>
+                        <button type="button" id="clearForm" class="btn btn-secondary clear-form-btn">Clear Equipments Form</button>
+                    </div>
+                    <div class="submit-section">
+                        <button type="submit" name="submit" class="btn btn-primary submit-btn">Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+</div>
 
-   
+<script>
+    //idea ng function na to is when user selected the level of hospital meron katumbas na institution leve and speciallevel yung
+    //hospital nayon
+    $(document).ready(function () {
+        $('#level').on('change', function () {
+            var selectedLevel = $(this).val();
+            var institutionField = $('#institutionFieldLevel3 select');
+            var specialtyField = $('#specialtyField select');
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            institutionField.empty(); // Clear previous options
+            specialtyField.empty(); // Clear previous options
 
-    <script>
-    $(document).ready(function() {
-        $('#searchInput').keyup(function() {
-            var searchText = $(this).val().toString().toLowerCase();
+            // Populate options based on selected level
+            if (selectedLevel === 'Non Hospital') {
+                institutionField.append('<option disabled selected>Select Hospital Category</option>');
+                institutionField.append('<option value="Primary Cancer Control and Clinic (PCCPC)">Primary Cancer Control and Clinic (PCCPC)</option>');
+                specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
+                specialtyField.append('<option value="N/A">N/A</option>');
+            } else if (selectedLevel === 'Level 1 General Hospital') {
+                institutionField.append('<option disabled selected>Select Hospital Category</option>');
+                institutionField.append('<option value="Secondary Cancer Control Clinic (SCCC)">Secondary Cancer Control Clinic (SCCC)</option>');
+                specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
+                specialtyField.append('<option value="N/A">N/A</option>');
+            } else if (selectedLevel === 'Level 2 General Hospital') {
+                institutionField.append('<option disabled selected>Select Hospital Category</option>');
+                institutionField.append('<option value="Cancer Control Unit (CCU)">Cancer Control Unit (CCU)</option>');
+                specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
+                specialtyField.append('<option value="N/A">N/A</option>');
+            } else if (selectedLevel === 'Level 3 General Hospital') {
+                institutionField.append('<option disabled selected>Select Hospital Category</option>');
+                institutionField.append('<option value="Advanced Comprehensive Cancer Centers (ACCC)">Advanced Comprehensive Cancer Centers (ACCC)</option>');
+                institutionField.append('<option value="Basic Comprehensive Cancer Center (BCCC)">Basic Comprehensive Cancer Center (BCCC)</option>');
+                specialtyField.append('<option disabled selected>Select Hospital Specialty</option>');
+                specialtyField.append('<option value="Multispecialty Cancer Center (MCC)">Multispecialty Cancer Center (MCC)</option>');
+                specialtyField.append('<option value="Specialty Cancer Center (SCC)">Specialty Cancer Center (SCC)</option>');
+            }
+        });
+    });
+</script>
+<script>
 
-            $('tbody tr').each(function() {
-                var name = $(this).data('name').toString().toLowerCase();
-                var level = $(this).data('level').toString().toLowerCase();
-                var institution = $(this).data('institution').toString().toLowerCase();
-                var barangay = $(this).data('barangay').toString().toLowerCase();
-                var street = $(this).data('street').toString().toLowerCase();
 
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                if (
-                    name.includes(searchText) ||
-                    level.includes(searchText) ||
-                    institution.includes(searchText) ||
-                    barangay.includes(searchText) ||
-                    street.includes(searchText)
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- PH AUTOMATIC ADDRESS WAG GALIWAN PARANG AWA-->
+<script>
+    $(document).ready(function () {
+        // Load Region
+        let regionDropdown = $('#region');
+        regionDropdown.empty();
+        regionDropdown.append('<option selected="true" disabled>Choose Region</option>');
+        regionDropdown.prop('selectedIndex', 0);
+        const regionUrl = 'ph-json/region.json';
 
-                ) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
+        // Populate dropdown with list of regions
+        $.getJSON(regionUrl, function (data) {
+            $.each(data, function (key, entry) {
+                regionDropdown.append($('<option></option>').attr('value', entry.region_code).text(
+                    entry.region_name));
+            });
+        });
+
+        // Change or Select Region
+        $('#region').on('change', function () {
+            // Load Provinces
+            var region_code = $(this).val();
+            var region_text = $(this).find("option:selected").text();
+            let region_input = $('#region-text');
+            region_input.val(region_text);
+
+            let provinceDropdown = $('#province');
+            provinceDropdown.empty();
+            provinceDropdown.append('<option selected="true" disabled>Choose State/Province</option>');
+            provinceDropdown.prop('selectedIndex', 0);
+
+            // Filter & fill provinces based on selected region
+            var provinceUrl = 'ph-json/province.json';
+            $.getJSON(provinceUrl, function (provinceData) {
+                var provinceResult = provinceData.filter(function (value) {
+                    return value.region_code == region_code;
+                });
+
+                provinceResult.sort(function (a, b) {
+                    return a.province_name.localeCompare(b.province_name);
+                });
+
+                $.each(provinceResult, function (key, entry) {
+                    provinceDropdown.append($('<option></option>').attr('value', entry
+                        .province_code).text(entry.province_name));
+                });
+            });
+        });
+
+        // Change or Select Province
+        $('#province').on('change', function () {
+            var province_code = $(this).val();
+            var province_text = $(this).find("option:selected").text();
+            let province_input = $('#province-text');
+            province_input.val(province_text);
+
+            let cityDropdown = $('#city');
+            cityDropdown.empty();
+            cityDropdown.append('<option selected="true" disabled>Choose City/Municipality</option>');
+            cityDropdown.prop('selectedIndex', 0);
+
+            // Filter & fill cities based on selected province
+            var cityUrl = 'ph-json/city.json';
+            $.getJSON(cityUrl, function (cityData) {
+                var cityResult = cityData.filter(function (value) {
+                    return value.province_code == province_code;
+                });
+
+                cityResult.sort(function (a, b) {
+                    return a.city_name.localeCompare(b.city_name);
+                });
+
+                $.each(cityResult, function (key, entry) {
+                    cityDropdown.append($('<option></option>').attr('value', entry
+                        .city_code).text(entry.city_name));
+                });
+            });
+        });
+
+        // Change or Select City
+        $('#city').on('change', function () {
+            var city_code = $(this).val();
+            var city_text = $(this).find("option:selected").text();
+            let city_input = $('#city-text');
+            city_input.val(city_text);
+
+            let barangayDropdown = $('#barangay');
+            barangayDropdown.empty();
+            barangayDropdown.append('<option selected="true" disabled>Choose Barangay</option>');
+            barangayDropdown.prop('selectedIndex', 0);
+
+            // Filter & fill barangays based on selected city
+            var barangayUrl = 'ph-json/barangay.json';
+            $.getJSON(barangayUrl, function (barangayData) {
+                var barangayResult = barangayData.filter(function (value) {
+                    return value.city_code == city_code;
+                });
+
+                barangayResult.sort(function (a, b) {
+                    return a.brgy_name.localeCompare(b.brgy_name);
+                });
+
+                $.each(barangayResult, function (key, entry) {
+                    barangayDropdown.append($('<option></option>').attr('value', entry
+                        .brgy_code).text(entry.brgy_name));
+                });
             });
         });
     });
-    </script>
+</script>
+<script>
+    $(document).ready(function () {
+        // Counter for dynamically generating label
+        var counter = 2;
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/tableexport.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        // Event delegation on the submit section for adding equipment
+        $(".submit-section").on("click", ".add-equipment-btn", function () {
+            addNewDropdown();
+        });
 
+        function addNewDropdown() {
+            var newDropdown = '<div class="form-group col-md-3">' +
+                '<label for="hospital-equipment">Equipment</label>' +
+                '<div class="input-group">' +
+                '<select name="hospital_equipment[]" class="form-control" required>' +
+                '<option value="" disabled selected>Select Medical Equipment</option>' +
+                '<?php
+                $query = $dbh->query("SELECT equipment_name FROM repo_equipment_category");
+                while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+                    ?>' +
+                '<option value="<?php echo $row['equipment_name']; ?>"><?php echo $row['equipment_name']; ?></option>' +
+                '<?php } ?>' +
+                '</select>' +
+                '<div class="input-group-append">' +
+                '<button type="button" class="btn btn-danger remove-equipment-btn">x</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
 
-    <!-- jQuery -->
-    <script src="./assets/js/jquery-3.2.1.min.js"></script>
-    <script src="./assets/js/print.js"></script>
+            $("#equipmentContainer").append(newDropdown);
 
-    <!-- Bootstrap Core JS -->
-    <script src="./assets/js/popper.min.js"></script>
-    <script src="./assets/js/bootstrap.min.js"></script>
+            // Increment the counter for the next label
+            counter++;
+        }
 
-    <!-- Slimscroll JS -->
-    <script src="./assets/js/jquery.slimscroll.min.js"></script>
+        // Event delegation for remove-equipment-btn
+        $("#equipmentContainer").on("click", ".remove-equipment-btn", function () {
+            $(this).closest('.form-group').remove();
+        });
 
-    <!-- Select2 JS -->
-    <script src="./assets/js/select2.min.js"></script>
-
-    <!-- Datetimepicker JS -->
-    <script src="./assets/js/moment.min.js"></script>
-    <script src="./assets/js/bootstrap-datetimepicker.min.js"></script>
-
-    <!-- Datatable JS -->
-    <script src="./assets/js/jquery.dataTables.min.js"></script>
-    <script src="./assets/js/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Custom JS -->  
-    <script src="./assets/js/app.js"></script>
-
-
-
+        // Clear form function
+        $("#clearForm").on("click", function () {
+            // Reset all form fields
+            $("form")[0].reset();
+        });
+    });
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
-
-

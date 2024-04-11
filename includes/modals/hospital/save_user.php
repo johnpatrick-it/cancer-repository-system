@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once("../../../includes/config.php");
+include_once("config.php");
 
 require_once "vendor/autoload.php"; // Assuming PHPMailer is installed via Composer
 use PHPMailer\PHPMailer\PHPMailer;
@@ -41,14 +41,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           exit;
             exit;
         }
-        
-        $query = "INSERT INTO repo_user (admin_id, hospital_id, user_fname, user_mname, user_lname, position, email, password) 
-                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
+        // Generate salt
+        $salt = generateSalt();
+
+        // Hash password with salt using bcrypt
+        $hashedPassword = password_hash($password . $salt, PASSWORD_DEFAULT);
+
+        // Insert user data into the database
+        $query = "INSERT INTO repo_user (admin_id, hospital_id, user_fname, user_mname, user_lname, position, email, password, salt) 
+                  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
         
         $result = pg_prepare($db_connection, "insert_query", $query);
 
         if ($result) {
-            $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalID, $firstName, $middleName, $lastName, $position, $email, $password));
+            $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalID, $firstName, $middleName, $lastName, $position, $email, $hashedPassword, $salt  ));
 
             if ($result_exec) {
                 $_SESSION['add-user'] = "New user added successfully!";

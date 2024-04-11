@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once("../../../includes/config.php");
+include_once("config.php");
 
 $AdminID = $_SESSION['admin_id'] ?? '';
 error_reporting(E_ALL);
@@ -23,58 +23,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hospitalEquipments = $_POST['hospital_equipment'] ?? '';
     $specialty = $_POST['specialty'] ?? '';
 
-    $equipmentIdStmt = pg_prepare($db_connection, "equipment_query", "SELECT equipment_id FROM repo_equipment_category WHERE equipment_name = $1");
-
-    if (!is_array($hospitalEquipments)) {
-        $hospitalEquipments = [$hospitalEquipments];
-    }
-    
-    $equipmentIds = [];
-    foreach ($hospitalEquipments as $equipment) {
-        $result = pg_execute($db_connection, "equipment_query", array($equipment));
-        if ($result) {
-            $equipmentId = pg_fetch_result($result, 0, 0);
-            if ($equipmentId !== false) {
-                $equipmentIds[] = $equipmentId;
-            } else {
-            }
-        } else {
-        }
-    }
-    // Set session variable upon successful insertion
-    if (!empty($equipmentIds)) {
-        $_SESSION['equipment-sent'] = "New hospital added successfully!";
-    }
-    // Construct insertion query
-    $query = "INSERT INTO hospital_general_information (admin_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, hospital_equipments, specialty, equipment_id) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)";
-
-    $result = pg_prepare($db_connection, "insert_query", $query);
+    // Prepare query to insert hospital general information
+    $query = "INSERT INTO hospital_general_information (admin_id, hospital_name, hospital_level, type_of_institution, hospital_region, hospital_province, hospital_city, hospital_barangay, hospital_street, specialty) 
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)";
+    $result = pg_prepare($db_connection, "insert_hospital_query", $query);
 
     if ($result) {
-    // Convert hospitalEquipments array to a comma-separated string
-    $hospitalEquipmentsString = implode(',', $hospitalEquipments);
-    
-    // Convert equipment IDs array to a unique array to avoid duplicates
-    $uniqueEquipmentIds = array_unique($equipmentIds);
-    
-    // Convert unique equipment IDs array to a string representation of PostgreSQL array
-    $equipmentIdsString = '{' . implode(',', $uniqueEquipmentIds) . '}';
-        // Execute the insertion query with the retrieved equipment_ids
+        // Execute insertion query for hospital general information
+        $result_exec = pg_execute($db_connection, "insert_hospital_query", array($AdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $specialty));
         
-        $result_exec = pg_execute($db_connection, "insert_query", array($AdminID, $hospitalName, $hospitalLevel, $institution, $region, $province, $city, $barangay, $street, $hospitalEquipmentsString, $specialty, $equipmentIdsString));    
         if ($result_exec) {
-            $_SESSION['add-hospital'] = "New hospital added successfully!";
-            header("Location: /hospital-information.php");
-            exit();
-        } else {
-            echo "Error executing query: " . pg_last_error($db_connection);
-        }
-    } else {
-        echo "Error preparing query: " . pg_last_error($db_connection);
-    }
+            // Get the hospital_id of the newly inserted hospital
+            $hospital_id_query = "SELECT hospital_id FROM hospital_general_information WHERE hospital_name = $1";
+            $result_hospital_id = pg_query_params($db_connection, $hospital_id_query, array($hospitalName));
+            
+            if ($result_hospital_id) {
+                $row = pg_fetch_assoc($result_hospital_id);
+                $hospital_id = $row['hospital_id'];
 
+                // Insert hospital equipment information
+                foreach ($hospitalEquipments as $equipment) {
+                    $equipmentIdQuery = "SELECT equipment_id FROM repo_equipment_category WHERE equipment_name = $1";
+                    $result_equipment_id = pg_query_params($db_connection, $equipmentIdQuery, array($equipment));
+                    if ($result_equipment_id) {
+                        $row = pg_fetch_assoc($result_equipment_id);
+                        $equipmentId = $row['equipment_id'];
+
+                        // Insert into hospital_equipment table
+                        $insertEquipmentQuery = "INSERT INTO hospital_equipment (hospital_id, equipment_id) VALUES ($1, $2)";
+                        $result_insert_equipment = pg_query_params($db_connection, $insertEquipmentQuery, array($hospital_id, $equipmentId));
+
+                        if (!$result_insert_equipment) {
+                        }
+                    } 
+                }
+                $_SESSION['add-hospital'] = "New hospital added successfully!";
+                header("Location: /hospital-information.php");
+                exit();
+            }
+        } 
+    } 
     pg_close($db_connection);
-} else {
 }
-?>
+
