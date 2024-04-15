@@ -71,7 +71,7 @@ $total_patients = $row_total_patients['total_patients'];
 //query para sa mga new patient metric
 $sql = "SELECT COUNT(patient_id) AS new_patient 
 FROM cancer_cases_general_info 
-WHERE time_stamp >= CURRENT_TIMESTAMP - INTERVAL '2 minutes' 
+WHERE time_stamp >= CURRENT_TIMESTAMP - INTERVAL '10 minutes' 
 AND hospital_id = (SELECT hospital_id FROM repo_user WHERE repo_user_id = $1)"; 
 //parameters 
 $result = pg_query_params($db_connection, $sql, array($_SESSION['repo_user_id']));
