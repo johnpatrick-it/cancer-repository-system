@@ -154,9 +154,9 @@ if (!$result) {
                                     <tbody>
                                         <?php
         // Query for logid, name, and surname of the repo_user who registered the patient
-        $query_logs = "SELECT rl.log_id, ru.user_fname, ru.user_lname, rl.log_timestamp, rl.log_action
+        $query_logs = "SELECT rl.log_id, ru.firstname, ru.lastname, rl.log_timestamp, rl.log_action
                         FROM repo_admin_logs rl
-                        JOIN repo_user ru ON rl.repo_user_id = ru.repo_user_id
+                        JOIN admin_users ru ON rl.repo_admin_id = ru.admin_id
                         ORDER BY rl.log_timestamp DESC";
 
         $result_logs = pg_query($db_connection, $query_logs);
@@ -165,9 +165,9 @@ if (!$result) {
             while ($row = pg_fetch_assoc($result_logs)) {
                 echo "<tr>";
                 echo "<td>{$row['log_id']}</td>";
-                echo "<td>{$row['user_fname']}</td>";
-                echo "<td>{$row['user_lname']}</td>";
-                echo "<td>{$row['log_timestamp']}</td>";
+                echo "<td>{$row['firstname']}</td>";
+                echo "<td>{$row['lastname']}</td>";
+                echo "<td>" . date("Y-m-d", strtotime($row['log_timestamp'])) . "</td>";
                 echo "<td>{$row['log_action']}</td>";
                 echo "</tr>";
             }

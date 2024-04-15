@@ -78,7 +78,22 @@ if (isset($_POST['add'])) {
         $insert_stmt->bindParam(':image_data', $image_data, PDO::PARAM_LOB);
 
         if ($insert_stmt->execute()) {
+            $log_timestamp = date("Y-m-d");
+                  $log_action = "New Equipment added"; 
+      
+                  $insertLogQuery = "INSERT INTO repo_admin_logs (repo_admin_id, repo_admin_uuid, log_timestamp, log_action) VALUES ($1, $2, $3, $4)";
+                  $result_insert_log = pg_query_params($db_connection, $insertLogQuery, array($AdminID, $AdminID, $log_timestamp, $log_action));
+                  
+                  if ($result_insert_log) {
+                      // Log inserted successfully
+                      echo "Log inserted successfully!";
+                  } else {
+                      // Error inserting log
+                      $error_message = pg_last_error($db_connection);
+                      echo "Error inserting log: " . $error_message;
+                  }
             $_SESSION['success'] = "Equipment added Successfully";
+
         } else {
             $_SESSION['error'] = "Failed to add equipment";
         }
@@ -88,7 +103,6 @@ if (isset($_POST['add'])) {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -229,13 +243,15 @@ if (isset($_POST['add'])) {
 <body>
     <div class="main-wrapper">
 
+        <!-- Include header and sidebar -->
         <?php include_once("includes/header.php"); ?>
         <?php include_once("includes/sidebar.php"); ?>
 
         <div class="page-wrapper">
-            <div class="content container-fluid">
-                <div class="body-container">
 
+            <div class="content container-fluid">
+
+                <div class="body-container">
                     <!-- HEADER -->
                     <div class="page-header">
                         <div class="row align-items-center">
@@ -260,9 +276,6 @@ if (isset($_POST['add'])) {
                         </div>
 
                         <div class="col-md-6">
-
-
-
                             <div class="row justify-content-end">
                                 <div class="col-auto">
                                     <div class="dropdown">
@@ -288,7 +301,6 @@ if (isset($_POST['add'])) {
                         </div>
                     </div>
 
-                    <!-- TABLE -->
                     <div class="row">
                         <div class="col-lg-4 col-md-6 col-sm-12 mb-30">
                             <div class="card-box pd-30 pt-10 height-100-p">
@@ -334,6 +346,8 @@ if (isset($_POST['add'])) {
                             </div>
                         </div>
 
+
+
                         <div class="col-lg-8 col-md-6 col-sm-12 mb-30">
                             <div class="card-box pd-30 pt-10 height-100-p">
                                 <h2 class="mb-30 h4">Euipment List</h2>
@@ -351,79 +365,103 @@ if (isset($_POST['add'])) {
                                         </thead>
                                         <tbody>
                                             <?php 
-    // Your database connection details
-    $host = "host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023";
+                                          
+                                              $host = "host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023";
+                                                try {
+                                                    // Create a new PDO instance
+                                                    $dbh = new PDO("pgsql:" . $host);
+                                                } catch (PDOException $e) {
+                                                    echo "Connection failed: " . $e->getMessage();
+                                                    exit; // Stop execution if unable to connect to the database
+                                                }
 
-    try {
-        // Create a new PDO instance
-        $dbh = new PDO("pgsql:" . $host);
-    } catch (PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
-        exit; // Stop execution if unable to connect to the database
-    }
+                                                    $query = "SELECT * FROM repo_equipment_category";
+                                                    $stmt = $dbh->prepare($query);
+                                                    $stmt->execute();
 
-    $query = "SELECT * FROM repo_equipment_category";
-    $stmt = $dbh->prepare($query);
-    $stmt->execute();
+                                                    // Fetch all results
+                                                    $results = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-    // Fetch all results
-    $results = $stmt->fetchAll(PDO::FETCH_OBJ);
+                                                                        // Check if any images are found
+                                                    if ($results) {
+                                                    $cnt = 1;
+                                                    // Display the images within a table
+                                                    foreach ($results as $result) {
+                                                        // Get the image data
+                                                        $imageData = $result->image_data;
 
-    // Check if any images are found
-    if ($results) {
-        $cnt = 1;
-        // Display the images within a table
-        foreach ($results as $result) {
-            // Get the image data
-            $imageData = $result->image_data;
+                                                // Check if image data is empty or null
+                                                if ($imageData) {
+                                                    // Convert the image data to base64 encoding
+                                                    $base64Image = base64_encode(stream_get_contents($imageData));
 
-            // Check if image data is empty or null
-            if ($imageData) {
-                // Convert the image data to base64 encoding
-                $base64Image = base64_encode(stream_get_contents($imageData));
-
-                // Display the image within a table row
-                echo '<tr>';
-                echo '<td>' . htmlentities($cnt) . '</td>';
-                echo '<td><img src="data:image/jpeg;base64,' . $base64Image . '" alt="Equipment Image" class="equipment-image"></td>';
-                echo '<td>' . htmlentities($result->equipment_name) . '</td>';
-                echo '<td class="description-cell">' . htmlentities($result->description) . '</td>';
-                echo '<td>' . htmlentities(date('Y-m-d', strtotime($result->created_at))) . '</td>';
-                echo '<td>';
-                echo '<a href="#" data-toggle="modal" data-target="#edit_equipment" title="Edit" class="btn text-xs text-white btn-blue action-icon"><i class="fa fa-pencil"></i></a>';
-                echo '<a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon ml-2"><i class="fa fa-trash"></i></a>';
-                echo '</td>';
-                echo '</tr>';
-                $cnt++;
-            } else {
-                echo "<tr><td colspan='6'>Image data is empty or null.</td></tr>";
-            }
-        }
-    } else {
-        echo "<tr><td colspan='6'>No images found.</td></tr>";
-    }
-    ?>
+                                                    // Display the image within a table row
+                                                    echo '<tr>';
+                                                    echo '<td>' . htmlentities($cnt) . '</td>';
+                                                    echo '<td><img src="data:image/jpeg;base64,' . $base64Image . '" alt="Equipment Image" class="equipment-image"></td>';
+                                                    echo '<td>' . htmlentities($result->equipment_name) . '</td>';
+                                                    echo '<td class="description-cell">' . htmlentities($result->description) . '</td>';
+                                                                                                                echo '<td>' . htmlentities(date('Y-m-d', strtotime($result->created_at))) . '</td>';
+                                                                                                                echo '<td>';
+                                                                                                                echo '<a href="#" data-toggle="modal" data-target="#edit_equipment" title="Edit" class="btn text-xs text-white btn-blue action-icon edit-equipment-button" 
+                                                                                                                      data-equipment-id="' . $result->equipment_id . '" 
+                                                                                                                      data-equipment-name="' . htmlentities($result->equipment_name) . '" 
+                                                                                                                      data-description="' . htmlentities($result->description) . '">
+                                                                                                                      <i class="fa fa-pencil"></i>
+                                                                                                                      </a>';
+                                                                                                                echo '<a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon ml-2"><i class="fa fa-trash"></i></a>';
+                                                                                                                echo '</td>';
+                                                                                                                
+                                                                                echo '</tr>';
+                                                                                
+                                                                                
+                                                                                $cnt++;
+                                                                            } else {
+                                                                                echo "<tr><td colspan='6'>Image data is empty or null.</td></tr>";
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        echo "<tr><td colspan='6'>No images found.</td></tr>";
+                                                                    }
+                                                                    ?>
                                         </tbody>
-
                                     </table>
+
                                 </div>
+
                             </div>
                         </div>
+
                     </div>
+
+
+
+
                 </div>
             </div>
-
-            <!-- Add User Modal -->
-            <?php include_once 'includes/modals/hospital/add_user.php'; ?>
-
-            <!-- Edit Hospital Modal -->
-            <?php include_once 'includes/modals/hospital/edit_equipment.php'; ?>
-
-
         </div>
     </div>
 
 
+
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap Core JS -->
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- Slimscroll JS -->
+    <script src="assets/js/jquery.slimscroll.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="assets/js/select2.min.js"></script>
+    <!-- Datetimepicker JS -->
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+    <!-- Datatable JS -->
+    <script src="assets/js/jquery.dataTables.min.js"></script>
+    <script src="assets/js/dataTables.bootstrap4.min.js"></script>
+    <!-- Custom JS -->
+    <script src="assets/js/app.js"></script>
 
     <!-- Include SweetAlert library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
@@ -446,14 +484,12 @@ if (isset($_POST['add'])) {
         });
     }
 
-
     document.addEventListener('DOMContentLoaded', function() {
         <?php
             if (isset($_SESSION['success'])) {
                 $Success = $_SESSION['success'];
                 // Clear the session error variable
                 unset($_SESSION['success']);
-
                 // Display the error for incorrect password
                 echo "successEquipment('$Success');";
             }
@@ -464,48 +500,104 @@ if (isset($_POST['add'])) {
                 $Error = $_SESSION['already-exist'];
                 // Clear the session error variable
                 unset($_SESSION['already-exist']);
-
                 // Display the error for incorrect password
                 echo "AlreadyExist('$Error');";
             }
             ?>
     });
     </script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/tableexport.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
-
-    <!-- jQuery -->
-    <script src="./assets/js/jquery-3.2.1.min.js"></script>
-    <script src="./assets/js/print.js"></script>
-
-
-    <!-- Bootstrap Core JS -->
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-
-    <!-- Slimscroll JS -->
-    <script src="assets/js/jquery.slimscroll.min.js"></script>
-
-    <!-- Select2 JS -->
-    <script src="assets/js/select2.min.js"></script>
-
-    <!-- Datetimepicker JS -->
-    <script src="assets/js/moment.min.js"></script>
-    <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
-
-    <!-- Datatable JS -->
-    <script src="assets/js/jquery.dataTables.min.js"></script>
-    <script src="assets/js/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Custom JS -->
-    <script src="assets/js/app.js"></script>
 </body>
+<div id="edit_equipment" class="modal custom-modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Equipment Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit_equipment_form" method="post">
+                    <input type="hidden" id="equipment_id_modal" name="equipment_id_modal">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="equipment_name_modal">Equipment Name</label>
+                                <input type="text" class="form-control" id="equipment_name_modal"
+                                    name="equipment_name_modal">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Image</label>
+                                <input name="image" type="file" class="form-control" required="true" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea id="description_modal" name="description_modal" class="form-control" required
+                                    length="150" maxlength="150" required="true" autocomplete="off"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn" id="save_changes_button">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 </html>
+
+<script>
+$(document).ready(function() {
+    $('.edit-equipment-button').click(function() {
+        var equipmentId = $(this).data('equipment-id');
+        var equipmentName = $(this).data('equipment-name');
+        var description = $(this).data('description');
+
+        $('#equipment_id_modal').val(equipmentId);
+        $('#equipment_name_modal').val(equipmentName);
+        $('#description_modal').val(description);
+    });
+
+    $('#save_changes_button').click(function(e) {
+        e.preventDefault();
+
+        var formData = new FormData($('#edit_equipment_form')[0]);
+
+        $.ajax({
+            type: 'POST',
+            url: "includes/modals/hospital/update_equipment_category.php",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // Handle success response here
+                console.log(response); // Log response to console for debugging
+                // Example: Display success message
+                alert('Equipment updated successfully');
+                // Reload page or perform any other action as needed
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Handle error response here
+                console.log(xhr
+                    .responseText); // Log error response to console for debugging
+                // Example: Display error message
+                alert('Failed to update equipment');
+            }
+        });
+    });
+});
+</script>

@@ -142,8 +142,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Send email
                 try {
+                  $log_timestamp = date("Y-m-d");
+                  $log_action = "New user added"; // Your desired log action
+      
+                  $insertLogQuery = "INSERT INTO repo_admin_logs (repo_admin_id, repo_admin_uuid, log_timestamp, log_action) VALUES ($1, $2, $3, $4)";
+                  $result_insert_log = pg_query_params($db_connection, $insertLogQuery, array($AdminID, $AdminID, $log_timestamp, $log_action));
+                  
+                  if ($result_insert_log) {
+                      // Log inserted successfully
+                      echo "Log inserted successfully!";
+                  } else {
+                      // Error inserting log
+                      $error_message = pg_last_error($db_connection);
+                      echo "Error inserting log: " . $error_message;
+                  }
                     $mail->send();
-                    header("Location: /user-information.php");
+                    header("Location: ../../../user-information.php");
                     exit();
                 } catch (Exception $e) {
                     echo "Mailer Error: " . $mail->ErrorInfo;
