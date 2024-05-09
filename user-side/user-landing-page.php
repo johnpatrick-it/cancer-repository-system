@@ -309,7 +309,11 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
+<<<<<<< HEAD
                                             <th>Cases Number</th>
+=======
+                                            <th>Case Number</th>
+>>>>>>> 382890f04fc90d823d843d34bf4a1762100a19ea
                                             <th>Gender</th>
                                             <th>Age</th>
                                             <th>Cancer</th>
