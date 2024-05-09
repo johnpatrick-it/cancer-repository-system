@@ -37,11 +37,11 @@ include "functions/login-function.php";
                 <form method="POST" enctype="multipart/form-data" autocomplete="off">
                     <div class="form-group">
                         <i class="fas fa-envelope icon"></i>
-                        <input class="form-control" name="email" type="email" placeholder="Email">
+                        <input class="form-control" name="email" type="email" placeholder="Email" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <i class="fas fa-lock icon"></i>
-                        <input class="form-control" name="password" type="password" placeholder="Password">
+                        <input class="form-control" name="password" type="password" placeholder="Password" autocomplete="off">
                     </div>
                     <div class="form-group text-center">
                         <div class="col-auto pt-2">

@@ -283,7 +283,7 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                     <div class="row mr-2">
                         <div class="col-md-3">
                             <div class="col">
-                                <h1 class="page-title">Patient Info</h1>
+                                <h1 class="page-title">Cases Info</h1>
                             </div>
                         </div>
 
@@ -309,7 +309,7 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
-                                            <th>Patient Number</th>
+                                            <th>Cases Number</th>
                                             <th>Gender</th>
                                             <th>Age</th>
                                             <th>Cancer</th>
@@ -397,7 +397,7 @@ $(document).ready(function() {
             var patientId = $(this).data('id');
             Swal.fire({
                 title: 'Manage Patient',
-                text: 'Redirecting to Manage Patient!',
+                text: 'Redirecting to Manage Cases!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
