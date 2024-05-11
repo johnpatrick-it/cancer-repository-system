@@ -83,11 +83,7 @@
                 <li>
                     <a href="manage-patient.php">
                         <i class="la la-users"></i>
-<<<<<<< HEAD
-                        <span>Manage Cases</span>
-=======
                         <span>Manage Repository</span>
->>>>>>> 382890f04fc90d823d843d34bf4a1762100a19ea
                     </a>
                 </li>
 
@@ -95,11 +91,7 @@
                 <li>
                     <a href="patient-report.php">
                         <i class="la la-file-text-o"></i>
-<<<<<<< HEAD
-                        <span>Logs Report</span>
-=======
                         <span>Repository Logs</span>
->>>>>>> 382890f04fc90d823d843d34bf4a1762100a19ea
                     </a>
                 </li>
 
