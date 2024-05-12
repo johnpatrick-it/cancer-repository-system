@@ -344,10 +344,10 @@ if (isset($_POST['add'])) {
                                         <thead>
                                             <tr>
                                                 <th class="searchable">ID.</th>
-                                                <th class="searchable">IMG</th>
                                                 <th class="searchable">CATEGORY NAME</th>
                                                 <th class="searchable">DATE CREATED</th>
-                                                <th>ACTION</th>
+                                                <th>EDIT</th>
+                                                <th>DELETE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -383,7 +383,6 @@ if (isset($_POST['add'])) {
                                                     // Display the image within a table row
                                                     echo '<tr>';
                                                     echo '<td>' . htmlentities($cnt) . '</td>';
-                                                    echo '<td><img src="' . $imageData . '" alt="Equipment Image" class="equipment-image"></td>';
 
                                             echo '<td>' . htmlentities($result->equipment_name) . '</td>';
                                                 '</td>';
@@ -398,6 +397,8 @@ if (isset($_POST['add'])) {
                                                     data-description="' . htmlentities($result->description) . '">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>';
+                                                echo '</td>';
+                                                echo '<td>';
                                                 echo '<a href="#" data-toggle="modal" data-target="#delete_hospital"
                                                     title="Delete"
                                                     class="btn text-xs text-white btn-danger action-icon ml-2"><i
