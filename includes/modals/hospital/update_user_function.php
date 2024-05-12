@@ -70,7 +70,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
                 // Check if the query was successful
     if ($result_exec) {
-        echo "success";
+        $log_timestamp = date("Y-m-d");
+        $log_action = "User info update"; // Your desired log action
+
+        $insertLogQuery = "INSERT INTO repo_admin_logs (repo_admin_id, repo_admin_uuid, log_timestamp, log_action) VALUES ($1, $2, $3, $4)";
+        $result_insert_log = pg_query_params($db_connection, $insertLogQuery, array($AdminID, $repoId, $log_timestamp, $log_action));
+        
+        if ($result_insert_log) {
+            // Log inserted successfully
+            echo "Log inserted successfully!";
+        } else {
+            // Error inserting log
+            $error_message = pg_last_error($db_connection);
+            echo "Error inserting log: " . $error_message;
+        }
     } else {
         echo "error: " . pg_last_error($db_connection);
     }

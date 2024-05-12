@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 include('./includes/config.php');
@@ -29,19 +28,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $adminResult = pg_execute($db_connection, "fetch_admin_password_query", array($email));
 
         if ($adminResult) {
+            // Fetch the admin row from the result
             $adminRow = pg_fetch_assoc($adminResult);
             if ($adminRow) {
+             
                 $hashedAdminPassword = $adminRow['password'];
 
+              
+                $adminId = $adminRow['admin_id']; 
+
+               
                 if (password_verify($password, $hashedAdminPassword)) {
+                    
+                    $token = md5(uniqid(rand(), true));
+                    $token_password = md5($password);
+                    $token_id = $token_password.$token;
+
+                
+                    $insertAuthQuery = "INSERT INTO authentication (admin_id, token) VALUES ($1, $2)";
+                    $insertAuthStmt = pg_prepare($db_connection, "insert_auth_query", $insertAuthQuery);
+                    if ($insertAuthStmt) {
+                        $insertAuthResult = pg_execute($db_connection, "insert_auth_query", array($adminId, $token_id));
+                        if (!$insertAuthResult) {
+                            echo "Error inserting authentication data.";
+                            exit;
+                        }
+                    } else {
+                        echo "Authentication statement preparation failed.";
+                        exit;
+                    }
 
                     $department = $adminRow['department'];
-                    $adminId = $adminRow['admin_id'];
                     $adminName = $adminRow['lastname'];
 
                     if ($department === 'Repository') {
                         $_SESSION['admin_id'] = $adminId;
                         $_SESSION['lastname'] = $adminName;
+                        $_SESSION['token'] = $token; // Store token in session for further authentication
                         header("Location: index.php");
                         exit;
                     } else {
@@ -70,7 +93,7 @@ function userLogin($email, $password) {
     global $db_connection;
 
     // User Login Query
-    $userQuery = "SELECT repo_user_id, user_fname, user_mname, user_lname, email, password, salt FROM public.repo_user WHERE email = $1";
+    $userQuery = "SELECT repo_user_id, hospital_id, user_fname, user_mname, user_lname, email, password, salt FROM public.repo_user WHERE email = $1";
     $userStmt = pg_prepare($db_connection, "fetch_user_password_query", $userQuery);
 
     if ($userStmt) {
@@ -91,6 +114,8 @@ function userLogin($email, $password) {
                         $_SESSION['user_mname'] = $userRow['user_mname'];
                         $_SESSION['user_lname'] = $userRow['user_lname'];
                         $_SESSION['email'] = $userRow['email'];
+                        $_SESSION['hospital_id'] = $userRow['hospital_id'];
+
 
                         header("Location: user-side/user-landing-page.php");
                         exit;
@@ -109,6 +134,7 @@ function userLogin($email, $password) {
                         $_SESSION['user_mname'] = $userRow['user_mname'];
                         $_SESSION['user_lname'] = $userRow['user_lname'];
                         $_SESSION['email'] = $userRow['email'];
+                        $_SESSION['hospital_id'] = $userRow['hospital_id'];
 
                         header("Location: user-side/user-landing-page.php");
                         exit;
@@ -134,4 +160,4 @@ function userLogin($email, $password) {
         exit;
     }
 }
-
+?>
