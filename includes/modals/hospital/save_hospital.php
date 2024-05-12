@@ -3,14 +3,7 @@ session_start();
 include_once("config.php");
 
 $AdminID = $_SESSION['admin_id'] ?? '';
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
-=======
->>>>>>> 993da59d339990ba8278087458421d2421015709
-
->>>>>>> 81ca0a6599ccc9ee6ed200bc17a9de80eb32573a
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header('Location: .../login.php');
     exit;
@@ -96,10 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $logTimestamp = date("Y-m-d");
     $logAction = "New hospital added"; // Your desired log action
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 81ca0a6599ccc9ee6ed200bc17a9de80eb32573a
     $insertLogQuery = "INSERT INTO repo_admin_logs (repo_admin_id, repo_admin_uuid, log_timestamp, log_action) VALUES ($1, $2, $3, $4)";
     $result_insert_log = pg_query_params($db_connection, $insertLogQuery, array($AdminID, $AdminID, $logTimestamp, $logAction));
     if (!$result_insert_log) {
@@ -107,8 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         pg_query($db_connection, "ROLLBACK");
         exit;
     }
-<<<<<<< HEAD
-=======
 
     $insertInfoQuery = "INSERT INTO hospital_info (hospital_street, hospital_plus_code, contact_number, email, hospital_admin_id, hospital_id) VALUES ($1, $2, $3, $4 ,$5, $6)";
     $result_insert_info = pg_query_params($db_connection, $insertInfoQuery, array($hospital_street, $hospital_plus_code, $hospital_contact, $hospital_email,$AdminID,$hospital_id));
@@ -128,39 +115,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 pg_close($db_connection);
-=======
-                        if (!$result_insert_equipment) {
-                        }
-                    } 
-                }
-             
-            }
-        } 
-         
-            $log_timestamp = date("Y-m-d");
-            $log_action = "New hospital added"; // Your desired log action
->>>>>>> 81ca0a6599ccc9ee6ed200bc17a9de80eb32573a
-
-    $insertInfoQuery = "INSERT INTO hospital_info (hospital_street, hospital_plus_code, contact_number, email, hospital_admin_id, hospital_id) VALUES ($1, $2, $3, $4 ,$5, $6)";
-    $result_insert_info = pg_query_params($db_connection, $insertInfoQuery, array($hospital_street, $hospital_plus_code, $hospital_contact, $hospital_email,$AdminID,$hospital_id));
-    if (!$result_insert_info) {
-        echo "Error inserting log: " . pg_last_error($db_connection);
-        pg_query($db_connection, "ROLLBACK");
-        exit;
-    }
-
-    // Commit the transaction
-    pg_query($db_connection, "COMMIT");
-
-    // Redirect
-    $_SESSION['add-hospital'] = "New hospital added successfully!";
-    header("Location: ../../../hospital-information.php");
-    exit();
-}
-
-<<<<<<< HEAD
-pg_close($db_connection);
-=======
->>>>>>> 993da59d339990ba8278087458421d2421015709
->>>>>>> 81ca0a6599ccc9ee6ed200bc17a9de80eb32573a
 ?>

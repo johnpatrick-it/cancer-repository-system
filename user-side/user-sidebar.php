@@ -93,12 +93,6 @@
                         <span>Hospital Equipment</span>
                     </a>
                 </li>
-                <li>
-                    <a href="user-hospital-equipment.php">
-                        <i class="la la-users"></i>
-                        <span>Hospital Equipment</span>
-                    </a>
-                </li>
 
                 <!-- Patient Report -->
                 <li>
