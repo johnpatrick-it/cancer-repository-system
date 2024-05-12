@@ -142,7 +142,7 @@ include('../includes/config.php');
                     <div class="row">
                         <div class="col-md-3">
                             <div class="col">
-                                <h1 class="page-title">Manage Patients</h1>
+                                <h1 class="page-title">Manage Case</h1>
                             </div>
                         </div>
 
@@ -170,7 +170,7 @@ include('../includes/config.php');
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
-                                            <th>Patient Number</th>
+                                            <th>Case Number</th>
                                             <th>Diagnosis Date</th>
                                             <th>Cancer Type</th>
                                             <th>City</th>
@@ -272,8 +272,8 @@ include('../includes/config.php');
         // Edit patient button alert to
     function confirmEdit(patientId) {
         Swal.fire({
-            title: 'Edit Patient',
-            text: 'Are you sure you want to edit this patient?',
+            title: 'Edit Case',
+            text: 'Are you sure you want to edit this case?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',

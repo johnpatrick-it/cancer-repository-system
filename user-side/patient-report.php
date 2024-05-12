@@ -261,7 +261,7 @@ include('../includes/config.php');
                         <input type="text" class="form-control" id="repoUserId" readonly>
                     </div>
                     <div class="col-md-12">
-                        <label for="patientId">Patient ID:</label>
+                        <label for="patientId">Case ID:</label>
                         <input type="text" class="form-control" id="patientId" readonly>
                     </div>
                     <div class="col-md-12">
@@ -273,7 +273,7 @@ include('../includes/config.php');
                         <input type="text" class="form-control" id="designation" readonly>
                     </div>
                     <div class="col-md-12">
-                        <label for="patientCaseNumber">Patient Case Number:</label>
+                        <label for="patientCaseNumber">Case Number:</label>
                         <input type="text" class="form-control" id="patientCaseNumber" readonly>
                     </div>
                     <div class="col-md-12">

@@ -278,7 +278,7 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="welcome d-flex justify-content-between align-items-center">
-                                            <h3 class="page-title">General Patient Information</h3>
+                                            <h3 class="page-title">Edit General Case Information</h3>
 
                                         </div>
                                         <ul class="breadcrumb">
@@ -333,20 +333,20 @@
                                                     <label class="custom-label">Cancer Stage</label>
                                                     <select name="cancer_stage" class="custom-select form-control" required="true">
                                                         <option value="">Select Type</option>
-                                                        <option value="1" <?php if ($cancer_stage == "1") echo "selected"; ?>>I</option>
-                                                        <option value="2" <?php if ($cancer_stage == "2") echo "selected"; ?>>II</option>
-                                                        <option value="3" <?php if ($cancer_stage == "3") echo "selected"; ?>>III</option>
-                                                        <option value="4" <?php if ($cancer_stage == "4") echo "selected"; ?>>IV</option>
+                                                        <option value="1" <?php if ($cancer_stage == "1") echo "selected"; ?>>1</option>
+                                                        <option value="2" <?php if ($cancer_stage == "2") echo "selected"; ?>>2</option>
+                                                        <option value="3" <?php if ($cancer_stage == "3") echo "selected"; ?>>3</option>
+                                                        <option value="4" <?php if ($cancer_stage == "4") echo "selected"; ?>>4</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Type of Patient</label>
+                                                    <label class="custom-label">Type of Case</label>
                                                     <select name="patient_type" class="custom-select form-control" required="true">
                                                         <option value="" disabled selected>Select Type</option> 
-                                                        <option value="In-patient" <?php if ($type_of_patient == "In-patient") echo "selected"; ?>>In-patient</option>
-                                                        <option value="Out-patient" <?php if ($type_of_patient == "Out-patient") echo "selected"; ?>>Out-patient</option>
+                                                        <option value="In-patient" <?php if ($type_of_patient == "Admitted") echo "selected"; ?>>Admitted</option>
+                                                        <option value="Out-patient" <?php if ($type_of_patient == "Discharge") echo "selected"; ?>>Discharge</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -397,7 +397,7 @@
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Patient Case Number</label>
+                                                    <label class="custom-label">Case Number</label>
                                                     <input name="patient_case_number" type="text" class="form-control date-picker" required="true" autocomplete="off" value="<?php echo htmlspecialchars($patient_case_number); ?>">
                                                 </div>
                                             </div>
@@ -470,7 +470,7 @@
                 echo "Swal.fire({
                     icon: 'success',
                     title: 'Success!',
-                    text: 'Patient details updated successfully.',
+                    text: 'Case details updated successfully.',
                     timer: 2000, // Duration for the alert to close automatically
                     timerProgressBar: true,
                     showConfirmButton: false
