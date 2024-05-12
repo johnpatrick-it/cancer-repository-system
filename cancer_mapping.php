@@ -1,24 +1,22 @@
 <?php
 session_start();
 
-//VERY IMPORTANT DONT ERASE
+// VERY IMPORTANT DON'T ERASE
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit;   
 }
 
-
 error_reporting(0);
 include('includes/config.php');
-
 
 require('fpdf186/fpdf.php'); // Include the FPDF library
 
 // Check if the button is clicked
-if (isset($_POST['generate_pdf']) && isset($_SESSION['selected_region'])) {
+if (isset($_POST['generate_pdf']) && isset($_SESSION['selected_city'])) {
     // Fetch data from the database (replace with your actual database connection code)
-    $Region = $_SESSION['selected_region'];
-    $query = "SELECT * FROM patient_data WHERE address_region = '$Region'";
+    $City = $_SESSION['selected_city'];
+    $query = "SELECT * FROM cancer_cases_general_info WHERE address_city_municipality = '$City'";
     $result = pg_query($db_connection, $query);
 
     // Check if query was successful
@@ -31,33 +29,31 @@ if (isset($_POST['generate_pdf']) && isset($_SESSION['selected_region'])) {
         $pdf->SetFont('Arial','B',16);
 
         // Add a title
-      $pdf->Cell(0, 10, 'Patient Data for ' . $Region, 0, 1, 'C');
+        $pdf->Cell(0, 10, 'Patient Data for ' . $City, 0, 1, 'C');
+
+            // Add column headers
+            $pdf->SetFont('Arial','B',8);
+            $pdf->Cell(65,10,'Patient ID',1,0,'C'); // Increased width for Patient ID
+            $pdf->Cell(30,10,'Address City',1,0,'C'); // Change to Address City
+            $pdf->Cell(22,10,'Primary Site',1,0,'C');
+            $pdf->Cell(22,10,'Cancer Stage',1,0,'C');
+            $pdf->Cell(30,10,'Type of Patient',1,0,'C');
+            $pdf->Cell(22,10,'Patient Status',1,1,'C');
+
+            // Set font for data
+            $pdf->SetFont('Arial','',8);
+
+            // Fetch data and add to PDF
+            while ($row = pg_fetch_assoc($result)) {
+                $pdf->Cell(65,10,$row['patient_id'],1,0,'C'); // Increased width for Patient ID
+                $pdf->Cell(30,10,$row['address_city_municipality'],1,0,'C'); // Change to Address City
+                $pdf->Cell(22,10,$row['primary_site'],1,0,'C');
+                $pdf->Cell(22,10,$row['cancer_stage'],1,0,'C');
+                $pdf->Cell(30,10,$row['type_of_patient'],1,0,'C');
+                $pdf->Cell(22,10,$row['patient_status'],1,1,'C');
+            }
 
 
-        // Add column headers
-        $pdf->SetFont('Arial','B',8);
-        $pdf->Cell(20,10,'Patient ID',1,0,'C');
-        $pdf->Cell(40,10,'Patient Name',1,0,'C');
-        $pdf->Cell(30,10,'Address Region',1,0,'C');
-        $pdf->Cell(22,10,'Primary Site',1,0,'C');
-        $pdf->Cell(22,10,'Cancer Stage',1,0,'C');
-        $pdf->Cell(30,10,'Patient Treatment',1,0,'C');
-        $pdf->Cell(22,10,'Patient Status',1,1,'C');
-
-        // Set font for data
-        $pdf->SetFont('Arial','',8);
-
-        // Fetch data and add to PDF
-        while ($row = pg_fetch_assoc($result)) {
-          
-            $pdf->Cell(20,10,$row['patient_id'],1,0,'C');
-            $pdf->Cell(40,10,$row['patient_name'],1,0,'C');
-            $pdf->Cell(30,10,$row['address_region'],1,0,'C');
-            $pdf->Cell(22,10,$row['primary_site'],1,0,'C');
-            $pdf->Cell(22,10,$row['cancer_stage'],1,0,'C');
-            $pdf->Cell(30,10,$row['patient_treatment'],1,0,'C');
-            $pdf->Cell(22,10,$row['patient_status'],1,1,'C');
-        }
 
         // Output PDF content
         $pdf->Output('D', 'patient_data.pdf'); // 'D' option forces download
@@ -68,21 +64,21 @@ if (isset($_POST['generate_pdf']) && isset($_SESSION['selected_region'])) {
     }
 }
 
-if (isset($_POST['generate_csv']) && isset($_SESSION['selected_region'])) {
+if (isset($_POST['generate_csv']) && isset($_SESSION['selected_city'])) {
     // Fetch data from the database (replace with your actual database connection code)
-    $Region = $_SESSION['selected_region'];
-    $query = "SELECT patient_id, patient_name, address_region, primary_site, cancer_stage, patient_treatment, patient_status FROM patient_data WHERE address_region = '$Region'";
+    $City = $_SESSION['selected_city'];
+    $query = "SELECT patient_id, patient_name, address_city_municipality, primary_site, cancer_stage, type_of_patient, patient_status FROM cancer_cases_general_info WHERE address_city_municipality = '$City'";
     $result = pg_query($db_connection, $query);
 
     // Check if query was successful
     if ($result) {
         // Initialize CSV content with column headers
-        $csv_content = "Patient ID, Patient Name, Address Region, Primary Site, Cancer Stage, Patient Treatment, Patient Status\n";
+        $csv_content = "Patient ID, Patient Name, Address City, Primary Site, Cancer Stage, Type of Patient, Patient Status\n";
 
         // Fetch all rows and append to CSV content
         while ($row = pg_fetch_assoc($result)) {
             // Append row data to CSV content
-            $csv_content .= "{$row['patient_id']}, {$row['patient_name']}, {$row['address_region']}, {$row['primary_site']}, {$row['cancer_stage']}, {$row['patient_treatment']}, {$row['patient_status']}\n";
+            $csv_content .= "{$row['patient_id']}, {$row['patient_name']}, {$row['address_city_municipality']}, {$row['primary_site']}, {$row['cancer_stage']}, {$row['type_of_patient']}, {$row['patient_status']}\n";
         }
 
         // Set headers for CSV download
@@ -98,7 +94,6 @@ if (isset($_POST['generate_csv']) && isset($_SESSION['selected_region'])) {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -243,150 +238,244 @@ if (isset($_POST['generate_csv']) && isset($_SESSION['selected_region'])) {
                         </div>
 
                         <div class="col-md-6">
-                            <div class="row">
-                                <div class="col-auto ml-auto m-right">
-                                    <form method="post" action="">
+                                        <div class="row">
+                                            <div class="col-auto ml-auto m-right">
+                                                <form method="post" action="">
+                                                    <select name="city" id="city" class="custom-select form-control" required="true">
+                                                        <option value="" disabled selected>Select City/Municipality</option>
+                                                        <!-- Add options for cities -->
+                                                       
+                                                        <option value="Alaminos">Alaminos</option>
+                                                        <option value="Angeles">Angeles</option>
+                                                        <option value="Antipolo">Antipolo</option>
+                                                        <option value="Bacolod">Bacolod</option>
+                                                        <option value="Bacoor">Bacoor</option>
+                                                        <option value="Bago">Bago </option>
+                                                        <option value="Baguio">Baguio </option>
+                                                        <option value="Bais">Bais </option>
+                                                        <option value="Balanga">Balanga </option>
+                                                        <option value="Baliwag">Baliwag </option>
+                                                        <option value="Batac">Batac</option>
+                                                        <option value="Batangas">Batangas </option>
+                                                        <option value="Bayawan">Bayawan </option>
+                                                        <option value="Baybay">Baybay </option>
+                                                        <option value="Bayugan">Bayugan </option>
+                                                        <option value="Biñan">Biñan </option>
+                                                        <option value="Bislig">Bislig </option>
+                                                        <option value="Bogo">Bogo </option>
+                                                        <option value="Borongan">Borongan </option>
+                                                        <option value="Butuan">Butuan </option>
+                                                        <option value="Cabadbaran">Cabadbaran </option>
+                                                        <option value="Cabanatuan">Cabanatuan </option>
+                                                        <option value="Cabuyao">Cabuyao </option>
+                                                        <option value="Cadiz">Cadiz </option>
+                                                        <option value="Cagayande Oro">Cagayande Oro </option>
+                                                        <option value="Calaca">Calaca </option>
+                                                        <option value="Calamba">Calamba </option>
+                                                        <option value="Calapan">Calapan </option>
+                                                        <option value="Calbayog">Calbayog</option>
+                                                        <option value="Caloocan">Caloocan </option>
+                                                        <option value="Candon">Candon </option>
+                                                        <option value="Canlaon">Canlaon </option>
+                                                        <option value="Carcar">Carcar </option>
+                                                        <option value="Catbalogan">Catbalogan </option>
+                                                        <option value="Cauayan">Cauayan </option>
+                                                        <option value="Cavite">Cavite </option>
+                                                        <option value="Cebu">Cebu </option>
+                                                        <option value="Cotabato">Cotabato </option>
+                                                        <option value="Dagupan">Dagupan </option>
+                                                        <option value="Danao">Danao </option>
+                                                        <option value="Dapitan">Dapitan </option>
+                                                        <option value="Dasmariñas">Dasmariñas </option>
+                                                        <option value="Davao">Davao </option>
+                                                        <option value="Digos">Digos </option>
+                                                        <option value="Dipolog">Dipolog </option>
+                                                        <option value="Dumaguete">Dumaguete </option>
+                                                        <option value="El Salvador">El Salvador </option>
+                                                        <option value="Escalante">Escalante </option>
+                                                        <option value="Gapan">Gapan </option>
+                                                        <option value="General Santos">General Santos </option>
+                                                        <option value="General Trias">General Trias </option>
+                                                        <option value="Gingoog">Gingoog</option>
+                                                        <option value="Guihulngan">Guihulngan</option>
+                                                        <option value="Himamaylan">Himamaylan </option>
+                                                        <option value="Ilagan">Ilagan</option>
+                                                        <option value="Iligan">Iligan </option>
+                                                        <option value="Iloilo">Iloilo </option>
+                                                        <option value="Imus">Imus </option>
+                                                        <option value="Iriga">Iriga </option>
+                                                        <option value="Isabela">Isabela </option>
+                                                        <option value="Kabankalan">Kabankalan </option>
+                                                        <option value="Kidapawan">Kidapawan </option>
+                                                        <option value="Koronadal">Koronadal </option>
+                                                        <option value="La Carlota">La Carlota </option>
+                                                        <option value="Lamitan">Lamitan </option>
+                                                        <option value="Lapu-Lapu">Lapu-Lapu </option>
+                                                        <option value="Las Piñas">Las Piñas </option>
+                                                        <option value="Legazpi">Legazpi </option>
+                                                        <option value="Ligao">Ligao </option>
+                                                        <option value="Lipa">Lipa </option>
+                                                        <option value="Lucena">Lucena </option>
+                                                        <option value="Maasin">Maasin</option>
+                                                        <option value="Mabalacat">Mabalacat</option>
+                                                        <option value="Makati">Makati</option>
+                                                        <option value="Malaybalay">Malaybalay</option>
+                                                        <option value="Malolos">Malolos</option>
+                                                        <option value="Mandaluyong">Mandaluyong</option>
+                                                        <option value="Mandaue">Mandaue</option>
+                                                        <option value="Manila">Manila</option>
+                                                        <option value="Marawi">Marawi</option>
+                                                        <option value="Marikina">Marikina</option>
+                                                        <option value="Masbate">Masbate</option>
+                                                        <option value="Mati">Mati</option>
+                                                        <option value="Meycauayan">Meycauayan</option>
+                                                        <option value="Muñoz">Muñoz</option>
+                                                        <option value="Muntinlupa">Muntinlupa</option>
+                                                        <option value="Naga">Naga</option>
+                                                        <option value="Navotas">Navotas</option>
+                                                        <option value="Olongapo">Olongapo</option>
+                                                        <option value="Ormoc">Ormoc</option>
+                                                        <option value="Oroquieta">Oroquieta</option>
+                                                        <option value="Ozamiz">Ozamiz</option>
+                                                        <option value="Pagadian">Pagadian</option>
+                                                        <option value="Palayan">Palayan</option>
+                                                        <option value="Panabo">Panabo</option>
+                                                        <option value="Parañaque">Parañaque</option>
+                                                        <option value="Pasay">Pasay</option>
+                                                        <option value="Pasig">Pasig</option>
+                                                        <option value="Passi">Passi</option>
+                                                        <option value="Puerto Princesa">Puerto Princesa</option>
+                                                        <option value="Quezon City">Quezon City</option>
+                                                        <option value="San Carlos">San Carlos</option>
+                                                        <option value="SanFernando">SanFernando</option>
+                                                        <option value="Samal">Samal</option>
+                                                        <option value="San Jose">San Jose</option>
+                                                        <option value="San Jose del Monte">San Jose del Monte</option>
+                                                        <option value="San Juan">San Juan</option>
+                                                        <option value="San Pablo">San Pablo</option>
+                                                        <option value="San Pedro">San Pedro</option>
+                                                        <option value="Santa Rosa">Santa Rosa</option>
+                                                        <option value="Santo Tomas">Santo Tomas</option>
+                                                        <option value="Santiago">Santiago</option>
+                                                        <option value="Silay">Silay</option>
+                                                        <option value="Sipalay">Sipalay</option>
+                                                        <option value="Sorsogon">Sorsogon</option>
+                                                        <option value="Surigao">Surigao</option>
+                                                        <option value="Tabaco">Tabaco</option>
+                                                        <option value="Tabuk">Tabuk</option>
+                                                        <option value="Tacloban">Tacloban</option>
+                                                        <option value="Tacurong">Tacurong</option>
+                                                        <option value="Tagaytay">Tagaytay</option>
+                                                        <option value="Tagbilaran">Tagbilaran</option>
+                                                        <option value="Taguig">Taguig</option>
+                                                        <option value="Tagum">Tagum</option>
+                                                        <option value="Talisay">Talisay</option>
+                                                        <option value="Tanauan">Tanauan</option>
+                                                        <option value="Tandag">Tandag</option>
+                                                        <option value="Tangub">Tangub</option>
+                                                        <option value="Tanjay">Tanjay</option>
+                                                        <option value="Tarlac">Tarlac</option>
+                                                        <option value="Tayabas">Tayabas</option>                                    
+                                                        <option value="Toledo">Toledo</option>
+                                                        <option value="Trece Martires">Trece Martires</option>
+                                                        <option value="Tuguegarao">Tuguegarao</option>
+                                                        <option value="Urdaneta">Urdaneta</option>
+                                                        <option value="Valencia">Valencia</option>
+                                                        <option value="Valenzuela">Valenzuela</option>
+                                                        <option value="Victorias">Victorias</option>
+                                                        <option value="Vigan">Vigan</option>
+                                                        <option value="Zamboanga">Zamboanga</option>
+                                                    </select>
 
-                                        <select name="region" class="form-control" id="region">
-                                            <option value="">Select Region</option>
-                                            <option value="BARMM">BARMM</option>
-                                            <option value="Bangsamoro">Bangsamoro</option>
-                                            <option value="Bicol Region">Bicol Region</option>
-                                            <option value="CAR">CAR</option>
-                                            <option value="Cagayan Valley">Cagayan Valley</option>
-                                            <option value="Calabarzon">Calabarzon</option>
-                                            <option value="Caraga">Caraga</option>
-                                            <option value="Central Luzon">Central Luzon</option>
-                                            <option value="Central Visayas">Central Visayas</option>
-                                            <option value="Cordillera Administrative Region">Cordillera Administrative
-                                                Region</option>
-                                            <option value="Davao Region">Davao Region</option>
-                                            <option value="Eastern Visayas">Eastern Visayas</option>
-                                            <option value="Ilocos Region">Ilocos Region</option>
-                                            <option value="Mimaropa Region">Mimaropa Region</option>
-                                            <option value="NCR">NCR</option>
-                                            <option value="National Capital Region">National Capital Region</option>
-                                            <option value="Northern Mindanao">Northern Mindanao</option>
-                                            <option value="Soccsksargen">Soccsksargen</option>
-                                            <option value="Southwestern Tagalog Region">Southwestern Tagalog Region
-                                            </option>
-                                            <option value="Western Visayas">Western Visayas</option>
-                                            <option value="Zamboanga Peninsula">Zamboanga Peninsula</option>
-                                            <option value="mimaropa">mimaropa</option>
-                                            <option value="regionI">regionI</option>
-                                            <option value="regionII">regionII</option>
-                                            <option value="regionIII">regionIII</option>
-                                            <option value="regionIV-A">regionIV-A</option>
-                                            <option value="regionIX">regionIX</option>
-                                            <option value="regionV">regionV</option>
-                                            <option value="regionVI">regionVI</option>
-                                            <option value="regionVII">regionVII</option>
-                                            <option value="regionVIII">regionVIII</option>
-                                            <option value="regionX">regionX</option>
-                                            <option value="regionXI">regionXI</option>
-                                            <option value="regionXII">regionXII</option>
-                                            <option value="regionXIII">regionXIII</option>
+                                        
 
-
-                                            <!-- Add more options as needed -->
-                                        </select>
-
-                                </div>
-                                <div class="col-auto">
-                                    <input type="submit" name="submit" class="add-btn" value="Fetch Data">
-                                    </form>
-                                </div>
-                                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                                    <div class="col-auto">
-                                        <div class="dropdown">
-                                            <button class="btn export-btn dropdown-toggle" type="button"
-                                                id="hide-on-print" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa fa-download"></i> Export
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                                <li><button type="submit" class="dropdown-item"
-                                                        name="generate_pdf">Export
-                                                        Data as PDF</button></li>
-                                                <li><button type="submit" class="dropdown-item"
-                                                        name="generate_csv">Export
-                                                        Data as CSV</button></li>
-                                            </ul>
-                                        </div>
-
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TABLE -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped custom-table datatable">
-                                    <thead>
-                                        <tr>
-                                            <th>Patient ID</th>
-                                            <th>Patient Name</th>
-                                            <th>Address Region</th>
-                                            <th>Primary Site</th>
-                                            <th>Cancer Stage</th>
-                                            <th>Patient Treatment</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                       
-                       if (!$db_connection) {
-                           echo "Failed to connect to the database.";
-                       } else {
-                           // Check if the form is submitted
-                           if(isset($_POST['submit']) && isset($_POST['region'])) {
-                               // Get the selected region
-                               $selectedRegion = $_POST['region'];
-                               $_SESSION['selected_region'] = $selectedRegion;
-                               // Construct the query with a placeholder for the parameter
-                               $query = "SELECT * FROM patient_data WHERE address_region = '$selectedRegion'";
-                       
-                               // Execute the query
-                               $result = pg_query($db_connection, $query);
-                       
-                               // Check if query execution is successful
-                               if ($result) {
-                                   // Fetch the results
-                                   while ($row = pg_fetch_assoc($result)) {
-                                       echo "<tr>";
-                                       echo "<td class=''>" . $row['patient_id'] . "</td>";
-                                       echo "<td class=''>" . $row['patient_name'] . "</td>";
-                                       echo "<td class='region'>" . $row['address_region'] . "</td>";
-                                       echo "<td class=''>" . $row['primary_site'] . "</td>";
-                                       echo "<td class='stage'>" . $row['cancer_stage'] . "</td>";
-                                       echo "<td class=''>" . $row['patient_treatment'] . "</td>";
-                                       echo "<td class=''>" . $row['patient_status'] . "</td>";
-                                       echo "<td>";
-                                       // Add action buttons if needed
-                                       echo "</td>";
-                                       echo "</tr>";
-                                   }
-                               } else {
-                                   echo "Error executing query: " . pg_last_error($db_connection);
-                               }
-                           }
-                       }
-                       ?>
-
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
+                                                    </div>
+        <div class="col-auto">
+            <input type="submit" name="submit" class="add-btn" value="Fetch Data">
+            </form>
+        </div>
+        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+            <div class="col-auto">
+                <div class="dropdown">
+                    <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-download"></i> Export
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                        <li><button type="submit" class="dropdown-item" name="generate_pdf">Export Data as PDF</button>
+                        </li>
+                        <li><button type="submit" class="dropdown-item" name="generate_csv">Export Data as CSV</button>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </form>
 
+    </div>
+</div>
+</div>
+
+<!-- TABLE -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped custom-table datatable">
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Address City</th>
+                        <th>Primary Site</th>
+                        <th>Cancer Stage</th>
+                        <th>Type of Patient</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if (!$db_connection) {
+                        echo "Failed to connect to the database.";
+                    } else {
+                        // Check if the form is submitted
+                        if(isset($_POST['submit']) && isset($_POST['city'])) {
+                            // Get the selected city
+                            $selectedCity = $_POST['city'];
+                            $_SESSION['selected_city'] = $selectedCity;
+                            // Construct the query with a placeholder for the parameter
+                            $query = "SELECT * FROM cancer_cases_general_info WHERE address_city_municipality = '$selectedCity'";
+                    
+                            // Execute the query
+                            $result = pg_query($db_connection, $query);
+                    
+                            // Check if query execution is successful
+                            if ($result) {
+                                // Fetch the results
+                                while ($row = pg_fetch_assoc($result)) {
+                                    echo "<tr>";
+                                    echo "<td class=''>" . $row['patient_id'] . "</td>";
+                                    echo "<td class=''>" . $row['address_city_municipality'] . "</td>";
+                                    echo "<td class=''>" . $row['primary_site'] . "</td>";
+                                    echo "<td class='stage'>" . $row['cancer_stage'] . "</td>";
+                                    echo "<td class=''>" . $row['type_of_patient'] . "</td>";
+                                    echo "<td class=''>" . $row['patient_status'] . "</td>";
+                                    echo "<td>";
+                                    // Add action buttons if needed
+                                    echo "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "Error executing query: " . pg_last_error($db_connection);
+                            }
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+</div>
 
 
 
