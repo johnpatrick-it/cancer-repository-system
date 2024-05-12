@@ -71,7 +71,7 @@ $total_patients = $row_total_patients['total_patients'];
 //query para sa mga new patient metric
 $sql = "SELECT COUNT(patient_id) AS new_patient 
 FROM cancer_cases_general_info 
-WHERE time_stamp >= CURRENT_TIMESTAMP - INTERVAL '10 minutes' 
+WHERE time_stamp >= CURRENT_TIMESTAMP - INTERVAL '2 minutes' 
 AND hospital_id = (SELECT hospital_id FROM repo_user WHERE repo_user_id = $1)"; 
 //parameters 
 $result = pg_query_params($db_connection, $sql, array($_SESSION['repo_user_id']));
@@ -283,7 +283,7 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                     <div class="row mr-2">
                         <div class="col-md-3">
                             <div class="col">
-                                <h1 class="page-title">Cases Info</h1>
+                                <h1 class="page-title">Patient Info</h1>
                             </div>
                         </div>
 
@@ -308,8 +308,8 @@ $new_patient = isset($row['new_patient']) ? $row['new_patient'] : 0;
                             <div class="table-responsive">
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
-                                        <tr>        
-                                            <th>Case Number</th>
+                                        <tr>
+                                            <th>Patient Number</th>
                                             <th>Gender</th>
                                             <th>Age</th>
                                             <th>Cancer</th>
@@ -397,7 +397,7 @@ $(document).ready(function() {
             var patientId = $(this).data('id');
             Swal.fire({
                 title: 'Manage Patient',
-                text: 'Redirecting to Manage Cases!',
+                text: 'Redirecting to Manage Patient!',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',

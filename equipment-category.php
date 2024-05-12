@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once("includes/config.php");
 
 //VERY IMPORTANT DONT ERASE
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
@@ -35,28 +36,15 @@ if (isset($_POST['add'])) {
     $description = trim($_POST['description']);
     $admin_user_id = $AdminID;  // Assuming you've set $AdminID elsewhere
 
+   
     if (isset($_FILES['image'])) {
-        if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            // Validate image file type and size (replace with your allowed extensions)
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-            if (in_array($_FILES['image']['type'], $allowedTypes) && $_FILES['image']['size'] <= 2097152) { // 2MB limit
-                $tmp_name = $_FILES['image']['tmp_name'];
-                $image_data = file_get_contents($tmp_name);
-            } else {
-                $_SESSION['error'] = "Invalid image format or size.";
-                header("location: equipment-category.php");
-                exit;
-            }
-        } else {
-            $_SESSION['error'] = "Error uploading file.";
-            header("location: equipment-category.php");
-            exit;
-        }
+        $image_data = $_FILES['image']['name'];
+        move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/'.$image_data);
+
     } else {
-        $_SESSION['error'] = "Please select an image to upload.";
-        header("location: equipment-category.php");
-        exit;
+        echo "No file uploaded or the 'image'.";
     }
+    
 
     // Check for existing equipment category
     $check_stmt = $dbh->prepare("SELECT * FROM repo_equipment_category WHERE equipment_name = :equipment_name");
@@ -75,7 +63,7 @@ if (isset($_POST['add'])) {
         $insert_stmt->bindParam(':description', $description);
         $insert_stmt->bindParam(':created_at', $created_at);
         $insert_stmt->bindParam(':admin_user_id', $admin_user_id);
-        $insert_stmt->bindParam(':image_data', $image_data, PDO::PARAM_LOB);
+        $insert_stmt->bindParam(':image_data', $image_data);
 
         if ($insert_stmt->execute()) {
             $log_timestamp = date("Y-m-d");
@@ -388,42 +376,49 @@ if (isset($_POST['add'])) {
                                                     // Display the images within a table
                                                     foreach ($results as $result) {
                                                         // Get the image data
-                                                        $imageData = $result->image_data;
+                                                      
+                                                        $imageData = "uploads/" . $result->image_data;
 
                                                 // Check if image data is empty or null
-                                                if ($imageData) {
-                                                    // Convert the image data to base64 encoding
-                                                    $base64Image = base64_encode(stream_get_contents($imageData));
+                                              
 
                                                     // Display the image within a table row
                                                     echo '<tr>';
                                                     echo '<td>' . htmlentities($cnt) . '</td>';
-                                                    echo '<td><img src="data:image/jpeg;base64,' . $base64Image . '" alt="Equipment Image" class="equipment-image"></td>';
-                                                    echo '<td>' . htmlentities($result->equipment_name) . '</td>';
-                                                    echo '<td class="description-cell">' . htmlentities($result->description) . '</td>';
-                                                                                                                echo '<td>' . htmlentities(date('Y-m-d', strtotime($result->created_at))) . '</td>';
-                                                                                                                echo '<td>';
-                                                                                                                echo '<a href="#" data-toggle="modal" data-target="#edit_equipment" title="Edit" class="btn text-xs text-white btn-blue action-icon edit-equipment-button" 
-                                                                                                                      data-equipment-id="' . $result->equipment_id . '" 
-                                                                                                                      data-equipment-name="' . htmlentities($result->equipment_name) . '" 
-                                                                                                                      data-description="' . htmlentities($result->description) . '">
-                                                                                                                      <i class="fa fa-pencil"></i>
-                                                                                                                      </a>';
-                                                                                                                echo '<a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon ml-2"><i class="fa fa-trash"></i></a>';
-                                                                                                                echo '</td>';
-                                                                                                                
-                                                                                echo '</tr>';
-                                                                                
-                                                                                
-                                                                                $cnt++;
-                                                                            } else {
-                                                                                echo "<tr><td colspan='6'>Image data is empty or null.</td></tr>";
-                                                                            }
-                                                                        }
-                                                                    } else {
-                                                                        echo "<tr><td colspan='6'>No images found.</td></tr>";
-                                                                    }
-                                                                    ?>
+                                                    echo '<td><img src="' . $imageData . '" alt="Equipment Image" class="equipment-image"></td>';
+
+                                            echo '<td>' . htmlentities($result->equipment_name) . '</td>';
+                                            echo '<td class="description-cell">' . htmlentities($result->description) .
+                                                '</td>';
+                                            echo '<td>' . htmlentities(date('Y-m-d', strtotime($result->created_at))) .
+                                                '</td>';
+                                            echo '<td>';
+                                                echo '<a href="#" data-toggle="modal" data-target="#edit_equipment"
+                                                    title="Edit"
+                                                    class="btn text-xs text-white btn-blue action-icon edit-equipment-button"
+                                                    data-equipment-id="' . $result->equipment_id . '"
+                                                    data-equipment-name="' . htmlentities($result->equipment_name) . '"
+                                                    data-description="' . htmlentities($result->description) . '">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>';
+                                                echo '<a href="#" data-toggle="modal" data-target="#delete_hospital"
+                                                    title="Delete"
+                                                    class="btn text-xs text-white btn-danger action-icon ml-2"><i
+                                                        class="fa fa-trash"></i></a>';
+                                                echo '</td>';
+
+                                            echo '</tr>';
+
+
+                                            $cnt++;
+
+                                            }
+                                            } else {
+                                            echo "<tr>
+                                                <td colspan='6'>No images found.</td>
+                                            </tr>";
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
 

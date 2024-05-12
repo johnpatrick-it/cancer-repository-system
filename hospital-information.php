@@ -114,6 +114,14 @@ include('includes/config.php');
     .m-right {
         margin-right: -0.8rem;
     }
+
+    .modal {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    #hidebtn {
+        display: none;
+    }
     </style>
 </head>
 
@@ -153,9 +161,11 @@ include('includes/config.php');
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-auto ml-auto m-right">
-                                    <a href="#" class="btn add-btn" data-toggle="modal" data-target="#add_hospital">
-                                        <i class="fa fa-medkit"></i> Add Hospital
-                                    </a>
+                                    <button type="button" class="btn add-btn" data-toggle="modal"
+                                        data-target="#firstModal"><i class="fa fa-medkit"></i>Add Hospital</button>
+                                    <a href="#" id="hidebtn" class="add-btn" data-toggle="modal"
+                                        data-target="#add_hospital"></a>
+
                                 </div>
 
                                 <div class="col-auto">
@@ -243,6 +253,9 @@ include('includes/config.php');
                 </div>
             </div>
 
+
+
+
             <!-- Add Hospital  Modal -->
             <?php include_once 'includes/modals/hospital/add_hospital.php'; ?>
 
@@ -253,46 +266,158 @@ include('includes/config.php');
         </div>
     </div>
 
+    <div id="firstModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Admin Login</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="adminLoginForm">
+                        <div class="form-group">
+                            <label for="Password">Password</label>
+                            <input type="text" class="form-control" id="passwordInput" name="passwordInput" required
+                                autocomplete="off">
+
+                        </div>
+
+                        <button type="button" class="btn btn-primary" id="adminLoginBtn">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Include SweetAlert2 CSS and JS files -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+    $(document).ready(function() {
+        // Function to open the add_hospital modal
+        function openAddHospitalModal() {
+            $('#add_hospital').modal('show');
+            console.log("Modal opened");
+        }
+
+        function closeFirstModal() {
+            $('#firstModal').modal('hide');
+        }
+
+        $('#passwordInput').keypress(function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                $('#adminLoginBtn').click();
+            }
+        });
+
+        $('#adminLoginBtn').click(function() {
+            var password = $('#passwordInput').val();
+
+            $.ajax({
+                type: "POST",
+                url: "authenticate.php",
+                data: {
+                    password: password
+                },
+                success: function(response) {
+                    if (response === "success") {
+                        closeFirstModal();
+                        $('.add-btn').trigger('click');
+                        openAddHospitalModal();
+                        setTimeout(function() {
+                            console.log("Modal closed after 10 seconds");
+                            // Display SweetAlert2 modal
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Session Expired',
+                                text: 'Your session has expired. Redirecting to Hospital Information page...',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                        }, 120000);
+                    } else if (response === "session_expired") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Session Expired',
+                            text: 'Your session has expired. Please log in again.'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Authentication Failed',
+                            text: 'Invalid password.'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error',
+                        text: 'There was an error processing your request. Please try again later.'
+                    });
+                }
+            });
+        });
+    });
+    </script>
+
+
+
 
     <!-- Include SweetAlert library -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
+
     <script>
-$(document).ready(function() {
-    // Event listener for edit button click
-    $('.edit-action').click(function() {
-        // Get the hospital ID from the data attribute
-        var hospitalId = $(this).data('hospital-id');
+    $(document).ready(function() {
+        // Event listener for edit button click
+        $('.edit-action').click(function() {
+            // Get the hospital ID from the data attribute
+            var hospitalId = $(this).data('hospital-id');
 
-        // Store the hospital ID in the hidden input field
-        $('#hospitalId').val(hospitalId);
+            // Store the hospital ID in the hidden input field
+            $('#hospitalId').val(hospitalId);
 
-        // Fetch hospital data using AJAX
-        $.ajax({
-            url: 'fetch_hospital.php', // URL to your PHP script to fetch hospital data
-            method: 'POST',
-            data: { hospital_id: hospitalId },
-            success: function(response) {
-                // Parse the JSON response
-                var hospitalData = JSON.parse(response);
+            // Fetch hospital data using AJAX
+            $.ajax({
+                url: 'fetch_hospital.php', // URL to your PHP script to fetch hospital data
+                method: 'POST',
+                data: {
+                    hospital_id: hospitalId
+                },
+                success: function(response) {
+                    // Parse the JSON response
+                    var hospitalData = JSON.parse(response);
 
-                // Populate the modal fields with the fetched data
-                $('#hospital_name').val(hospitalData.hospital_name);
-                $('#hospital_level').val(hospitalData.hospital_level);
-                $('#type_of_institution').val(hospitalData.type_of_institution);
-                $('#specialty').val(hospitalData.specialty);
-                $('#hospital_barangay').val(hospitalData.hospital_barangay);
-                $('#hospital_street').val(hospitalData.hospital_street);
-            },
-            error: function(xhr, status, error) {
-                // Handle error
-                console.error(error);
-            }
+                    // Populate the modal fields with the fetched data
+                    $('#hospital_name').val(hospitalData.hospital_name);
+                    $('#hospital_level').val(hospitalData.hospital_level);
+                    $('#type_of_institution').val(hospitalData
+                        .type_of_institution);
+                    $('#specialty').val(hospitalData.specialty);
+                    $('#hospital_barangay').val(hospitalData
+                        .hospital_barangay);
+                    $('#hospital_street').val(hospitalData.hospital_street);
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error(error);
+                }
+            });
         });
     });
-});
-</script>
+    </script>
 
-<?php
+    <?php
 // Check if the session variable is set
 if (isset($_SESSION['add-hospital'])) {
     // Display the alert message
@@ -310,7 +435,7 @@ if (isset($_SESSION['add-hospital'])) {
 }
 ?>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
     $(document).ready(function() {
         $('#searchInput').keyup(function() {
@@ -319,8 +444,10 @@ if (isset($_SESSION['add-hospital'])) {
             $('tbody tr').each(function() {
                 var name = $(this).data('name').toString().toLowerCase();
                 var level = $(this).data('level').toString().toLowerCase();
-                var institution = $(this).data('institution').toString().toLowerCase();
-                var barangay = $(this).data('barangay').toString().toLowerCase();
+                var institution = $(this).data('institution').toString()
+                    .toLowerCase();
+                var barangay = $(this).data('barangay').toString()
+                    .toLowerCase();
                 var street = $(this).data('street').toString().toLowerCase();
 
 
@@ -343,11 +470,14 @@ if (isset($_SESSION['add-hospital'])) {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js">
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/tableexport.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js">
+    </script>
 
     <!-- jQuery -->
     <script src=" assets/js/jquery-3.2.1.min.js"></script>

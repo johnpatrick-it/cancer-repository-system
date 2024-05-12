@@ -206,7 +206,7 @@ if (!$db_connection) {
         }
 }
 
-</style>
+  </style>
 
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
