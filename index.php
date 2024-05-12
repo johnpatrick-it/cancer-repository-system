@@ -227,7 +227,7 @@ pg_close($db_connection);
                     </div>
                     <?php
                     // Add your SQL query to count the total number of patients
-                    $sql = "SELECT COUNT(*) as total_patients FROM cancer_cases_general_info";
+                    $sql = "SELECT COUNT(*) as total_patients FROM patient_data";
                     $result = pg_query($db_connection, $sql);
 
                     // Check if the query was successful
@@ -251,14 +251,13 @@ pg_close($db_connection);
                                     <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
                                     <div class="dash-widget-info">
                                         <h3><?php echo $totalPatients ?></h3>
-                                        <span>Total Patient</span>
+                                        <span>Total Cases</span>
                                     </div>
                                 </div>
                             </a>
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="cancerDataDashboard">
                         <div class='tableauPlaceholder' id='viz1710575809354' style='position: relative'><noscript><a

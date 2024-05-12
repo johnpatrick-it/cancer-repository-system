@@ -1,6 +1,5 @@
 <?php
-session_start();
-include_once("../../../includes/config.php");
+include_once("config.php");
 
 $AdminID = $_SESSION['admin_id'] ?? '';
 error_reporting(E_ALL);

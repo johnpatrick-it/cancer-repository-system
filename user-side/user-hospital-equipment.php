@@ -170,13 +170,14 @@ include('../includes/config.php');
                         </div>
 
                         <div class="col-md-6">
+                            
                             <div class="row">
                                 <div class="col-auto  ml-auto m-right">
                                     <button class="btn export-btn">
                                         <i class="fa fa-download"></i> Export
                                     </button>
+                                    
                                 </div>
-
                             </div>
                         </div>
                     </div>

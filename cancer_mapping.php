@@ -239,7 +239,24 @@ if (isset($_POST['generate_csv']) && isset($_SESSION['selected_region'])) {
                         </div>
 
                         <div class="col-md-3">
-                            <!-- Empty Space -->
+                        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                                    <div class="col-auto">
+                                        <div class="dropdown">
+                                            <button class="btn export-btn dropdown-toggle" type="button"
+                                                id="hide-on-print" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa fa-download"></i> Export
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                                <li><button type="submit" class="dropdown-item"
+                                                        name="generate_pdf">Export
+                                                        Data as PDF</button></li>
+                                                <li><button type="submit" class="dropdown-item"
+                                                        name="generate_csv">Export
+                                                        Data as CSV</button></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </form>
                         </div>
 
                         <div class="col-md-6">
@@ -296,27 +313,10 @@ if (isset($_POST['generate_csv']) && isset($_SESSION['selected_region'])) {
                                     <input type="submit" name="submit" class="add-btn" value="Fetch Data">
                                     </form>
                                 </div>
-                                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                                    <div class="col-auto">
-                                        <div class="dropdown">
-                                            <button class="btn export-btn dropdown-toggle" type="button"
-                                                id="hide-on-print" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa fa-download"></i> Export
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                                <li><button type="submit" class="dropdown-item"
-                                                        name="generate_pdf">Export
-                                                        Data as PDF</button></li>
-                                                <li><button type="submit" class="dropdown-item"
-                                                        name="generate_csv">Export
-                                                        Data as CSV</button></li>
-                                            </ul>
-                                        </div>
 
-                                    </div>
-                                </form>
-
+                                
                             </div>
+                            
                         </div>
                     </div>
 
@@ -327,15 +327,14 @@ if (isset($_POST['generate_csv']) && isset($_SESSION['selected_region'])) {
                                 <table class="table table-striped custom-table datatable">
                                     <thead>
                                         <tr>
-                                            <th>Patient ID</th>
-                                            <th>Patient Name</th>
+                                            <th>Case ID</th>
+                                            <th>Sex</th>
                                             <th>Address Region</th>
-                                            <th>Primary Site</th>
+                                            <th>Cancer Type</th>
                                             <th>Cancer Stage</th>
-                                            <th>Patient Treatment</th>
+                                            <th>Treatment</th>
                                             <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
+                                            </tr>
                                     </thead>
                                     <tbody>
                                         <?php
@@ -360,7 +359,7 @@ if (isset($_POST['generate_csv']) && isset($_SESSION['selected_region'])) {
                                    while ($row = pg_fetch_assoc($result)) {
                                        echo "<tr>";
                                        echo "<td class=''>" . $row['patient_id'] . "</td>";
-                                       echo "<td class=''>" . $row['patient_name'] . "</td>";
+                                       echo "<td class=''>" . $row['sex'] . "</td>";
                                        echo "<td class='region'>" . $row['address_region'] . "</td>";
                                        echo "<td class=''>" . $row['primary_site'] . "</td>";
                                        echo "<td class='stage'>" . $row['cancer_stage'] . "</td>";

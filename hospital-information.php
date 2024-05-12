@@ -165,7 +165,6 @@ include('includes/config.php');
                                         data-target="#firstModal"><i class="fa fa-medkit"></i>Add Hospital</button>
                                     <a href="#" id="hidebtn" class="add-btn" data-toggle="modal"
                                         data-target="#add_hospital"></a>
-
                                 </div>
 
                                 <div class="col-auto">
@@ -280,11 +279,9 @@ include('includes/config.php');
                     <form id="adminLoginForm">
                         <div class="form-group">
                             <label for="Password">Password</label>
-                            <input type="text" class="form-control" id="passwordInput" name="passwordInput" required
+                            <input type="password" class="form-control" id="passwordInput" name="passwordInput" required
                                 autocomplete="off">
-
                         </div>
-
                         <button type="button" class="btn btn-primary" id="adminLoginBtn">Login</button>
                     </form>
                 </div>

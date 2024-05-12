@@ -1,16 +1,17 @@
-    <?php
+<?php
 session_start();
-include_once("includes/config.php");
+include('../includes/config.php');
 
 //VERY IMPORTANT DONT ERASE
-if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
+// Check if si user is logged in
+if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
+    //if walang session babalik sya login page
     header("Location: login.php");
-    exit; 
+    exit;
 }
 
-$AdminID = $_SESSION['admin_id'] ?? '';
+$AdminID = $_SESSION['repo_user_id'] ?? '';
 
-include('includes/config.php');
 
 $host = "user=postgres.tcfwwoixwmnbwfnzchbn password=sbit4e-4thyear-capstone-2023 host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres";
                                             
@@ -53,7 +54,7 @@ if (isset($_POST['add'])) {
 
     if ($check_stmt->rowCount() > 0) {
         $_SESSION['already-exist'] = "Equipment Already Exist";
-        header("location: equipment-category.php");
+        header("location: equipment-category-user.php");
         exit;
     } else {
         // Insert new category
@@ -109,25 +110,25 @@ if (isset($_POST['add'])) {
     <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="assets/css/select2.min.css">
+    <link rel="stylesheet" href="../assets/css/select2.min.css">
 
     <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
 
     <style>
     body {
@@ -232,8 +233,8 @@ if (isset($_POST['add'])) {
     <div class="main-wrapper">
 
         <!-- Include header and sidebar -->
-        <?php include_once("includes/header.php"); ?>
-        <?php include_once("includes/sidebar.php"); ?>
+        <?php include_once("user-sidebar.php"); ?>
+        <?php include_once("user-header.php"); ?>
 
         <div class="page-wrapper">
 

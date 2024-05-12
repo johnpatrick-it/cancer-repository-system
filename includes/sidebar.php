@@ -93,7 +93,7 @@ $token = $_SESSION['token'] ?? '';
                 <!-- HOSPITAL MAPPING -->
                 <li><a href="./mapping.php"><i class="la la-map"></i><span>Hospital Mapping</span></a></li>
 
-                <li><a href="./cancer_mapping.php"><i class="la la-map"></i><span>Patient Data</span></a></li>
+                <li><a href="./cancer_mapping.php"><i class="la la-map"></i><span>Cancer    Cases Data</span></a></li>
 
                 <!-- Equipment Category     -->
                 <li><a href="./equipment-category.php"><i class="la la-map"></i><span>Equipment Category</span></a></li>

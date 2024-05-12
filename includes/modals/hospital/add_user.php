@@ -1,5 +1,4 @@
 <?php
-session_start();
 include_once("config.php");
 
 $AdminID = $_SESSION['admin_id'] ?? '';
