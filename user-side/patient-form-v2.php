@@ -208,7 +208,7 @@ pg_close($db_connection);
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <div class="welcome d-flex justify-content-between align-items-center">
-                                            <h3 class="page-title">General Patient Information</h3>
+                                            <h3 class="page-title">General Cases Information</h3>
 
                                         </div>
                                         <ul class="breadcrumb">
@@ -276,11 +276,11 @@ pg_close($db_connection);
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Type of Patient</label>
+                                                    <label class="custom-label">Type of Cases</label>
                                                     <select name="patient_type" id="patient_type" class="custom-select form-control" autocomplete="off" required="true">
                                                         <option value="" disabled selected>Select Type</option>
-                                                        <option value="In-patient">In-patient</option>
-                                                        <option value="Out-patient">Out-patient</option>
+                                                        <option value="Admitted">Admitted</option>
+                                                        <option value="Discharge">Discharge</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -304,7 +304,7 @@ pg_close($db_connection);
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="custom-label">Patient Status</label>
+                                                    <label class="custom-label">Case Status</label>
                                                     <select name="patient_status" id="patient_status" class="custom-select form-control" onchange="toggleDateOfDeath(this)" required="true">
                                                         <option value="" disabled selected>Select Status</option>
                                                         <option value="Alive">Alive</option>
@@ -473,7 +473,7 @@ pg_close($db_connection);
                                             </div>
                                             <div class="col-md-3 col-sm-12">
                                                 <div class="form-group">
-                                                        <label class="custom-label">Patient Case Number</label>
+                                                        <label class="custom-label">Case Number</label>
                                                         <input name="patient_case_number" id="patient_case_number" type="text" class="form-control date-picker" autocomplete="off" placeholder="Patient Case Number" required="true">
                                                 </div>
                                             </div>  

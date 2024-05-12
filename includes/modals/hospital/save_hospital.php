@@ -3,6 +3,10 @@ session_start();
 include_once("config.php");
 
 $AdminID = $_SESSION['admin_id'] ?? '';
+<<<<<<< HEAD
+=======
+
+>>>>>>> 993da59d339990ba8278087458421d2421015709
 
 if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header('Location: .../login.php');
@@ -89,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $logTimestamp = date("Y-m-d");
     $logAction = "New hospital added"; // Your desired log action
 
+<<<<<<< HEAD
     $insertLogQuery = "INSERT INTO repo_admin_logs (repo_admin_id, repo_admin_uuid, log_timestamp, log_action) VALUES ($1, $2, $3, $4)";
     $result_insert_log = pg_query_params($db_connection, $insertLogQuery, array($AdminID, $AdminID, $logTimestamp, $logAction));
     if (!$result_insert_log) {
@@ -115,4 +120,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 pg_close($db_connection);
+=======
+                        if (!$result_insert_equipment) {
+                        }
+                    } 
+                }
+             
+            }
+        } 
+         
+            $log_timestamp = date("Y-m-d");
+            $log_action = "New hospital added"; // Your desired log action
+
+            $insertLogQuery = "INSERT INTO repo_admin_logs (repo_admin_id, repo_admin_uuid, log_timestamp, log_action) VALUES ($1, $2, $3, $4)";
+            $result_insert_log = pg_query_params($db_connection, $insertLogQuery, array($AdminID, $AdminID, $log_timestamp, $log_action));
+            
+            if ($result_insert_log) {
+                // Log inserted successfully
+                echo "Log inserted successfully!";
+            } else {
+                // Error inserting log
+                $error_message = pg_last_error($db_connection);
+                echo "Error inserting log: " . $error_message;
+            }
+            $_SESSION['add-hospital'] = "New hospital added successfully!";
+            header("Location: ../../../hospital-information.php");
+            exit();
+    } 
+    pg_close($db_connection);
+}
+
+>>>>>>> 993da59d339990ba8278087458421d2421015709
 ?>

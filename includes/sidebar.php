@@ -69,7 +69,7 @@ $token = $_SESSION['token'] ?? '';
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
                 <li class="profile-block">
-                    <a href="./user-landing-page.php">
+                    <a href="./index.php">
                         <span class="user-img d-inline-block position-relative">
                             <img src="./profiles/pcc-logo.png" alt="User Picture"
                                 class="rounded-circle img-thumbnail neon-border">

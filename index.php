@@ -251,7 +251,7 @@ pg_close($db_connection);
                                     <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
                                     <div class="dash-widget-info">
                                         <h3><?php echo $totalPatients ?></h3>
-                                        <span>Total Patient</span>
+                                        <span>Total Cases</span>
                                     </div>
                                 </div>
                             </a>

@@ -68,7 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         header("Location: index.php");
                         exit;
                     } else {
-                        echo "You are not authorized to access this page.";
                         exit;
                     }
                 } else {
@@ -80,11 +79,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 userLogin($email, $password);
             }
         } else {
-            echo "Admin login query execution failed.";
             exit;
         }
     } else {
-        echo "Admin statement preparation failed.";
         exit;
     }
 }
@@ -152,11 +149,9 @@ function userLogin($email, $password) {
                 exit;
             }
         } else {
-            echo "User login query execution failed.";
             exit;
         }
     } else {
-        echo "User statement preparation failed.";
         exit;
     }
 }
