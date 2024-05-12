@@ -376,15 +376,36 @@ if (isset($_POST['add'])) {
                                                     // Display the images within a table
                                                     foreach ($results as $result) {
                                                         // Get the image data
+<<<<<<< HEAD
                                                       
                                                         $imageData = "uploads/" . $result->image_data;
 
                                                 // Check if image data is empty or null
                                               
+=======
+<<<<<<< HEAD
+                                                      
+                                                        $imageData = "uploads/" . $result->image_data;
+
+                                                // Check if image data is empty or null
+                                              
+=======
+                                                        $imageData = $result->image_data;
+
+                                                // Check if image data is empty or null
+                                                if ($imageData) {
+                                                    // Convert the image data to base64 encoding
+                                                    $base64Image = base64_encode(stream_get_contents($imageData));
+>>>>>>> 993da59d339990ba8278087458421d2421015709
+>>>>>>> 81ca0a6599ccc9ee6ed200bc17a9de80eb32573a
 
                                                     // Display the image within a table row
                                                     echo '<tr>';
                                                     echo '<td>' . htmlentities($cnt) . '</td>';
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 81ca0a6599ccc9ee6ed200bc17a9de80eb32573a
                                                     echo '<td><img src="' . $imageData . '" alt="Equipment Image" class="equipment-image"></td>';
 
                                             echo '<td>' . htmlentities($result->equipment_name) . '</td>';
@@ -419,6 +440,37 @@ if (isset($_POST['add'])) {
                                             </tr>";
                                             }
                                             ?>
+<<<<<<< HEAD
+=======
+=======
+                                                    echo '<td><img src="data:image/jpeg;base64,' . $base64Image . '" alt="Equipment Image" class="equipment-image"></td>';
+                                                    echo '<td>' . htmlentities($result->equipment_name) . '</td>';
+                                                    echo '<td class="description-cell">' . htmlentities($result->description) . '</td>';
+                                                                                                                echo '<td>' . htmlentities(date('Y-m-d', strtotime($result->created_at))) . '</td>';
+                                                                                                                echo '<td>';
+                                                                                                                echo '<a href="#" data-toggle="modal" data-target="#edit_equipment" title="Edit" class="btn text-xs text-white btn-blue action-icon edit-equipment-button" 
+                                                                                                                      data-equipment-id="' . $result->equipment_id . '" 
+                                                                                                                      data-equipment-name="' . htmlentities($result->equipment_name) . '" 
+                                                                                                                      data-description="' . htmlentities($result->description) . '">
+                                                                                                                      <i class="fa fa-pencil"></i>
+                                                                                                                      </a>';
+                                                                                                                echo '<a href="#" data-toggle="modal" data-target="#delete_hospital" title="Delete" class="btn text-xs text-white btn-danger action-icon ml-2"><i class="fa fa-trash"></i></a>';
+                                                                                                                echo '</td>';
+                                                                                                                
+                                                                                echo '</tr>';
+                                                                                
+                                                                                
+                                                                                $cnt++;
+                                                                            } else {
+                                                                                echo "<tr><td colspan='6'>Image data is empty or null.</td></tr>";
+                                                                            }
+                                                                        }
+                                                                    } else {
+                                                                        echo "<tr><td colspan='6'>No images found.</td></tr>";
+                                                                    }
+                                                                    ?>
+>>>>>>> 993da59d339990ba8278087458421d2421015709
+>>>>>>> 81ca0a6599ccc9ee6ed200bc17a9de80eb32573a
                                         </tbody>
                                     </table>
 
