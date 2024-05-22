@@ -161,10 +161,8 @@ include('includes/config.php');
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-auto ml-auto m-right">
-                                    <button type="button" class="btn add-btn" data-toggle="modal"
-                                        data-target="#firstModal"><i class="fa fa-medkit"></i>Add Hospital</button>
-                                    <a href="#" id="hidebtn" class="add-btn" data-toggle="modal"
-                                        data-target="#add_hospital"></a>
+                                    <button type="button" class="btn add-btn" data-toggle="modal" data-target="#firstModal"><i class="fa fa-medkit"></i>Add Hospital</button>
+                                    <a href="#" id="hidebtn" class="add-btn" data-toggle="modal" data-target="#add_hospital"></a>
                                 </div>
 
                                 <div class="col-auto">

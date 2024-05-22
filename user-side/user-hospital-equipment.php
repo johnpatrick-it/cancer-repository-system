@@ -133,6 +133,20 @@ include('../includes/config.php');
         color: blue;
         /* Change text color on hover */
     }
+    #hidebtn {
+        display: none;
+    }
+
+    table {
+        width: 100%;
+        table-layout: fixed; /* Set table layout to fixed */
+    }
+    th, td {
+        padding: 8px; /* Add padding for better readability */
+        text-align: center; /* Align text to the left */
+        max-height: 100px; /* Set maximum height for table cells */
+        overflow: auto; /* Add scrollbar if content exceeds maximum height */
+    }
     </style>
 </head>
 
@@ -141,6 +155,8 @@ include('../includes/config.php');
 
         <?php include_once("user-header.php"); ?>
         <?php include_once("user-sidebar.php"); ?>
+        <?php include_once("add-equipment-userside.php"); ?>
+
 
         <div class="page-wrapper">
             <div class="content container-fluid">
@@ -170,13 +186,27 @@ include('../includes/config.php');
                         </div>
 
                         <div class="col-md-6">
-                            
                             <div class="row">
-                                <div class="col-auto  ml-auto m-right">
-                                    <button class="btn export-btn">
-                                        <i class="fa fa-download"></i> Export
-                                    </button>
-                                    
+                                <div class="col-auto ml-auto m-right">
+                                <button type="button" class="btn add-btn" data-toggle="modal" data-target="#add_equipment_userside"><i class="fa fa-medkit"></i>Add Equipment</button>                                                      
+                            </div>
+                                <div class="col-auto">
+                                    <div class="dropdown">
+                                        <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
+                                            data-bs-toggle="dropdown" aria-expanded="false"> <i
+                                                class="fa fa-download"></i> Export</button>
+                                        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                            <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">Export as
+                                                    PDF</a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">Export
+                                                    as Excel</a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportTable('csv')">Export as
+                                                    CSV</a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -190,37 +220,38 @@ include('../includes/config.php');
                                         <tr>
                                             <th>Equipment Name</th>
                                             <th>Description</th>
-
+                                            <th>Purchase-date</th>
+                                            <th>Location</th>
+                                            <th>Equipment Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                            // Check database connection
-                            if (!$db_connection) {
-                                echo "Failed to connect to the database.";
-                            } else {
-                                // Query to fetch equipment information
-                                $query = "SELECT rec.equipment_name, rec.description
-                                FROM hospital_equipment he
-                                JOIN repo_equipment_category rec ON he.equipment_id = rec.equipment_id
-                                WHERE he.hospital_id = '$hospitalID'";
-                      
+                                            // Check database connection
+                                            if (!$db_connection) {
+                                                echo "Failed to connect to the database.";
+                                            } else {
+                                                // Execute the query
+                                                        $query = "SELECT equipment_name, description, purchase_date, location, equipment_status FROM hospital_equipment_user_side";
+                                                        $result = pg_query($db_connection, $query);
 
-                                // Execute the query
-                                $result = pg_query($db_connection, $query);                                    
-                                if (!$result) {
-                                    echo "Query execution failed: " . pg_last_error($db_connection);
-                                } else {
-                                    // Fetch and display results
-                                    while ($row = pg_fetch_assoc($result)) {
-                                        echo "<tr>";
-                                        echo "<td class='first-name'>" . $row['equipment_name'] . "</td>";
-                                        echo "<td class='middle-name'>" . $row['description'] . "</td>";
-                                        echo "</tr>";
-                                    }
-                                }
-                            }
-                            ?>
+                                                        if (!$result) {
+                                                            echo "Query execution failed: " . pg_last_error($db_connection);
+                                                        } else {
+                                                            // Fetch and display results
+                                                            while ($row = pg_fetch_assoc($result)) {
+                                                                echo "<tr>";
+                                                                echo "<td class='equipment-name'>" . $row['equipment_name'] . "</td>";
+                                                                echo "<td class='description'>" . $row['description'] . "</td>";
+                                                                echo "<td class='purchase-date'>" . $row['purchase_date'] . "</td>";
+                                                                echo "<td class='location'>" . $row['location'] . "</td>";
+                                                                echo "<td class='equipment-status'>" . $row['equipment_status'] . "</td>";
+                                                                echo "</tr>";
+                                                            }
+                                                        }
+                                            }
+                                            ?>
                                     </tbody>
                                 </table>
                             </div>
