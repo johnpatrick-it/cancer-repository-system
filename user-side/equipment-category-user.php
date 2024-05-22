@@ -326,7 +326,7 @@ if (isset($_POST['add'])) {
                                         </div>
                                         <div class="col-sm-12 text-right">  
                                             <div class="dropdown">
-                                                <input class="btn btn-primary" type="submit" value="Save" name="add"
+                                                <input class="btn btn-primary" typ  e="submit" value="Save" name="add"
                                                     id="add">
                                             </div>
                                         </div>

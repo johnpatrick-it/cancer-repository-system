@@ -118,6 +118,10 @@ include('includes/config.php');
     .modal {
         background-color: rgba(0, 0, 0, 0.4);
     }
+
+    #hidebtn {
+        display: none;
+    }
     </style>
 </head>
 
@@ -157,11 +161,8 @@ include('includes/config.php');
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-auto ml-auto m-right">
-                                    <button type="button" class="btn add-btn" data-toggle="modal"
-                                        data-target="#firstModal"><i class="fa fa-medkit"></i>Open First Modal</button>
-
-
-
+                                    <button type="button" class="btn add-btn" data-toggle="modal" data-target="#firstModal"><i class="fa fa-medkit"></i>Add Hospital</button>
+                                    <a href="#" id="hidebtn" class="add-btn" data-toggle="modal" data-target="#add_hospital"></a>
                                 </div>
 
                                 <div class="col-auto">
@@ -261,8 +262,7 @@ include('includes/config.php');
 
         </div>
     </div>
-    <!-- First Modal -->
-    <!-- First Modal -->
+
     <div id="firstModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -276,31 +276,96 @@ include('includes/config.php');
                 <div class="modal-body">
                     <form id="adminLoginForm">
                         <div class="form-group">
-                            <label for="usernameInput">Username</label>
-                            <input type="text" class="form-control" id="usernameInput" name="usernameInput" required>
+                            <label for="Password">Password</label>
+                            <input type="password" class="form-control" id="passwordInput" name="passwordInput" required
+                                autocomplete="off">
                         </div>
-
                         <button type="button" class="btn btn-primary" id="adminLoginBtn">Login</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Include SweetAlert2 CSS and JS files -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
     $(document).ready(function() {
-        // Event listener for button click
-        $('#adminLoginBtn').click(function() {
-            // Check the value of the username input field
-            var username = $('#usernameInput').val();
+        // Function to open the add_hospital modal
+        function openAddHospitalModal() {
+            $('#add_hospital').modal('show');
+            console.log("Modal opened");
+        }
 
-            // If the username is "admin", redirect to hospital.php and open the add_hospital modal
-            if (username === "admin") {
-                window.location.href =
-                    'includes/modals/hospital/add_hospital.php'; // Redirect to hospital.php
+        function closeFirstModal() {
+            $('#firstModal').modal('hide');
+        }
+
+        $('#passwordInput').keypress(function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                $('#adminLoginBtn').click();
             }
+        });
+
+        $('#adminLoginBtn').click(function() {
+            var password = $('#passwordInput').val();
+
+            $.ajax({
+                type: "POST",
+                url: "authenticate.php",
+                data: {
+                    password: password
+                },
+                success: function(response) {
+                    if (response === "success") {
+                        closeFirstModal();
+                        $('.add-btn').trigger('click');
+                        openAddHospitalModal();
+                        setTimeout(function() {
+                            console.log("Modal closed after 10 seconds");
+                            // Display SweetAlert2 modal
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Session Expired',
+                                text: 'Your session has expired. Redirecting to Hospital Information page...',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                        }, 120000);
+                    } else if (response === "session_expired") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Session Expired',
+                            text: 'Your session has expired. Please log in again.'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Authentication Failed',
+                            text: 'Invalid password.'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Server Error',
+                        text: 'There was an error processing your request. Please try again later.'
+                    });
+                }
+            });
         });
     });
     </script>
+
 
 
 

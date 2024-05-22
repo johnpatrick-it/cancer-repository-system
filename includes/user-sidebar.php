@@ -84,7 +84,7 @@
                 <!-- Patient Report -->
                 <li>
                     <a href="./patient-report.php">
-                        <i class="la la-file-text-o"></i>
+                            <i class="la la-file-text-o"></i>
                         <span>Patient Report</span>
                     </a>
                 </li>

@@ -28,31 +28,32 @@ include('../includes/config.php');
     <meta name="keywords" content="PCC-CR, CR, Cancer Repository, Capstone, System, Repo">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../profiles/pcc-logo1.png">
+    <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
     <!-- Fontawesome CSS -->
-    <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
 
     <!-- Lineawesome CSS -->
-    <link rel="stylesheet" href="../assets/css/line-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/line-awesome.min.css">
 
     <!-- Datatable CSS -->
-    <link rel="stylesheet" href="../assets/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="assets/css/dataTables.bootstrap4.min.css">
 
     <!-- Select2 CSS -->
-    <link rel="stylesheet" href="../assets/css/select2.min.css">
+    <link rel="stylesheet" href="assets/css/select2.min.css">
 
     <!-- Datetimepicker CSS -->
-    <link rel="stylesheet" href="../assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 
     <style>
     body {
@@ -104,7 +105,7 @@ include('../includes/config.php');
         color: #888;
     }
 
-    .print-btn,
+    .filter-btn,
     .export-btn {
         padding: 8px 20px;
         background-color: #E5F6F1;
@@ -121,31 +122,12 @@ include('../includes/config.php');
         margin-right: -0.8rem;
     }
 
-    /* Add hover effect to table rows */
-    /* Add hover effect to table rows */
-    .table tbody tr:hover {
-        background-color: #f5f5f5;
-        cursor: pointer;
+    .modal {
+        background-color: rgba(0, 0, 0, 0.4);
     }
 
-    /* Add hover effect to text within table cells */
-    .table tbody tr:hover td {
-        color: blue;
-        /* Change text color on hover */
-    }
     #hidebtn {
         display: none;
-    }
-
-    table {
-        width: 100%;
-        table-layout: fixed; /* Set table layout to fixed */
-    }
-    th, td {
-        padding: 8px; /* Add padding for better readability */
-        text-align: center; /* Align text to the left */
-        max-height: 100px; /* Set maximum height for table cells */
-        overflow: auto; /* Add scrollbar if content exceeds maximum height */
     }
     </style>
 </head>
@@ -153,9 +135,10 @@ include('../includes/config.php');
 <body>
     <div class="main-wrapper">
 
-        <?php include_once("user-header.php"); ?>
-        <?php include_once("user-sidebar.php"); ?>
-        <?php include_once("add-equipment-userside.php"); ?>
+
+    <?php include_once("includes/header.php"); ?>
+    <?php include_once("includes/sidebar.php"); ?>
+
 
 
         <div class="page-wrapper">
@@ -188,7 +171,7 @@ include('../includes/config.php');
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-auto ml-auto m-right">
-                                <button type="button" class="btn add-btn" data-toggle="modal" data-target="#add_equipment_userside"><i class="fa fa-medkit"></i>Add Equipment</button>                                                      
+                                <!-- Empty shiit space para hindi umurong -->   
                             </div>
                                 <div class="col-auto">
                                     <div class="dropdown">
@@ -215,53 +198,46 @@ include('../includes/config.php');
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table table-striped custom-table datatable" id="logTable">
+                            <table class="table table-striped custom-table datatable" id="logTable">
                                     <thead>
                                         <tr>
+                                            <th>Hospital Name</th>
                                             <th>Equipment Name</th>
                                             <th>Description</th>
-                                            <th>Purchase-date</th>
+                                            <th>Purchase Date</th>
                                             <th>Location</th>
                                             <th>Equipment Status</th>
-                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-                                            // Check database connection
-                                            if (!$db_connection) {
-                                                echo "Failed to connect to the database.";
+                                        <?php
+                                        // Check database connection
+                                        if (!$db_connection) {
+                                            echo "Failed to connect to the database.";
+                                        } else {
+                                            // Execute the query
+                                            $query = "
+                                                SELECT hgi.hospital_name, heus.equipment_name, heus.description, heus.purchase_date, heus.location, heus.equipment_status
+                                                FROM hospital_equipment_user_side heus
+                                                JOIN hospital_general_information hgi ON heus.hospital_id = hgi.hospital_id"; // Adjust column and table names as needed
+                                            $result = pg_query($db_connection, $query);
+
+                                            if (!$result) {
+                                                echo "Query execution failed: " . pg_last_error($db_connection);
                                             } else {
-                                                // Check if hospital ID is set in session
-                                                if (!isset($_SESSION['hospital_id']) || empty($_SESSION['hospital_id'])) {
-                                                    echo "Hospital ID not found in session.";
-                                                } else {
-                                                    // Get hospital ID from session
-                                                    $hospital_id = $_SESSION['hospital_id'];
-
-                                                    // Prepare and execute the query
-                                                    $query = "SELECT equipment_name, description, purchase_date, location, equipment_status 
-                                                            FROM hospital_equipment_user_side 
-                                                            WHERE hospital_id = $1"; // Use parameterized query to prevent SQL injection
-                                                    $result = pg_query_params($db_connection, $query, array($hospital_id));
-
-                                                    if (!$result) {
-                                                        echo "Query execution failed: " . pg_last_error($db_connection);
-                                                    } else {
-                                                        // Fetch and display results
-                                                        while ($row = pg_fetch_assoc($result)) {
-                                                            echo "<tr>";
-                                                            echo "<td class='equipment-name'>" . $row['equipment_name'] . "</td>";
-                                                            echo "<td class='description'>" . $row['description'] . "</td>";
-                                                            echo "<td class='purchase-date'>" . $row['purchase_date'] . "</td>";
-                                                            echo "<td class='location'>" . $row['location'] . "</td>";
-                                                            echo "<td class='equipment-status'>" . $row['equipment_status'] . "</td>";
-                                                            echo "<td class='action'><a href='edit_equipment.php?id=" . htmlspecialchars($row['equipment_id']) . "' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a></td>";
-                                                            echo "</tr>";
-                                                        }
-                                                    }
+                                                // Fetch and display results
+                                                while ($row = pg_fetch_assoc($result)) {
+                                                    echo "<tr>";
+                                                    echo "<td class='hospital-name'>" . htmlspecialchars($row['hospital_name']) . "</td>";
+                                                    echo "<td class='equipment-name'>" . htmlspecialchars($row['equipment_name']) . "</td>";
+                                                    echo "<td class='description'>" . htmlspecialchars($row['description']) . "</td>";
+                                                    echo "<td class='purchase-date'>" . htmlspecialchars($row['purchase_date']) . "</td>";
+                                                    echo "<td class='location'>" . htmlspecialchars($row['location']) . "</td>";
+                                                    echo "<td class='equipment-status'>" . htmlspecialchars($row['equipment_status']) . "</td>";
+                                                    echo "</tr>";
                                                 }
                                             }
+                                        }
                                         ?>
                                     </tbody>
                                 </table>
