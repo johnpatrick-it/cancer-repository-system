@@ -1,21 +1,36 @@
 <?php
 session_start();
-//SESSION para sa hospital name
-$hospital_name = $_SESSION['hospital_name'];
-//VERY IMPORTANT
-if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id']) ||
-    !isset($_SESSION['hospital_id']) || empty($_SESSION['hospital_id'])) {
+
+// Ensure the admin is logged in
+if (!isset($_SESSION['admin_id']) || empty($_SESSION['admin_id'])) {
     header("Location: login.php");
-    exit; 
+    exit;
 }
 
-$hospitalID = $_SESSION['hospital_id'];
+// Include the configuration file
+include('includes/config.php');
 
-error_reporting(0);
-include('../includes/config.php');
-//-------end--------
+// Retrieve the hospital IDs directly associated with the logged-in admin
+$admin_id = $_SESSION['admin_id'];
+$hospital_ids_query = "
+    SELECT hospital_id 
+    FROM hospital_general_information 
+    WHERE admin_id = $1";
+$hospital_ids_result = pg_query_params($db_connection, $hospital_ids_query, [$admin_id]);
 
-
+if ($hospital_ids_result && pg_num_rows($hospital_ids_result) > 0) {
+    $hospital_ids = [];
+    while ($row = pg_fetch_assoc($hospital_ids_result)) {
+        $hospital_ids[] = $row['hospital_id'];
+    }
+    // Convert array to a string of comma-separated UUIDs
+    $hospital_ids_str = implode("','", $hospital_ids);
+    $hospital_ids_str = "'" . $hospital_ids_str . "'";
+} else {
+    $_SESSION['error'] = 'No hospitals found for this admin.';
+    header('Location: dashboard.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +43,6 @@ include('../includes/config.php');
     <meta name="keywords" content="PCC-CR, CR, Cancer Repository, Capstone, System, Repo">
     <meta name="author" content="Heionim">
     <meta name="robots" content="noindex, nofollow">
-    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <title>PCC CANCER REPOSITORY</title>
 
     <!-- Favicon -->
@@ -56,90 +70,87 @@ include('../includes/config.php');
     <link rel="stylesheet" href="assets/css/style.css">
 
     <style>
-    body {
-        background-color: #D4DEDB;
-    }
+        body {
+            background-color: #D4DEDB;
+        }
 
-    .body-container {
-        background-color: #FAFAFA;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    }
+        .body-container {
+            background-color: #FAFAFA;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        }
 
-    table {
-        text-align: center;
-        border: 1px solid #285D4D;
-    }
+        table {
+            text-align: center;
+            border: 1px solid #285D4D;
+        }
 
-    .page-title {
-        font-size: 1.3rem;
-        color: #204A3D;
-    }
+        .page-title {
+            font-size: 1.3rem;
+            color: #204A3D;
+        }
 
-    .btn-blue {
-        background-color: #0D6EFD;
-    }
+        .btn-blue {
+            background-color: #0D6EFD;
+        }
 
-    .search-container {
-        position: relative;
-    }
+        .search-container {
+            position: relative;
+        }
 
-    .search-input {
-        border: none;
-        border-radius: 5px;
-        width: 100%;
-        border: 1px solid #9E9E9E;
-        margin-bottom: 20px;
-    }
+        .search-input {
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            border: 1px solid #9E9E9E;
+            margin-bottom: 20px;
+        }
 
-    .search-input:focus {
-        outline: none;
-    }
+        .search-input:focus {
+            outline: none;
+        }
 
-    .search-container i {
-        position: absolute;
-        left: 15px;
-        top: 45%;
-        transform: translateY(-50%);
-        color: #888;
-    }
+        .search-container i {
+            position: absolute;
+            left: 15px;
+            top: 45%;
+            transform: translateY(-50%);
+            color: #888;
+        }
 
-    .filter-btn,
-    .export-btn {
-        padding: 8px 20px;
-        background-color: #E5F6F1;
-        color: #204A3D;
-        border: 1px solid #204A3D;
-    }
+        .filter-btn,
+        .export-btn {
+            padding: 8px 20px;
+            background-color: #E5F6F1;
+            color: #204A3D;
+            border: 1px solid #204A3D;
+        }
 
-    .add-btn {
-        border-radius: 5px;
-        padding: 8px 2rem;
-    }
+        .add-btn {
+            border-radius: 5px;
+            padding: 8px 2rem;
+        }
 
-    .m-right {
-        margin-right: -0.8rem;
-    }
+        .m-right {
+            margin-right: -0.8rem;
+        }
 
-    .modal {
-        background-color: rgba(0, 0, 0, 0.4);
-    }
+        .modal {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
 
-    #hidebtn {
-        display: none;
-    }
+        #hidebtn {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
     <div class="main-wrapper">
 
-
-    <?php include_once("includes/header.php"); ?>
-    <?php include_once("includes/sidebar.php"); ?>
-
-
+        <?php include_once("includes/header.php"); ?>
+        <?php include_once("includes/sidebar.php"); ?>
 
         <div class="page-wrapper">
             <div class="content container-fluid">
@@ -159,46 +170,36 @@ include('../includes/config.php');
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control pl-5 search-input" id="searchInput"
-                                    placeholder="Search">
+                                <input type="text" class="form-control pl-5 search-input" id="searchInput" placeholder="Search">
                             </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <!-- Empty Space -->
                         </div>
 
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-auto ml-auto m-right">
-                                <!-- Empty shiit space para hindi umurong -->   
-                            </div>
+                                    <!-- Empty space to align buttons -->
+                                </div>
                                 <div class="col-auto">
                                     <div class="dropdown">
-                                        <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
-                                            data-bs-toggle="dropdown" aria-expanded="false"> <i
-                                                class="fa fa-download"></i> Export</button>
+                                        <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fa fa-download"></i> Export
+                                        </button>
                                         <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">Export as
-                                                    PDF</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">Export
-                                                    as Excel</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('csv')">Export as
-                                                    CSV</a>
-                                            </li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">Export as PDF</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">Export as Excel</a></li>
+                                            <li><a class="dropdown-item" href="#" onclick="exportTable('csv')">Export as CSV</a></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- TABLE -->
                     <div class="row">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                            <table class="table table-striped custom-table datatable" id="logTable">
+                                <table class="table table-striped custom-table datatable" id="logTable">
                                     <thead>
                                         <tr>
                                             <th>Hospital Name</th>
@@ -215,11 +216,12 @@ include('../includes/config.php');
                                         if (!$db_connection) {
                                             echo "Failed to connect to the database.";
                                         } else {
-                                            // Execute the query
+                                            // Fetch equipment data for the retrieved hospital IDs
                                             $query = "
                                                 SELECT hgi.hospital_name, heus.equipment_name, heus.description, heus.purchase_date, heus.location, heus.equipment_status
                                                 FROM hospital_equipment_user_side heus
-                                                JOIN hospital_general_information hgi ON heus.hospital_id = hgi.hospital_id"; // Adjust column and table names as needed
+                                                JOIN hospital_general_information hgi ON heus.hospital_id = hgi.hospital_id
+                                                WHERE heus.hospital_id IN ($hospital_ids_str)";
                                             $result = pg_query($db_connection, $query);
 
                                             if (!$result) {
@@ -246,95 +248,10 @@ include('../includes/config.php');
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-
-    <script>
-    //fetcing sa mga data na ilalagay sa modal
-    $(document).ready(function() {
-        $('.log-details').click(function(e) {
-            e.preventDefault();
-            var logId = $(this).data('log-id');
-            var repoUserId = $(this).data('repo-user-id');
-            var patientId = $(this).data('patient-id');
-            var completedBy = $(this).data('completed-by');
-            var designation = $(this).data('designation');
-            var patientCaseNumber = $(this).data('patient-case-number');
-            var logTimestamp = $(this).data('log-timestamp');
-            var logAction = $(this).data('log-action');
-            // Set values sa modal
-            $('#logId').val(logId);
-            $('#repoUserId').val(repoUserId);
-            $('#patientId').val(patientId);
-            $('#completedBy').val(completedBy);
-            $('#designation').val(designation);
-            $('#patientCaseNumber').val(patientCaseNumber);
-            $('#logTimestamp').val(logTimestamp);
-            $('#logAction').val(logAction);
-            // Show the modal ito yung clicking part
-            $('#logModal').modal('show');
-        });
-    });
-    //-------end--------
-
-
-    //search function
-    $(document).ready(function() {
-        $('#searchInput').keyup(function() {
-            var searchText = $(this).val().toLowerCase();
-
-            $('tbody tr').each(function() {
-                var logId = $(this).find('td:eq(0)').text().toLowerCase();
-                var patientId = $(this).find('td:eq(1)').text().toLowerCase();
-                var date = $(this).find('td:eq(2)').text().toLowerCase();
-                var description = $(this).find('td:eq(3)').text().toLowerCase();
-
-                if (
-                    logId.includes(searchText) ||
-                    patientId.includes(searchText) ||
-                    date.includes(searchText) ||
-                    description.includes(searchText)
-                ) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
-    });
-    //-------end--------
-    </script>
-
-
-    <!-- jQuery -->
-    <script src="../assets/js/jquery-3.2.1.min.js"></script>
-
-    <!-- Bootstrap Core JS -->
-    <script src="../assets/js/popper.min.js"></script>
-    <script src="../assets/js/bootstrap.min.js"></script>
-
-    <!-- Slimscroll JS -->
-    <script src="../assets/js/jquery.slimscroll.min.js"></script>
-
-    <!-- Select2 JS -->
-    <script src="../assets/js/select2.min.js"></script>
-
-    <!-- Datetimepicker JS -->
-    <script src="../assets/js/moment.min.js"></script>
-    <script src="../assets/js/bootstrap-datetimepicker.min.js"></script>
-
-    <!-- Datatable JS -->
-    <script src="../assets/js/jquery.dataTables.min.js"></script>
-    <script src="../assets/js/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Custom JS -->
-    <script src="../assets/js/app.js"></script>
+    <!-- JS scripts here -->
 </body>
 
 </html>

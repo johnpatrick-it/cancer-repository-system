@@ -419,17 +419,10 @@ if (isset($_POST['add'])) {
                                             ?>
                                         </tbody>
                                     </table>
-
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
-
-
-
-
                 </div>
             </div>
         </div>

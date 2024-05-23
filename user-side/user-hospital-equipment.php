@@ -240,9 +240,7 @@ include('../includes/config.php');
                                                     $hospital_id = $_SESSION['hospital_id'];
 
                                                     // Prepare and execute the query
-                                                    $query = "SELECT equipment_name, description, purchase_date, location, equipment_status 
-                                                            FROM hospital_equipment_user_side 
-                                                            WHERE hospital_id = $1"; // Use parameterized query to prevent SQL injection
+                                                    $query = "SELECT equipment_id, equipment_name, description, purchase_date, location, equipment_status FROM hospital_equipment_user_side WHERE hospital_id = $1";
                                                     $result = pg_query_params($db_connection, $query, array($hospital_id));
 
                                                     if (!$result) {
@@ -250,15 +248,20 @@ include('../includes/config.php');
                                                     } else {
                                                         // Fetch and display results
                                                         while ($row = pg_fetch_assoc($result)) {
-                                                            echo "<tr>";
-                                                            echo "<td class='equipment-name'>" . $row['equipment_name'] . "</td>";
-                                                            echo "<td class='description'>" . $row['description'] . "</td>";
-                                                            echo "<td class='purchase-date'>" . $row['purchase_date'] . "</td>";
-                                                            echo "<td class='location'>" . $row['location'] . "</td>";
-                                                            echo "<td class='equipment-status'>" . $row['equipment_status'] . "</td>";
-                                                            echo "<td class='action'><a href='edit_equipment.php?id=" . htmlspecialchars($row['equipment_id']) . "' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a></td>";
-                                                            echo "</tr>";
-                                                        }
+                                                            if (isset($row['equipment_id']) && !empty($row['equipment_id'])) {
+                                                                $equipmentID = htmlspecialchars($row['equipment_id']);
+                                                                echo "<tr>";
+                                                                echo "<td class='equipment-name'>" . htmlspecialchars($row['equipment_name']) . "</td>";
+                                                                echo "<td class='description'>" . htmlspecialchars($row['description']) . "</td>";
+                                                                echo "<td class='purchase-date'>" . htmlspecialchars($row['purchase_date']) . "</td>";
+                                                                echo "<td class='location'>" . htmlspecialchars($row['location']) . "</td>";
+                                                                echo "<td class='equipment-status'>" . htmlspecialchars($row['equipment_status']) . "</td>";
+                                                                echo "<td class='action'><a href='add-equipment-userside-edit.php?id=$equipmentID' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a></td>";
+                                                                echo "</tr>";
+                                                            } else {
+                                                                echo "<tr><td colspan='6'>Equipment ID missing for this row.</td></tr>";
+                                                            }
+                                                        }                                                                                                         
                                                     }
                                                 }
                                             }
