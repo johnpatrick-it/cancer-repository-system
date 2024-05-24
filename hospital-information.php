@@ -149,8 +149,7 @@ include('includes/config.php');
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control pl-5 search-input" id="searchInput"
-                                    placeholder="Search">
+                                <input type="text" class="form-control pl-5 search-input" id="searchInput" placeholder="Search">
                             </div>
                         </div>
 

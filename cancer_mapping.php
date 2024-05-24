@@ -340,7 +340,6 @@ if (isset($_POST['generate_csv']) && isset($_SESSION['selected_region'])) {
                                         <?php
                        
                        if (!$db_connection) {
-                           echo "Failed to connect to the database.";
                        } else {
                            // Check if the form is submitted
                            if(isset($_POST['submit']) && isset($_POST['region'])) {
@@ -366,7 +365,6 @@ if (isset($_POST['generate_csv']) && isset($_SESSION['selected_region'])) {
                                        echo "<td class=''>" . $row['patient_treatment'] . "</td>";
                                        echo "<td class=''>" . $row['patient_status'] . "</td>";
                                        echo "<td>";
-                                       // Add action buttons if needed
                                        echo "</td>";
                                        echo "</tr>";
                                    }

@@ -174,11 +174,16 @@ if ($hospital_ids_result && pg_num_rows($hospital_ids_result) > 0) {
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+                            <!-- Empty Space -->
+                        </div>
+
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-auto ml-auto m-right">
-                                    <!-- Empty space to align buttons -->
+                                        <a href="#" id="hidebtn" class="add-btn" data-toggle="modal" data-target="#add_hospital"></a>
                                 </div>
+
                                 <div class="col-auto">
                                     <div class="dropdown">
                                         <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print" data-bs-toggle="dropdown" aria-expanded="false">
