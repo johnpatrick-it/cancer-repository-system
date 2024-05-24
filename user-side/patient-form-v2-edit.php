@@ -380,7 +380,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3 col-sm-12">
-                                                <div class="form-group" id="dateOfDeathField" <?php if ($patient_status == 'Dead') echo 'style="display: block;"'; ?>>
+                                                <div class="form-group" id="dateOfDeathField" <?php if ($patient_status == 'Dead') echo 'style="display: none;"'; ?>>
                                                     <label class="custom-label">Date of Death</label>
                                                     <div class="input-group date">
                                                         <input type="date" name="date_of_death" class="form-control date-picker" id="datepicker1" autocomplete="off" value="<?php echo htmlspecialchars($date_of_death); ?>">
@@ -483,9 +483,9 @@
     </script>
     <script>
 
-        document.addEventListener('DOMContentLoaded', function() {
-        });
-        function toggleDateOfDeath(selectElement) {
+//----------------------------------------------------------------------------------
+         // Function to show/hide the Date of Death field based on the patient status
+    function toggleDateOfDeath(selectElement) {
         var dateOfDeathField = document.getElementById('dateOfDeathField');
         if (selectElement.value === 'Dead') {
             dateOfDeathField.style.display = 'block';
@@ -495,6 +495,32 @@
             document.getElementById('datepicker1').removeAttribute('required');
         }
     }
+
+    // Function to update min attribute of Date of Death input based on the diagnosis date
+    function updateMinDeathDate() {
+        var diagnosisDate = new Date(document.getElementById('datepicker3').value);
+        document.getElementById('datepicker1').min = formatDate(diagnosisDate);
+    }
+
+    // Function to format date as YYYY-MM-DD
+    function formatDate(date) {
+        var year = date.getFullYear();
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var day = String(date.getDate()).padStart(2, '0');
+        return year + '-' + month + '-' + day;
+    }
+
+    // Event listener to call toggleDateOfDeath when the patient status changes
+    document.addEventListener('DOMContentLoaded', function() {
+        var patientStatusSelect = document.querySelector('select[name="patient_status"]');
+        patientStatusSelect.addEventListener('change', function() {
+            toggleDateOfDeath(this);
+        });
+
+        // Call the function initially to set the correct state
+        toggleDateOfDeath(patientStatusSelect);
+    });
+//----------------------------------------------------------------------------------
 
     //DATE VALIDATION BETWEEM DIAGNONIS AND DEATH DATE
     function validateDates() {

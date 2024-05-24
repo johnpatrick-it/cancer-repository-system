@@ -177,7 +177,7 @@ if (!$equipment) {
                     </div>
 
                     <!-- FORM FOR EDITING EQUIPMENT -->
-                    <form id="editEquipmentForm" method="POST" action="save-edited-equipment.php" enctype="multipart/form-data">
+                    <form id="editEquipmentForm" method="POST" action="update-equipment.php" enctype="multipart/form-data">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="hospital-equipment">Medical Equipment</label>
