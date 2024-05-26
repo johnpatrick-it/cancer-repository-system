@@ -46,7 +46,6 @@ if ($result_hospital_id) {
 
         // Check if hospital_id is null
         if ($hospital_id === null) {
-            echo "Error: Hospital ID not found for current user.";
             exit; // Stop execution
         }
 
@@ -89,7 +88,6 @@ if ($result_hospital_id) {
         $result_log_success = pg_query_params($db_connection, $query_log_success, array($repo_user_id, $patient_id, $hospital_id, $last_name, $first_name, $middle_name, $designation, $patient_case_number, $log_action));
 
         if (!$result_log_success) {
-            echo "Error logging action: " . pg_last_error($db_connection);
             exit;
         }
 
@@ -99,6 +97,5 @@ if ($result_hospital_id) {
         exit();
     }
 } else {
-    echo "Error retrieving hospital ID for repo_user_id: $repo_user_id";
     exit;
 }   

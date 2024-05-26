@@ -1,8 +1,8 @@
 <?php
 session_start();
-//SESSION para sa hospital name
+// SESSION para sa hospital name
 $hospital_name = $_SESSION['hospital_name'];
-//VERY IMPORTANT
+// VERY IMPORTANT
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id']) ||
     !isset($_SESSION['hospital_id']) || empty($_SESSION['hospital_id'])) {
     header("Location: login.php");
@@ -13,8 +13,7 @@ $hospitalID = $_SESSION['hospital_id'];
 
 error_reporting(0);
 include('../includes/config.php');
-//-------end--------
-
+// -------end--------
 
 ?>
 
@@ -122,7 +121,6 @@ include('../includes/config.php');
     }
 
     /* Add hover effect to table rows */
-    /* Add hover effect to table rows */
     .table tbody tr:hover {
         background-color: #f5f5f5;
         cursor: pointer;
@@ -131,21 +129,37 @@ include('../includes/config.php');
     /* Add hover effect to text within table cells */
     .table tbody tr:hover td {
         color: blue;
-        /* Change text color on hover */
     }
+
     #hidebtn {
         display: none;
     }
 
     table {
         width: 100%;
-        table-layout: fixed; /* Set table layout to fixed */
+        table-layout: fixed;
     }
+
     th, td {
-        padding: 8px; /* Add padding for better readability */
-        text-align: center; /* Align text to the left */
-        max-height: 100px; /* Set maximum height for table cells */
-        overflow: auto; /* Add scrollbar if content exceeds maximum height */
+        padding: 8px;
+        text-align: center;
+    }
+
+    .btn {
+        display: inline-block;
+        margin: 0 auto;
+    }
+
+    .action-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .scroll-box {
+        max-height: 50px; /* Adjust height as needed */
+        overflow-y: auto;
+        overflow-x: hidden;
     }
     </style>
 </head>
@@ -156,7 +170,6 @@ include('../includes/config.php');
         <?php include_once("user-header.php"); ?>
         <?php include_once("user-sidebar.php"); ?>
         <?php include_once("add-equipment-userside.php"); ?>
-
 
         <div class="page-wrapper">
             <div class="content container-fluid">
@@ -176,8 +189,7 @@ include('../includes/config.php');
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control pl-5 search-input" id="searchInput"
-                                    placeholder="Search">
+                                <input type="text" class="form-control pl-5 search-input" id="searchInput" placeholder="Search">
                             </div>
                         </div>
 
@@ -188,29 +200,14 @@ include('../includes/config.php');
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-auto ml-auto m-right">
-                                <button type="button" class="btn add-btn" data-toggle="modal" data-target="#add_equipment_userside"><i class="fa fa-medkit"></i>Add Equipment</button>                                                      
-                            </div>
+                                    <button type="button" class="btn add-btn" data-toggle="modal" data-target="#add_equipment_userside"><i class="fa fa-medkit"></i>Add Equipment</button>
+                                </div>
                                 <div class="col-auto">
-                                    <div class="dropdown">
-                                        <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print"
-                                            data-bs-toggle="dropdown" aria-expanded="false"> <i
-                                                class="fa fa-download"></i> Export</button>
-                                        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">Export as
-                                                    PDF</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">Export
-                                                    as Excel</a>
-                                            </li>
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('csv')">Export as
-                                                    CSV</a>
-                                            </li>
-                                        </ul>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- TABLE -->
                     <div class="row">
                         <div class="col-md-12">
@@ -252,16 +249,20 @@ include('../includes/config.php');
                                                                 $equipmentID = htmlspecialchars($row['equipment_id']);
                                                                 echo "<tr>";
                                                                 echo "<td class='equipment-name'>" . htmlspecialchars($row['equipment_name']) . "</td>";
-                                                                echo "<td class='description'>" . htmlspecialchars($row['description']) . "</td>";
+                                                                echo "<td class='description'><div class='scroll-box'>" . htmlspecialchars($row['description']) . "</div></td>";
                                                                 echo "<td class='purchase-date'>" . htmlspecialchars($row['purchase_date']) . "</td>";
                                                                 echo "<td class='location'>" . htmlspecialchars($row['location']) . "</td>";
                                                                 echo "<td class='equipment-status'>" . htmlspecialchars($row['equipment_status']) . "</td>";
-                                                                echo "<td class='action'><a href='add-equipment-userside-edit.php?id=$equipmentID' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a></td>";
+                                                                echo "<td>
+                                                                    <button onclick=\"confirmEdit('{$equipmentID}')\" class='btn text-xs text-white btn-blue action-icon'>
+                                                                        <i class='fa fa-pencil'></i>
+                                                                    </button>
+                                                                </td>";
                                                                 echo "</tr>";
                                                             } else {
                                                                 echo "<tr><td colspan='6'>Equipment ID missing for this row.</td></tr>";
                                                             }
-                                                        }                                                                                                         
+                                                        }
                                                     }
                                                 }
                                             }
@@ -277,70 +278,30 @@ include('../includes/config.php');
         </div>
     </div>
 
-
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
-    //fetcing sa mga data na ilalagay sa modal
-    $(document).ready(function() {
-        $('.log-details').click(function(e) {
-            e.preventDefault();
-            var logId = $(this).data('log-id');
-            var repoUserId = $(this).data('repo-user-id');
-            var patientId = $(this).data('patient-id');
-            var completedBy = $(this).data('completed-by');
-            var designation = $(this).data('designation');
-            var patientCaseNumber = $(this).data('patient-case-number');
-            var logTimestamp = $(this).data('log-timestamp');
-            var logAction = $(this).data('log-action');
-            // Set values sa modal
-            $('#logId').val(logId);
-            $('#repoUserId').val(repoUserId);
-            $('#patientId').val(patientId);
-            $('#completedBy').val(completedBy);
-            $('#designation').val(designation);
-            $('#patientCaseNumber').val(patientCaseNumber);
-            $('#logTimestamp').val(logTimestamp);
-            $('#logAction').val(logAction);
-            // Show the modal ito yung clicking part
-            $('#logModal').modal('show');
+    // Function to handle edit confirmation
+    function confirmEdit(equipmentID) {
+        Swal.fire({
+            title: 'Edit this equipment?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, edit it!',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'add-equipment-userside-edit.php?id=' + equipmentID;
+            }
         });
-    });
-    //-------end--------
-
-
-    //search function
-    $(document).ready(function() {
-        $('#searchInput').keyup(function() {
-            var searchText = $(this).val().toLowerCase();
-
-            $('tbody tr').each(function() {
-                var logId = $(this).find('td:eq(0)').text().toLowerCase();
-                var patientId = $(this).find('td:eq(1)').text().toLowerCase();
-                var date = $(this).find('td:eq(2)').text().toLowerCase();
-                var description = $(this).find('td:eq(3)').text().toLowerCase();
-
-                if (
-                    logId.includes(searchText) ||
-                    patientId.includes(searchText) ||
-                    date.includes(searchText) ||
-                    description.includes(searchText)
-                ) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
-    });
-    //-------end--------
+    }
     </script>
 
-
     <!-- jQuery -->
-    <script src="../assets/js/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <!-- Bootstrap Core JS -->
     <script src="../assets/js/popper.min.js"></script>
