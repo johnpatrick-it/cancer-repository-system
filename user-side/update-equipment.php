@@ -19,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $image_tmp_name = $_FILES['image']['tmp_name'];
         $image_path = "uploads-img/" . basename($image_name);
         if (!move_uploaded_file($image_tmp_name, $image_path)) {
-            echo "Failed to upload image.";
+            $_SESSION['error'] = 'Failed to upload image.';
+            header("Location: user-hospital-equipment.php");
             exit;
         }
     }
@@ -31,10 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = pg_query_params($db_connection, $query, array($equipment_name, $description, $purchase_date, $location, $serial_number, $model_number, $equipment_status, $image_path, $equipment_id));
 
     if ($result) {
-        header("Location: user-hospital-equipment.php"); // Redirect to equipment list page after update
-        exit;
+        $_SESSION['success'] = 'Equipment updated successfully.';
     } else {
-        echo "Failed to update equipment: " . pg_last_error($db_connection);
+        $_SESSION['error'] = 'Failed to update equipment: ' . pg_last_error($db_connection);
     }
-}
 
+    header("Location: user-hospital-equipment.php");
+    exit;
+}

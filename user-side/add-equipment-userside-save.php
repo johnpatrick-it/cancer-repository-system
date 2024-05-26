@@ -103,4 +103,3 @@ error_log("Parameters: " . print_r($params, true));
 
 header('Location: user-hospital-equipment.php');
 exit;
-
