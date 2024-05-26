@@ -259,7 +259,7 @@ if (isset($_POST['generate_csv'])) {
                     <div class="page-header">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="page-title">Patient Reports</h3>
+                                <h3 class="page-title">Equipment of Hospital affiliates</h3>
                             </div>
                         </div>
                     </div>
