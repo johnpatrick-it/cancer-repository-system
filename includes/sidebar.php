@@ -86,10 +86,10 @@ $token = $_SESSION['token'] ?? '';
                 <li class="sample-active mt-5"><a href="./index.php"><i class="la la-dashboard"></i> <span>
                             Dashboard</span> </a></li>
 
-                <!-- CANCER STATISTICS -->
+                <!-- CANCER STATISTICS
                 <li><a href="./cancerstatistic.php"><i class="la la-bar-chart"></i><span>Cancer Statistics</span></a>
                 </li>
-
+                 -->
                 <!-- HOSPITAL MAPPING -->
                 <li><a href="./mapping.php"><i class="la la-map"></i><span>Hospital Mapping</span></a></li>
 
@@ -104,9 +104,9 @@ $token = $_SESSION['token'] ?? '';
                 <!-- HOSPITAL EQUIPMENT INFORMATION -->
                 <li><a href="./hospital-equipment-table.php"><i class="la la-file-text-o"></i></i><span>Equipment Information</span></a></li>
 
-                <!-- ACTIVITY LOGS -->
+                <!-- ACTIVITY LOGS
                 <li><a href="./activity-logs.php"><i class="la la-history"></i><span>Activity Logs</span></a></li>
-
+                -->
 
 
                 <br>

@@ -1,12 +1,23 @@
-<?php   
+<?php
 include "includes/config.php";
 include "functions/login-function.php";
+
+// Check if the user is already logged in
+if (isset($_SESSION['repo_user_id'])) {
+    // Redirect repo_user to user landing page
+    header("Location: user-side/user-landing-page.php");
+    exit;
+} elseif (isset($_SESSION['admin_id'])) {
+    // Redirect admin to index page
+    header("Location: index.php");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,   initial-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <title>PCC CANCER REPOSITORY</title>
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="./profiles/pcc-logo1.png">
@@ -37,11 +48,11 @@ include "functions/login-function.php";
                 <form method="POST" enctype="multipart/form-data" autocomplete="off">
                     <div class="form-group">
                         <i class="fas fa-envelope icon"></i>
-                        <input class="form-control" name="email" type="email" placeholder="Email">
+                        <input class="form-control" name="email" type="email" placeholder="Email" required="true">
                     </div>
                     <div class="form-group">
                         <i class="fas fa-lock icon"></i>
-                        <input class="form-control" name="password" type="password" placeholder="Password">
+                        <input class="form-control" name="password" type="password" placeholder="Password" required="true">
                     </div>
                     <div class="form-group text-center">
                         <div class="col-auto pt-2">
@@ -108,7 +119,6 @@ include "functions/login-function.php";
                 unset($_SESSION['not-found']);
 
                 // Display the error for user not found
-                          echo "displayNotFoundAlert('$error');";
             }
             ?>
 
@@ -119,7 +129,6 @@ include "functions/login-function.php";
                 unset($_SESSION['emptyfields']);
 
                 // Display the error for empty fields
-                echo "displayEmptyFieldsAlert('$error');";
             }
             ?>
         });

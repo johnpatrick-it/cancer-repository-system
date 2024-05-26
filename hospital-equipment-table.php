@@ -160,7 +160,7 @@ if ($hospital_ids_result && pg_num_rows($hospital_ids_result) > 0) {
                     <div class="page-header">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="page-title">Patient Reports</h3>
+                                <h3 class="page-title">Hospital Equipments Reports</h3>
                             </div>
                         </div>
                     </div>

@@ -89,19 +89,19 @@
                 </li>
                 <li>
                     <a href="user-hospital-equipment.php">
-                        <i class="la la-users"></i>
+                        <i class="la la-file-text-o"></i>
                         <span>Hospital Equipment</span>
                     </a>
                 </li>
 
-                <!-- Patient Report -->
+                <!-- Patient Report
                 <li>
                     <a href="patient-report.php">
                         <i class="la la-file-text-o"></i>
                         <span>Repository Logs</span>
                     </a>
                 </li>
-
+                 -->
                 <!-- LOGOUT -->
                 <li class="out-container">
                     <a class="out-button" href="functions/user-logout-function.php" onclick="confirmLogout(event)">

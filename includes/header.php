@@ -177,8 +177,7 @@ include('includes/config.php');
                   
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="profile.php">My Profile</a>
-      
+                    <a class="dropdown-item" href="./activity-logs.php">Admin Logs  </a>
                     <a class="dropdown-item" href="functions/logout-function.php" onclick="confirmLogout(event)">Logout</a>
                 </div>
             </div>
