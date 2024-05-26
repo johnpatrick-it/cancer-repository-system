@@ -1,8 +1,8 @@
 <?php
 session_start();
-// SESSION para sa hospital name
+//SESSION para sa hospital name
 $hospital_name = $_SESSION['hospital_name'];
-// VERY IMPORTANT
+//VERY IMPORTANT
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id']) ||
     !isset($_SESSION['hospital_id']) || empty($_SESSION['hospital_id'])) {
     header("Location: login.php");
@@ -13,9 +13,124 @@ $hospitalID = $_SESSION['hospital_id'];
 
 error_reporting(0);
 include('../includes/config.php');
-// -------end--------
+//-------end--------
+
+require('../fpdf186/fpdf.php'); // Include the FPDF library
+
+// Ensure database connection is established
+// $db_connection = pg_connect("your_connection_string");
+// Generate PDF
+// Generate PDF
+if (isset($_POST['generate_pdf'])) {
+    // Ensure hospital name is set
+    $hospital_name = $_SESSION['hospital_name'] ?? '';
+
+    // Get hospital ID from session
+    $hospital_id = $_SESSION['hospital_id'] ?? '';
+
+    // Updated query with JOIN and WHERE clause to filter by hospital ID
+    $query = "SELECT hgi.hospital_name, heus.equipment_name, heus.description, heus.purchase_date, heus.location, heus.equipment_status
+              FROM hospital_equipment_user_side heus
+              JOIN public.hospital_general_information hgi ON heus.hospital_id = hgi.hospital_id
+              WHERE heus.hospital_id = $1"; // Use parameterized query for safety
+
+    // Execute the query with hospital ID as parameter
+    $result = pg_query_params($db_connection, $query, array($hospital_id));
+
+    // Check if query was successful
+    if ($result) {
+        // Initialize PDF
+        $pdf = new FPDF();
+        $pdf->AddPage();
+
+        // Set font
+        $pdf->SetFont('Arial','B',16);
+        $pdf->Cell(0, 10, 'Equipment Data for ' . $hospital_name, 0, 1, 'C');
+
+        // Add column headers
+        $pdf->SetFont('Arial','B',7);
+        $pdf->Cell(60,10,'Hospital Name',1,0,'C');
+        $pdf->Cell(25,10,'Equipment Name',1,0,'C');
+        $pdf->Cell(25,10,'Description',1,0,'C');
+        $pdf->Cell(25,10,'Purchase Date',1,0,'C');
+        $pdf->Cell(25,10,'Location',1,0,'C');
+        $pdf->Cell(25,10,'Equipment Status',1,1,'C');
+
+        // Set font for data
+        $pdf->SetFont('Arial','',7);
+
+        // Fetch data and add to PDF
+        while ($row = pg_fetch_assoc($result)) {
+            $pdf->Cell(60,10,$row['hospital_name'],1,0,'C');
+            $pdf->Cell(25,10,$row['equipment_name'],1,0,'C');
+            $pdf->Cell(25,10,$row['description'],1,0,'C');
+            $pdf->Cell(25,10,$row['purchase_date'],1,0,'C');
+            $pdf->Cell(25,10,$row['location'],1,0,'C');
+            $pdf->Cell(25,10,$row['equipment_status'],1,1,'C');
+        }
+
+        // Close the database connection
+        pg_free_result($result);
+        pg_close($db_connection);
+
+        // Output PDF content
+        $pdf->Output('D', 'equipment_data.pdf'); // 'D' option forces download
+        exit;
+    } else {
+        // Handle query error
+        echo "Error: " . pg_last_error($db_connection);
+    }
+}
+
+
+if (isset($_POST['generate_csv'])) {
+    // Ensure hospital name is set
+    $hospital_name = $_SESSION['hospital_name'] ?? '';
+
+    // Get hospital ID from session
+    $hospital_id = $_SESSION['hospital_id'] ?? '';
+
+    // Updated query with JOIN and filtering by hospital IDs
+    $query = "SELECT hgi.hospital_name, heus.equipment_name, heus.description, heus.purchase_date, heus.location, heus.equipment_status
+              FROM hospital_equipment_user_side heus
+              JOIN public.hospital_general_information hgi ON heus.hospital_id = hgi.hospital_id
+              WHERE heus.hospital_id = $1"; // Correctly use parameterized query
+
+    // Execute the query with hospital ID as parameter
+    $result = pg_query_params($db_connection, $query, array($hospital_id));
+
+    // Check if query was successful
+    if ($result) {
+        // Initialize CSV content with column headers
+        $csv_content = "Hospital Name, Equipment Name, Description, Purchase Date, Location, Equipment Status\n";
+
+        // Fetch all rows and append to CSV content
+        while ($row = pg_fetch_assoc($result)) {
+            // Append row data to CSV content
+            $csv_content .= "{$row['hospital_name']}, {$row['equipment_name']}, {$row['description']}, {$row['purchase_date']}, {$row['location']}, {$row['equipment_status']}\n";
+        }
+
+        // Close the database connection
+        pg_free_result($result);
+        pg_close($db_connection);
+
+        // Set headers for CSV download
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="equipment_data.csv"');
+
+        // Output CSV content
+        echo $csv_content;
+        exit;
+    } else {
+        // Handle query error
+        echo "Error: " . pg_last_error($db_connection);
+    }
+}
 
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -121,6 +236,7 @@ include('../includes/config.php');
     }
 
     /* Add hover effect to table rows */
+    /* Add hover effect to table rows */
     .table tbody tr:hover {
         background-color: #f5f5f5;
         cursor: pointer;
@@ -129,37 +245,21 @@ include('../includes/config.php');
     /* Add hover effect to text within table cells */
     .table tbody tr:hover td {
         color: blue;
+        /* Change text color on hover */
     }
-
     #hidebtn {
         display: none;
     }
 
     table {
         width: 100%;
-        table-layout: fixed;
+        table-layout: fixed; /* Set table layout to fixed */
     }
-
     th, td {
-        padding: 8px;
-        text-align: center;
-    }
-
-    .btn {
-        display: inline-block;
-        margin: 0 auto;
-    }
-
-    .action-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .scroll-box {
-        max-height: 50px; /* Adjust height as needed */
-        overflow-y: auto;
-        overflow-x: hidden;
+        padding: 8px; /* Add padding for better readability */
+        text-align: center; /* Align text to the left */
+        max-height: 100px; /* Set maximum height for table cells */
+        overflow: auto; /* Add scrollbar if content exceeds maximum height */
     }
     </style>
 </head>
@@ -171,6 +271,7 @@ include('../includes/config.php');
         <?php include_once("user-sidebar.php"); ?>
         <?php include_once("add-equipment-userside.php"); ?>
 
+
         <div class="page-wrapper">
             <div class="content container-fluid">
                 <div class="body-container">
@@ -179,7 +280,7 @@ include('../includes/config.php');
                     <div class="page-header">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="page-title">Patient Reports</h3>
+                                <h3 class="page-title">Equipment Report</h3>
                             </div>
                         </div>
                     </div>
@@ -189,7 +290,8 @@ include('../includes/config.php');
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control pl-5 search-input" id="searchInput" placeholder="Search">
+                                <input type="text" class="form-control pl-5 search-input" id="searchInput"
+                                    placeholder="Search">
                             </div>
                         </div>
 
@@ -199,15 +301,32 @@ include('../includes/config.php');
 
                         <div class="col-md-6">
                             <div class="row">
+                            
                                 <div class="col-auto ml-auto m-right">
-                                    <button type="button" class="btn add-btn" data-toggle="modal" data-target="#add_equipment_userside"><i class="fa fa-medkit"></i>Add Equipment</button>
-                                </div>
+                                <button type="button" class="btn add-btn" data-toggle="modal" data-target="#add_equipment_userside"><i class="fa fa-medkit"></i>Add Equipment</button>                                                      
+                            </div>
                                 <div class="col-auto">
+                                    <div class="dropdown">
+                                    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                                            <button class="btn export-btn dropdown-toggle" type="button"
+                                                id="hide-on-print" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa fa-download"></i> Export
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                                <li><button type="submit" class="dropdown-item"
+                                                        name="generate_pdf">Export
+                                                        Data as PDF</button></li>
+                                                <li><button type="submit" class="dropdown-item"
+                                                        name="generate_csv">Export
+                                                        Data as CSV</button></li>
+                                            </ul>
+                                            </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                     <!-- TABLE -->
                     <div class="row">
                         <div class="col-md-12">
@@ -225,48 +344,46 @@ include('../includes/config.php');
                                     </thead>
                                     <tbody>
                                     <?php
-                                            // Check database connection
-                                            if (!$db_connection) {
-                                                echo "Failed to connect to the database.";
-                                            } else {
-                                                // Check if hospital ID is set in session
-                                                if (!isset($_SESSION['hospital_id']) || empty($_SESSION['hospital_id'])) {
-                                                    echo "Hospital ID not found in session.";
-                                                } else {
-                                                    // Get hospital ID from session
-                                                    $hospital_id = $_SESSION['hospital_id'];
+            // Display equipment data in HTML table
+            if (!$db_connection) {
+                echo "Failed to connect to the database.";
+            } else {
+                // Check if hospital ID is set in session
+                if (!isset($_SESSION['hospital_id']) || empty($_SESSION['hospital_id'])) {
+                    echo "Hospital ID not found in session.";
+                } else {
+                    // Get hospital ID from session
+                    $hospital_id = $_SESSION['hospital_id'];
 
-                                                    // Prepare and execute the query
-                                                    $query = "SELECT equipment_id, equipment_name, description, purchase_date, location, equipment_status FROM hospital_equipment_user_side WHERE hospital_id = $1";
-                                                    $result = pg_query_params($db_connection, $query, array($hospital_id));
+                    // Prepare and execute the query
+                    $query = "SELECT equipment_id, equipment_name, description, purchase_date, location, equipment_status 
+                            FROM hospital_equipment_user_side 
+                            WHERE hospital_id = $1";
+                    $result = pg_query_params($db_connection, $query, array($hospital_id));
 
-                                                    if (!$result) {
-                                                        echo "Query execution failed: " . pg_last_error($db_connection);
-                                                    } else {
-                                                        // Fetch and display results
-                                                        while ($row = pg_fetch_assoc($result)) {
-                                                            if (isset($row['equipment_id']) && !empty($row['equipment_id'])) {
-                                                                $equipmentID = htmlspecialchars($row['equipment_id']);
-                                                                echo "<tr>";
-                                                                echo "<td class='equipment-name'>" . htmlspecialchars($row['equipment_name']) . "</td>";
-                                                                echo "<td class='description'><div class='scroll-box'>" . htmlspecialchars($row['description']) . "</div></td>";
-                                                                echo "<td class='purchase-date'>" . htmlspecialchars($row['purchase_date']) . "</td>";
-                                                                echo "<td class='location'>" . htmlspecialchars($row['location']) . "</td>";
-                                                                echo "<td class='equipment-status'>" . htmlspecialchars($row['equipment_status']) . "</td>";
-                                                                echo "<td>
-                                                                    <button onclick=\"confirmEdit('{$equipmentID}')\" class='btn text-xs text-white btn-blue action-icon'>
-                                                                        <i class='fa fa-pencil'></i>
-                                                                    </button>
-                                                                </td>";
-                                                                echo "</tr>";
-                                                            } else {
-                                                                echo "<tr><td colspan='6'>Equipment ID missing for this row.</td></tr>";
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        ?>
+                    if (!$result) {
+                        echo "Query execution failed: " . pg_last_error($db_connection);
+                    } else {
+                        // Fetch and display results
+                        while ($row = pg_fetch_assoc($result)) {
+                            if (isset($row['equipment_id']) && !empty($row['equipment_id'])) {
+                                $equipmentID = htmlspecialchars($row['equipment_id']);
+                                echo "<tr>";
+                                echo "<td class='equipment-name'>" . htmlspecialchars($row['equipment_name']) . "</td>";
+                                echo "<td class='description'>" . htmlspecialchars($row['description']) . "</td>";
+                                echo "<td class='purchase-date'>" . htmlspecialchars($row['purchase_date']) . "</td>";
+                                echo "<td class='location'>" . htmlspecialchars($row['location']) . "</td>";
+                                echo "<td class='equipment-status'>" . htmlspecialchars($row['equipment_status']) . "</td>";
+                                echo "<td class='action'><a href='add-equipment-userside-edit.php?id=$equipmentID' class='btn text-xs text-white btn-blue action-icon'><i class='fa fa-pencil'></i></a></td>";
+                                echo "</tr>";
+                            } else {
+                                echo "<tr><td colspan='6'>Equipment ID missing for this row.</td></tr>";
+                            }
+                        }
+                    }
+                }
+            }
+            ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -278,30 +395,78 @@ include('../includes/config.php');
         </div>
     </div>
 
-    </div>
 
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 
     <script>
-    // Function to handle edit confirmation
-    function confirmEdit(equipmentID) {
-        Swal.fire({
-            title: 'Edit this equipment?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, edit it!',
-            cancelButtonText: 'No, cancel',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = 'add-equipment-userside-edit.php?id=' + equipmentID;
-            }
+    //fetcing sa mga data na ilalagay sa modal
+    $(document).ready(function() {
+        $('.log-details').click(function(e) {
+            e.preventDefault();
+            var logId = $(this).data('log-id');
+            var repoUserId = $(this).data('repo-user-id');
+            var patientId = $(this).data('patient-id');
+            var completedBy = $(this).data('completed-by');
+            var designation = $(this).data('designation');
+            var patientCaseNumber = $(this).data('patient-case-number');
+            var logTimestamp = $(this).data('log-timestamp');
+            var logAction = $(this).data('log-action');
+            // Set values sa modal
+            $('#logId').val(logId);
+            $('#repoUserId').val(repoUserId);
+            $('#patientId').val(patientId);
+            $('#completedBy').val(completedBy);
+            $('#designation').val(designation);
+            $('#patientCaseNumber').val(patientCaseNumber);
+            $('#logTimestamp').val(logTimestamp);
+            $('#logAction').val(logAction);
+            // Show the modal ito yung clicking part
+            $('#logModal').modal('show');
         });
-    }
+    });
+    //-------end--------
+
+
+    //search function
+    $(document).ready(function() {
+        $('#searchInput').keyup(function() {
+            var searchText = $(this).val().toLowerCase();
+
+            $('tbody tr').each(function() {
+                var logId = $(this).find('td:eq(0)').text().toLowerCase();
+                var patientId = $(this).find('td:eq(1)').text().toLowerCase();
+                var date = $(this).find('td:eq(2)').text().toLowerCase();
+                var description = $(this).find('td:eq(3)').text().toLowerCase();
+
+                if (
+                    logId.includes(searchText) ||
+                    patientId.includes(searchText) ||
+                    date.includes(searchText) ||
+                    description.includes(searchText)
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+    //-------end--------
     </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/tableexport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="./assets/js/print.js"></script>
+
     <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../assets/js/jquery-3.2.1.min.js"></script>
 
     <!-- Bootstrap Core JS -->
     <script src="../assets/js/popper.min.js"></script>

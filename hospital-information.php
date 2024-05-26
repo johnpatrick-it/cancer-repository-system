@@ -149,7 +149,8 @@ include('includes/config.php');
                         <div class="col-md-3">
                             <div class="search-container">
                                 <i class="fa fa-search"></i>
-                                <input type="text" class="form-control pl-5 search-input" id="searchInput" placeholder="Search">
+                                <input type="text" class="form-control pl-5 search-input" id="searchInput"
+                                    placeholder="Search">
                             </div>
                         </div>
 
@@ -369,6 +370,39 @@ include('includes/config.php');
 
 
     <!-- Include SweetAlert library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+$(document).ready(function() {
+    $('#searchInput').keyup(function() {
+        var searchText = $(this).val().toLowerCase();
+
+        $('tbody tr').each(function() {
+            var name = $(this).find('td:nth-child(1)').text().toLowerCase();
+            var level = $(this).find('td:nth-child(2)').text().toLowerCase();
+            var category = $(this).find('td:nth-child(3)').text().toLowerCase();
+            var resourceLevel = $(this).find('td:nth-child(4)').text().toLowerCase();
+            var locationCode = $(this).find('td:nth-child(5)').text().toLowerCase();
+            var street = $(this).find('td:nth-child(6)').text().toLowerCase();
+
+            if (
+                name.includes(searchText) ||
+                level.includes(searchText) ||
+                category.includes(searchText) ||
+                resourceLevel.includes(searchText) ||
+                locationCode.includes(searchText) ||
+                street.includes(searchText)
+            ) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+});
+
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
 
     <script>
@@ -428,38 +462,41 @@ if (isset($_SESSION['add-hospital'])) {
     unset($_SESSION['add-hospital']);
 }
 ?>
+    <!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        $('#searchInput').keyup(function() {
-            var searchText = $(this).val().toString().toLowerCase();
 
-            $('tbody tr').each(function() {
-                var name = $(this).data('name').toString().toLowerCase();
-                var level = $(this).data('level').toString().toLowerCase();
-                var institution = $(this).data('institution').toString()
-                    .toLowerCase();
-                var barangay = $(this).data('barangay').toString()
-                    .toLowerCase();
-                var street = $(this).data('street').toString().toLowerCase();
+<script>
+$(document).ready(function() {
+    $('#searchInput').keyup(function() {
+        var searchText = $(this).val().toLowerCase();
 
+        $('tbody tr').each(function() {
+            var name = $(this).find('td:nth-child(1)').text().toLowerCase();
+            var level = $(this).find('td:nth-child(2)').text().toLowerCase();
+            var institution = $(this).find('td:nth-child(3)').text().toLowerCase();
+            var barangay = $(this).find('td:nth-child(4)').text().toLowerCase();
+            var street = $(this).find('td:nth-child(5)').text().toLowerCase();
 
-                if (
-                    name.includes(searchText) ||
-                    level.includes(searchText) ||
-                    institution.includes(searchText) ||
-                    barangay.includes(searchText) ||
-                    street.includes(searchText)
-
-                ) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
+            if (
+                name.includes(searchText) ||
+                level.includes(searchText) ||
+                institution.includes(searchText) ||
+                barangay.includes(searchText) ||
+                street.includes(searchText)
+            ) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
         });
     });
+});
+
+
+</script>
+
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -495,7 +532,8 @@ if (isset($_SESSION['add-hospital'])) {
     <script src="assets/js/dataTables.bootstrap4.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/app.js"></script>\
+    <script src="assets/js/print.js"></script>
 </body>
 
 </html>

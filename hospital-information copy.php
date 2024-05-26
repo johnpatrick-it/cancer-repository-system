@@ -370,6 +370,39 @@ include('includes/config.php');
 
 
     <!-- Include SweetAlert library -->
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#searchInput').keyup(function() {
+            var searchText = $(this).val().toString().toLowerCase();
+
+            $('tbody tr').each(function() {
+                var name = $(this).data('name').toString().toLowerCase();
+                var level = $(this).data('level').toString().toLowerCase();
+                var institution = $(this).data('institution').toString()
+                    .toLowerCase();
+                var barangay = $(this).data('barangay').toString()
+                    .toLowerCase();
+                var street = $(this).data('street').toString().toLowerCase();
+
+
+                if (
+                    name.includes(searchText) ||
+                    level.includes(searchText) ||
+                    institution.includes(searchText) ||
+                    barangay.includes(searchText) ||
+                    street.includes(searchText)
+
+                ) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@latest"></script>
 
     <script>

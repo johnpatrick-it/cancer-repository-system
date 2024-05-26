@@ -70,13 +70,6 @@
 								<input class="form-control" id="editEmail" type="text" placeholder="Email">
 							</div>
 						</div>
-
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label class="col-form-label">Password</span></label>
-								<input class="form-control" id="editPassword" type="password" placeholder="Password">
-							</div>
-						</div>
 				
 						<div class="col-sm-12">
 						<div class="submit-section">

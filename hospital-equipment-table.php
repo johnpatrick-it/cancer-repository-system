@@ -31,6 +31,105 @@ if ($hospital_ids_result && pg_num_rows($hospital_ids_result) > 0) {
     header('Location: dashboard.php');
     exit;
 }
+
+
+
+require('fpdf186/fpdf.php'); // Include the FPDF library
+
+// Ensure database connection is established
+// $db_connection = pg_connect("your_connection_string");
+
+if (isset($_POST['generate_pdf'])) {
+
+    // Updated query with JOIN
+    $query = "SELECT hgi.hospital_name, heus.equipment_name, heus.description, heus.purchase_date, heus.location, heus.equipment_status
+              FROM hospital_equipment_user_side heus
+              JOIN public.hospital_general_information hgi ON heus.hospital_id = hgi.hospital_id"; // Adjust the join condition as per your schema
+    $result = pg_query($db_connection, $query);
+
+    // Check if query was successful
+    if ($result) {
+        // Initialize PDF
+        $pdf = new FPDF();
+        $pdf->AddPage();
+
+        // Set font
+        $pdf->SetFont('Arial','B',16);
+
+
+        $pdf->Cell(0, 10, 'Equipment Data for ' . 'Hospital Afilliates', 0, 1, 'C');
+
+        // Add column headers
+        $pdf->SetFont('Arial','B',7);
+        $pdf->Cell(60,10,'Hospital Name',1,0,'C');
+        $pdf->Cell(25,10,'Equipment Name',1,0,'C');
+        $pdf->Cell(25,10,'Description',1,0,'C');
+        $pdf->Cell(25,10,'Purchase Date',1,0,'C');
+        $pdf->Cell(25,10,'Location',1,0,'C');
+        $pdf->Cell(25,10,'Equipment Status',1,1,'C');
+
+        // Set font for data
+        $pdf->SetFont('Arial','',7);
+
+        // Fetch data and add to PDF
+        while ($row = pg_fetch_assoc($result)) {
+            $pdf->Cell(60,10,$row['hospital_name'],1,0,'C');
+            $pdf->Cell(25,10,$row['equipment_name'],1,0,'C');
+            $pdf->Cell(25,10,$row['description'],1,0,'C');
+            $pdf->Cell(25,10,$row['purchase_date'],1,0,'C');
+            $pdf->Cell(25,10,$row['location'],1,0,'C');
+            $pdf->Cell(25,10,$row['equipment_status'],1,1,'C');
+        }
+
+        // Close the database connection
+        pg_free_result($result);
+        pg_close($db_connection);
+
+        // Output PDF content
+        $pdf->Output('D', 'equipment_data.pdf'); // 'D' option forces download
+        exit;
+    } else {
+        // Handle query error
+        echo "Error: " . pg_last_error($db_connection);
+    }
+}
+
+if (isset($_POST['generate_csv'])) {
+    // Updated query with JOIN and filtering by hospital IDs
+    $query = "SELECT hgi.hospital_name, heus.equipment_name, heus.description, heus.purchase_date, heus.location, heus.equipment_status
+              FROM hospital_equipment_user_side heus
+              JOIN public.hospital_general_information hgi ON heus.hospital_id = hgi.hospital_id
+              WHERE heus.hospital_id IN ($hospital_ids_str)";
+    $result = pg_query($db_connection, $query);
+
+    // Check if query was successful
+    if ($result) {
+        // Initialize CSV content with column headers
+        $csv_content = "Hospital Name, Equipment Name, Description, Purchase Date, Location, Equipment Status\n";
+
+        // Fetch all rows and append to CSV content
+        while ($row = pg_fetch_assoc($result)) {
+            // Append row data to CSV content
+            $csv_content .= "{$row['hospital_name']}, {$row['equipment_name']}, {$row['description']}, {$row['purchase_date']}, {$row['location']}, {$row['equipment_status']}\n";
+        }
+
+        // Close the database connection
+        pg_free_result($result);
+        pg_close($db_connection);
+
+        // Set headers for CSV download
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="equipment_data.csv"');
+
+        // Output CSV content
+        echo $csv_content;
+        exit;
+    } else {
+        // Handle query error
+        echo "Error: " . pg_last_error($db_connection);
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -186,14 +285,20 @@ if ($hospital_ids_result && pg_num_rows($hospital_ids_result) > 0) {
 
                                 <div class="col-auto">
                                     <div class="dropdown">
-                                        <button class="btn export-btn dropdown-toggle" type="button" id="hide-on-print" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa fa-download"></i> Export
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">Export as PDF</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('excel')">Export as Excel</a></li>
-                                            <li><a class="dropdown-item" href="#" onclick="exportTable('csv')">Export as CSV</a></li>
-                                        </ul>
+                                    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                                            <button class="btn export-btn dropdown-toggle" type="button"
+                                                id="hide-on-print" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fa fa-download"></i> Export
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                                                <li><button type="submit" class="dropdown-item"
+                                                        name="generate_pdf">Export
+                                                        Data as PDF</button></li>
+                                                <li><button type="submit" class="dropdown-item"
+                                                        name="generate_csv">Export
+                                                        Data as CSV</button></li>
+                                            </ul>
+                                    </form>
                                     </div>
                                 </div>
                             </div>
@@ -258,5 +363,47 @@ if ($hospital_ids_result && pg_num_rows($hospital_ids_result) > 0) {
 
     <!-- JS scripts here -->
 </body>
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#searchInput').keyup(function() {
+        var searchText = $(this).val().toLowerCase();
+
+        $('tbody tr').each(function() {
+            var hospitalName = $(this).find('.hospital-name').text().toLowerCase();
+            var equipmentName = $(this).find('.equipment-name').text().toLowerCase();
+            var description = $(this).find('.description').text().toLowerCase();
+            var purchaseDate = $(this).find('.purchase-date').text().toLowerCase();
+            var location = $(this).find('.location').text().toLowerCase();
+            var equipmentStatus = $(this).find('.equipment-status').text().toLowerCase();
+
+            if (
+                hospitalName.includes(searchText) ||
+                equipmentName.includes(searchText) ||
+                description.includes(searchText) ||
+                purchaseDate.includes(searchText) ||
+                location.includes(searchText) ||
+                equipmentStatus.includes(searchText)
+            ) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+});
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tableexport/5.2.0/tableexport.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="./assets/js/print.js"></script>
 
 </html>
