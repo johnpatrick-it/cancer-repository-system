@@ -1,6 +1,7 @@
 <?php
 session_start();
-error_reporting(0);
+error_reporting(E_ALL); // Enable error reporting
+ini_set('display_errors', 1);
 
 // Check if the user is logged in
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
@@ -46,6 +47,7 @@ if ($result_hospital_id) {
 
         // Check if hospital_id is null
         if ($hospital_id === null) {
+            echo "Hospital ID is null.";
             exit; // Stop execution
         }
 
@@ -88,14 +90,16 @@ if ($result_hospital_id) {
         $result_log_success = pg_query_params($db_connection, $query_log_success, array($repo_user_id, $patient_id, $hospital_id, $last_name, $first_name, $middle_name, $designation, $patient_case_number, $log_action));
 
         if (!$result_log_success) {
+            echo "Log insertion failed: " . pg_last_error($db_connection);
             exit;
         }
-
 
         // Redirect back to patient-form-v2.php regardless of registration success
         header("Location: patient-form-v2.php");
         exit();
     }
 } else {
+    echo "Failed to retrieve hospital ID: " . pg_last_error($db_connection);
     exit;
-}   
+}
+?>

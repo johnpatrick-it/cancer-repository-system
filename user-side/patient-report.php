@@ -1,14 +1,15 @@
 <?php
 session_start();
-//SESSION para sa hospital name
-$hospital_name = $_SESSION['hospital_name'];
-//VERY IMPORTANT
+error_reporting(E_ALL); // Enable error reporting
+ini_set('display_errors', 1);
+
+include('../includes/config.php');
+
+// Check if the user is logged in
 if (!isset($_SESSION['repo_user_id']) || empty($_SESSION['repo_user_id'])) {
     header("Location: login.php");
-    exit; 
+    exit;
 }
-error_reporting(0);
-include('../includes/config.php');
 //-------end--------
 
 
@@ -195,40 +196,46 @@ include('../includes/config.php');
                                         //ILALAGAY DITO SA TABLE
                                         //THE ONLY LOGS THAT WILL APPEAR IS IF SAME NG REPO_USER_ID YUNG SUBMITTER
                                         //TYAKA NAKA SESSION NA REPO_USER
+                                        $hospital_name = $_SESSION['hospital_name'];
                                         $query_hospital = "SELECT hospital_id FROM hospital_general_information WHERE hospital_name = $1";
                                         $result_hospital = pg_query_params($db_connection, $query_hospital, array($hospital_name));
-                                        $row_hospital = pg_fetch_assoc($result_hospital);
-                                        $hospital_id = $row_hospital['hospital_id'];
-                                        // Fetching logs para sa ilalagay sa table nasa script sa baba yung code function
-                                        $current_repo_user_id = $_SESSION['repo_user_id'];
-                                        $query = "SELECT repository_log_id, patient_case_number, log_timestamp AS date, log_action AS description, 
-                                                         completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_id
-                                                  FROM repository_logs
-                                                  WHERE hospital_id = $1";
-                                        //query para sa satinization
-                                        $result = pg_query_params($db_connection, $query, array($hospital_id));
-                                        //populating tables with clickable link para sa extra info nung logs
-                                        if ($result) {
-                                            while ($row = pg_fetch_assoc($result)) {
-                                                echo "<tr class='log-details' 
-                                                      data-log-id='" . htmlspecialchars($row['repository_log_id']) . "'
-                                                      data-repo-user-id='" . htmlspecialchars($current_repo_user_id) . "'
-                                                      data-patient-id='" . htmlspecialchars($row['patient_id']) . "'
-                                                      data-completed-by='" . htmlspecialchars($row['completed_by_lname'] . ' ' . $row['completed_by_fname'] . ' ' . $row['completed_by_mname']) . "'
-                                                      data-designation='" . htmlspecialchars($row['designation']) . "'
-                                                      data-patient-case-number='" . htmlspecialchars($row['patient_case_number']) . "'
-                                                      data-log-timestamp='" . htmlspecialchars($row['date']) . "'
-                                                      data-log-action='" . htmlspecialchars($row['description']) . "'>";
-                                                echo "<td>" . htmlspecialchars($row['repository_log_id']) . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['completed_by_fname'] . " " . $row['completed_by_mname'] . " " . $row['completed_by_lname']) . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
-                                                echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                                                echo "</tr>";
+
+                                        if ($result_hospital) {
+                                            $row_hospital = pg_fetch_assoc($result_hospital);
+                                            $hospital_id = $row_hospital['hospital_id'];
+
+                                            $current_repo_user_id = $_SESSION['repo_user_id'];
+                                            $query = "SELECT repository_log_id, patient_case_number, log_timestamp AS date, log_action AS description, 
+                                                            completed_by_lname, completed_by_fname, completed_by_mname, designation, patient_id
+                                                    FROM repository_logs
+                                                    WHERE hospital_id = $1";
+
+                                            $result = pg_query_params($db_connection, $query, array($hospital_id));
+
+                                            if ($result) {
+                                                while ($row = pg_fetch_assoc($result)) {
+                                                    echo "<tr class='log-details' 
+                                                        data-log-id='" . htmlspecialchars($row['repository_log_id']) . "'
+                                                        data-repo-user-id='" . htmlspecialchars($current_repo_user_id) . "'
+                                                        data-patient-id='" . htmlspecialchars($row['patient_id']) . "'
+                                                        data-completed-by='" . htmlspecialchars($row['completed_by_lname'] . ' ' . $row['completed_by_fname'] . ' ' . $row['completed_by_mname']) . "'
+                                                        data-designation='" . htmlspecialchars($row['designation']) . "'
+                                                        data-patient-case-number='" . htmlspecialchars($row['patient_case_number']) . "'
+                                                        data-log-timestamp='" . htmlspecialchars($row['date']) . "'
+                                                        data-log-action='" . htmlspecialchars($row['description']) . "'>";
+                                                    echo "<td>" . htmlspecialchars($row['repository_log_id']) . "</td>";
+                                                    echo "<td>" . htmlspecialchars($row['completed_by_fname'] . " " . $row['completed_by_mname'] . " " . $row['completed_by_lname']) . "</td>";
+                                                    echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                                                    echo "<td>" . htmlspecialchars($row['description']) . "</td>";
+                                                    echo "</tr>";
+                                                }
+                                                pg_free_result($result);
+                                            } else {
+                                                echo "Log fetching failed: " . pg_last_error($db_connection);
                                             }
-                                            pg_free_result($result);
                                         } else {
+                                            echo "Failed to retrieve hospital ID: " . pg_last_error($db_connection);
                                         }
-                                        //-------end--------
                                         ?>
                                     </tbody>
                                 </table>
